@@ -86,3 +86,106 @@ Base analizada: clon en `scratchpad/rwdk/` (HEAD `7dd6396`, `RoundWhiteDiscKit.v
 7. **Reconexión**: la ruta corta depende de kAuth guardado (RWDK no lo persiste) y del PIN como `tail4`. Si es rechazada antes de Phase 6, el fallback completo exige reenviar el certificado; el NFC no se repite.
 8. **NFC**: `recommendedCommandCode` decide 0xA0/0xA8 solo por `stateByte == 0x01` (`NFCActivationModels.swift:36-38`). En modo `.activateOrSwitchReceiver` puede activar sin confirmación: LingoScan debe usar `.readPatchInfo` primero y pedir confirmación antes de `.activateFreshSensor`. La hora de activación es `now - 1` (`CoreNFCActivationReader.swift:213-216`).
 9. `BLETimingLogger.swift:7-9` se describe como "parche local" que "no sobrevivirá un re-resolve": es una señal de que este clon trae parches locales. Fijar el commit del fork.
+
+## Línea base (T-01)
+
+### Commit base y paquete
+
+| Campo | Valor |
+|---|---|
+| Origen | `https://github.com/airedev326/RoundWhiteDiscKit` |
+| Commit base | `7dd6396f04371330d35799c88b9cba105a200180` ("Merge pull request #1 from loopandlearn/fix/swiftformat-parse") |
+| Fecha del commit | 2026-10-24 08:04:30 -0500 |
+| Historial upstream | 3 commits: `e66da6c` (2026-10-06, import inicial aplastado), `b646a45` (2026-10-23, `Sendable` de `Event` fuera de línea), `7dd6396` (merge) |
+| Versión del paquete | `RoundWhiteDiscKit.version = "0.0.1"` (`Sources/RoundWhiteDiscKit/RoundWhiteDiscKit.swift:8`); sin tags |
+| Swift tools version | `5.10` |
+| Plataformas | iOS 17, macOS 14; `defaultLocalization: "en"`; recursos `Resources/Localizations` (10 idiomas) |
+| Dependencias SPM | ninguna |
+| Ubicación en el repo | `Packages/RoundWhiteDiscKit/` (sin `.git`; `LICENSE` MIT y `NOTICE.md` conservados) |
+
+El comentario de procedencia va en la **línea 2** de `Package.swift`: la línea 1 tiene que ser `// swift-tools-version: 5.10` o SwiftPM no reconoce el manifiesto.
+
+### Build y tests en macOS
+
+Toolchain: Apple Swift 6.4 (`swiftlang-6.4.0.34.1`), destino `arm64-apple-macosx27.0.0`. Log completo: `Logs/T-01-swift-test.log` (ignorado por git).
+
+- `swift build`: **OK** (exit 0). 6 avisos `ImplicitStrongCapture` ("'weak' ownership of capture … differs from implicitly-captured strong reference"), en `BLE/SensorScanner.swift:356` (×2) y `BLE/SensorSession.swift:211, 290, 412, 485`. Son avisos del compilador 6.4, no errores. No se tocan en T-01.
+- `swift test`: **75 tests XCTest, 75 pasados, 0 fallados, 0 omitidos** (exit 0). Swift Testing: 0 tests. Corre en macOS sin simulador: CoreNFC está detrás de `#if os(iOS) && canImport(CoreNFC)`.
+
+| Suite | Tests | Resultado |
+|---|---|---|
+| `AESCCMTests` | 2 | 2 pasados |
+| `AppIdentityTests` | 4 | 4 pasados |
+| `BleFramingTests` | 4 | 4 pasados |
+| `DataPlaneTests` | 21 | 21 pasados |
+| `Libre3ReceiverIDTests` | 5 | 5 pasados |
+| `Libre3SensorStateLoaderTests` | 7 | 7 pasados |
+| `LocalizationTests` | 9 | 9 pasados |
+| `NFCActivationCommandTests` | 11 | 11 pasados |
+| `PublicSmokeTests` | 12 | 12 pasados |
+| **Total** | **75** | **75 pasados** |
+
+Lista de tests:
+
+- `AESCCMTests`: `testRFC3610Vector1RoundTrip`, `testTamperFailsAuth`
+- `AppIdentityTests`: `testAuthKeyMatchesReference`, `testChallengeAnswerAndSessionMatchReference`, `testInstallRoundTrip`, `testKeyCertificateMismatchRejected`
+- `BleFramingTests`: `testNotifyReassemblerSensorCert`, `testNotifyReassemblerSequenceGap`, `testTakeMoreThanAvailable`, `testWriteFragmenter162Cert`
+- `DataPlaneTests`: `testDataFrameRoundTrip`, `testDataFrameTooShort`, `testDataPlaneChannelMappingPinsLiveDescriptors`, `testDataPlaneCryptoRoundTripsAndFindsDescriptor`, `testDataPlaneNonceUsesSequenceDescriptorAndPhase6IV`, `testHistoricalBackfillSummarizesCoverageAndGaps`, `testHistoricalReadingPageParsesLivePlaintext`, `testLifecycleTakesWarmupAndWearFromPatchInfo`, `testLiveGlucoseDataFragmentsReassembleAndDecrypt`, `testLiveHistoricalDataDecryptsThroughChannelDecoder`, `testLivePatchStatusDecryptsThroughChannelDecoder`, `testPatchControlCommandEncryptsTo13ByteWriteFrame`, `testPatchControlCommandPlaintextsMatchIOSBuilders`, `testPatchStatusDecodesSensorErrorCodes`, `testPatchStatusExposesPatchStateGroups`, `testPatchStatusParsesLivePlaintext`, `testRealtimeGlucoseReadingParsesAbbottDQAndStatusBits`, `testRealtimeGlucoseReadingParsesLivePlaintext`, `testRealtimeGlucoseReadingUsesCurrentNormalization`, `testRealtimeReadingFrameStructure`, `testSessionControlFrames`
+- `Libre3ReceiverIDTests`: `testAccountIDDerivationsNormalizeCase`, `testDerivationRoundTripsThroughItsRawValueForPersistence`, `testFreeStyleLibre3DerivationMatchesAccountlessFoldOnCapturedVectors`, `testSampleAccountFoldsToBothDocumentedReceiverIDs`, `testShortTrailingWordIsLeftPadded`
+- `Libre3SensorStateLoaderTests`: `testEncodesRoundTrippableHexJSON`, `testLoadsHexBlePIN`, `testLoadsRealmBase64BlePIN`, `testPersistsAndRestoresSensorCycle`, `testReconnectFallsBackToDefaultWhenNoPersistedCycle`, `testRejectsWrongPINSize`, `testUpdatesLastGlucoseMetadata`
+- `LocalizationTests`: `testAllLocalizationsArePackaged`, `testDeviceLanguagePreferenceResolvesToShippedCatalog`, `testEnglishCatalogMapsEachKeyToItself`, `testEveryLocaleHasExactlyTheKeys`, `testFormatSpecifiersMatchEnglish`, `testHelperResolvesAgainstTheResourceBundle`, `testLookupReturnsTranslationForNonEnglishLocale`, `testScannerErrorDescriptionStaysEnglish`, `testTranslationsAreNonEmptyAndActuallyTranslated`
+- `NFCActivationCommandTests`: `testAbbottCRC16MatchesAcceptedFreshPairVector`, `testAccountlessReceiverIDMatchesCapturedPristineUUIDs`, `testActivationAndSwitchCommandsMatchCapturedWire`, `testActivationResponseParserAcceptsCoreNFCResponseParameters`, `testActivationResponseParserUsesCorrectedBlePinBoundary`, `testCoreNFCPayloadsExcludeRequestFlagAndCommandCode`, `testPatchInfoParserAcceptsCoreNFCResponseParameters`, `testPatchInfoParserCollapsesRepeatedA5PadFromCoreNFC`, `testPatchInfoParserMatchesFreshAndActiveCaptures`, `testReceiverIDRecoveryEncodingParsesLittleEndianHex`, `testSwitchResponseWithOriginalReceiverParsesAsActivationLikePayload`
+- `PublicSmokeTests`: `testAuthorizationHandshakeRejectsNonFourByteTailBeforeTransportUse`, `testCachedReconnectHandshakeSkipsCertAndEphemeralExchange`, `testDataPlaneStateCombinesPatchStatusLifecycleWithRealtimeQuality`, `testNonDisplayableCurrentWordBlocksQualityAssessment`, `testNotActionableStatusIsAdvisoryAndDoesNotBlock`, `testPatchStatusExposesDefaultWarmupLifecycle`, `testRealtimeQualityFieldsGateUsability`, `testReceiverIDLittleEndianRoundTrip`, `testSensorCertificateVerifiesWithBundledPatchSigningKey`, `testSensorStateRoundTripUsesPublicShapeOnly`, `testUnavailableCurrentGlucoseBlocksQualityAssessment`, `testWarmupLifecycleBlocksCurrentQualityAssessment`
+
+### Comparación con xdripswift 7.2.0
+
+xdripswift tag `7.2.0` = commit `ba37f261352eedfb7f518c4a38e2266acb0f95e9` (2026-10-20, "version 7.2.0 - build 4234"). **xDrip no usa RWDK como paquete SPM.** Tiene una **copia vendorizada y adaptada** en `xDrip/BluetoothTransmitter/CGM/Libre/Libre3/Protocol/`. Cada archivo lleva la cabecera "Copied from RoundWhiteDiscKit with xDrip4iOS integration changes", apunta a `…/RoundWhiteDiscKit/blob/main/…` sin fijar commit y remite a `Libre3/license.md` (MIT). Los archivos indican creación el 11/10/26. Upstream solo tiene un import inicial (2026-10-06) y un cambio posterior de `Sendable` (2026-10-23). La copia de xDrip deriva, por tanto, del mismo código 0.0.1. **No es una versión más nueva ni más vieja de RWDK: es un fork descendente** con endurecimiento propio y menos superficie.
+
+Método: emparejar por nombre (xDrip antepone `Libre3` a archivos y tipos) y comparar tras normalizar comentarios, espacios, el prefijo `Libre3`, los modificadores `public`/`internal` y `nonisolated(unsafe)`. Los diffs crudos y normalizados están en el scratchpad (`t01/diffs/`, `t01/ndiffs/`) y no se guardan en el repo.
+
+**Cambios mecánicos en todos los archivos emparejados:** prefijo `Libre3` en tipos, eliminación de `public` (módulo de app, no librería), cabecera de atribución y algunos `;`→`,` en comentarios.
+
+| Archivo RWDK | Archivo xDrip | Diferencia tras normalizar | Naturaleza |
+|---|---|---|---|
+| `BLE/FrameAssembler.swift`, `BLE/LibreSensorGATT.swift` | `Libre3FrameAssembler`, `Libre3LibreSensorGATT` | ninguna | renombre |
+| `DataPlane/ClinicalReadingRecord`, `DataFrame`, `DataPlaneCrypto`, `HistoricalBackfill`, `Libre3DataPlaneState`, `PatchControlCommand`, `PatchStatus`, `RealtimeGlucoseReading`, `SensorLifecycle` | mismos con `Libre3` | ninguna | renombre |
+| `Pairing/ChallengeMessage`, `NFCActivationCommand`, `PairingTransport`, `PhoneCert`, `SensorCert` | mismos con `Libre3` | ninguna | renombre (mismas claves `Libre3PatchSigningKey.known`) |
+| `Crypto/AESCCM.swift` | `Libre3AESCCM.swift` | `xor` con `zip`; `AESCCMError: Equatable` | estilo |
+| `DataPlane/DataPlaneDecoder.swift` | `Libre3DataPlaneDecoder.swift` | El ensamblador de glucosa exige fragmentos de 15+20 B o un paquete de 35 B y descarta el resto (`nil`) | corrección más estricta. **Para Lingo (57 B) descarta en silencio** |
+| `DataPlane/HistoricalReadingPage.swift` | `Libre3HistoricalReadingPage.swift` | guard de desbordamiento de `lifeCount` + `invalidLifeCount` | corrección |
+| `Pairing/Libre3ReceiverID.swift` | igual | Parser hex estricto (solo `0x…` o `aa:bb:cc:dd`; rechaza basura en lugar de filtrarla) | corrección |
+| `Pairing/Phase6Response.swift` | `Libre3Phase6Response.swift` | Añade `decrypt(rawKey:aad:)` | API añadida |
+| `Pairing/EphemeralExchange.swift` | `Libre3EphemeralExchange.swift` | Quita `init(nativeScalarWindowLE:)`, `publicKey65Override` y `invalidScalarWindowLength` | herramientas de depuración eliminadas |
+| `Pairing/PairingFlow.swift` | `Libre3PairingFlow.swift` | (1) **Lista de claves de firma vacía → `sensorCertificateVerificationFailed`** (RWDK la salta y sigue). (2) Quita `sharedEphStatic` del resultado. (3) Quita la inyección `phase5Cipher` (usa `AESCCM.commonCryptoBlockEncrypt` fijo). (4) Elimina **todos los logs con hex de material secreto** (R1, R2, kAuth Phase 5, claves públicas, tail4/PIN). (5) Timeout en las escrituras `StartAuthorization` y `ChallengeLoadDone`. (6) `log` con `@autoclosure` | seguridad y robustez, menos superficie |
+| `Pairing/NFCActivationModels.swift` | `Libre3NFCActivationModels.swift` | Mensajes de error sin hex crudo; `errorDescription` localizada para la UI; **mueve aquí `SensorState`/`SensorStateError`** | privacidad y reorganización |
+| `Pairing/CoreNFCActivationReader.swift` | `Libre3CoreNFCActivationReader.swift` | `@available(iOS 16.2)`; hooks `prepare`/`saveResponse`; `cancel()`; protección contra sesiones obsoletas en `complete(_:for:)`; eventos `Log.event(...)` de xDrip; textos `TextsLibre3`/`TextsLibreNFC` | integración con la app |
+
+Archivos solo en un lado:
+
+| Solo RWDK | Solo xDrip |
+|---|---|
+| `BLE/SensorScanner.swift`, `BLE/SensorScannerNG.swift`, `BLE/SensorSession.swift` (xDrip usa su propio `BluetoothTransmitter`/`CGMLibre3Transmitter`) | `Pairing/Libre3SessionKey.swift`: `Libre3AppIdentity` (valida clave↔certificado, `authenticationKey(for:)`) + KDF `Libre3SessionKey.derive` + `Libre3IdentityError`. Sustituye a `AppIdentity.swift` |
+| `Pairing/AppIdentity.swift` (`AppIdentities` global, `install(json:)`) | Fuera de `Protocol/`: `CGMLibre3Transmitter.swift`, `Libre3AuthTransport.swift`, `Libre3CredentialStore.swift`, `Libre3IdentityStore.swift`, `Libre3AccountLookup.swift` |
+| `Pairing/Libre3SensorStateLoader.swift` (el tipo se movió a `NFCActivationModels`), `Pairing/SensorSessionTransport.swift` | Tests: `xDrip Tests/Libre3/` (8 archivos, incluido `Libre3Phase6ResponseTests` con handshake guionado y `sensorCertSigningKeys`) |
+| `Diagnostics/BLETimingLogger.swift`, `Localization/LocalizedString.swift`, `Resources/Localizations/**`, `RoundWhiteDiscKit.swift` | — |
+
+**Menciones relevantes en xdripswift 7.2.0:**
+
+- `lingo`: **ninguna** en el código Swift (las únicas coincidencias son la subcadena de `pollingOption`).
+- `productType`: solo se parsea (`Libre3NFCActivationModels.swift:21,40`) y se prueba con valor `4`. No se usa para elegir identidad, clave ni parser.
+- `sensorCertSigningKeys`: default `Libre3PatchSigningKey.known` (solo claves Libre 3). `CGMLibre3Transmitter.swift:412` construye `Libre3PairingFlow` sin pasarlas. **Un sensor Lingo firmado con otra clave fallaría en xDrip con `sensorCertificateVerificationFailed`** antes de enviar el certificado de la app.
+- `AppIdentities`: no existe; lo sustituyen `Libre3AppIdentity` y `Libre3IdentityStore`.
+
+**Cómo provee xDrip las credenciales (identidades de app):**
+
+1. **Descarga**, no se empaquetan. `Libre3IdentitySource.current` (`Libre3IdentityStore.swift`) fija en el binario una versión (`app-identities-1`), un ID de transacción de **Arweave** y un **SHA-256**. Descarga de `https://arweave.net/<tx>` con respaldo en `https://turbo-gateway.com/<tx>`, sesión efímera y límite de 1 MB.
+2. **Validación**: el digest debe coincidir; JSON `{"format":1,"curve":"P-256","identities":[{label, privateKeyHex(32 B), certificateHex(162 B)}]}`, entre 1 y 16 entradas con etiquetas únicas. Cada clave debe coincidir con su certificado. **No hay campo de tipo de sensor.**
+3. **Almacenamiento**: Keychain `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`, no sincronizable, servicio `<bundleID>.libre3.identities` (`Libre3CredentialStore`). En la primera ejecución tras instalar borra el Keychain (marcador en `UserDefaults`).
+4. **UI**: `xDrip/SwiftUIViews/Settings/Libre3CredentialsView.swift` descarga la versión actual y elige versión (`select`).
+5. **Selección en el pairing** (`CGMLibre3Transmitter.swift:378-476`): usa la versión fijada en el registro del sensor y prueba primero la etiqueta preferida. Si falla, avanza a la siguiente identidad (`identityAttempt`). Al agotarlas lanza `credentialsRejected`. La etiqueta y la versión ganadoras se guardan en `Libre3PairingRecord` (Keychain), junto a `securityVersion` y `region`.
+6. **Receiver ID**: aleatorio por app, en Keychain, o derivado de la cuenta LibreLinkUp. `Libre3AccountLookup` hace login en `https://<host>/llu/auth/login` para obtener el ID de cuenta y poder importar un sensor ya activo.
+
+**Consecuencias para el fork:**
+
+- Conviene portar las correcciones de xDrip: logs sin secretos, verificación de certificado sin fallo abierto (ya prevista en T-02), timeouts de escritura, parser estricto de Receiver ID y guard de `lifeCount`.
+- No conviene copiar el ensamblador de glucosa de xDrip: su rigidez 15+20/35 empeora el caso Lingo (T-03).

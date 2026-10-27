@@ -1,0 +1,64 @@
+name: LingoScan
+options:
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: 6.2
+    SWIFT_STRICT_CONCURRENCY: complete
+    DEVELOPMENT_TEAM: SR8DQF26N7
+    CODE_SIGN_STYLE: Automatic
+packages:
+  LingoCore:
+    path: Packages/LingoCore
+  RoundWhiteDiscKit:
+    path: Packages/RoundWhiteDiscKit
+targets:
+  LingoScan:
+    type: application
+    platform: iOS
+    sources:
+      - path: LingoScan
+        excludes:
+          - Info.plist
+          - LingoScan.entitlements
+    dependencies:
+      - package: LingoCore
+        product: LingoCore
+      - package: RoundWhiteDiscKit
+        product: RoundWhiteDiscKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.otalvaro.lingoscan
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: LingoScan/Info.plist
+        CODE_SIGN_ENTITLEMENTS: LingoScan/LingoScan.entitlements
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_EMIT_LOC_STRINGS: YES
+  LingoScanTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - LingoScanTests
+    dependencies:
+      - target: LingoScan
+      - package: LingoCore
+        product: LingoCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.otalvaro.lingoscan.tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  LingoScan:
+    build:
+      targets:
+        LingoScan: all
+        LingoScanTests: [test]
+    test:
+      targets:
+        - LingoScanTests

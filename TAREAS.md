@@ -17,12 +17,12 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 
 | ID | Fase | Modelo | Título | Depende de | Estado |
 |---|---|---|---|---|---|
-| T-01 | 1 | Opus | Fork de RoundWhiteDiscKit: clon fijado y línea base | — | pendiente |
+| T-01 | 1 | Opus | Fork de RoundWhiteDiscKit: clon fijado y línea base | — | cerrada |
 | T-02 | 1 | Opus | Fork: familia Lingo, identidad por `productType`, clave de firma, errores explícitos | T-01 | pendiente |
 | T-03 | 1 | Opus | Fork: plano de datos Lingo (51 B, 14 B, historial, fast data) | T-02 | pendiente |
-| T-04 | 1 | Sonnet | Vectores AES-CCM independientes y tests negativos | T-01 | pendiente |
+| T-04 | 1 | Sonnet | Vectores AES-CCM independientes y tests negativos | T-01 | cerrada |
 | T-05 | 1 | Sonnet | Cargador de credenciales JSON → Keychain | T-02, T-06 | pendiente |
-| T-06 | 1 | Sonnet | Proyecto Xcode LingoScan + paquete LingoCore | — | pendiente |
+| T-06 | 1 | Sonnet | Proyecto Xcode LingoScan + paquete LingoCore | — | cerrada |
 | T-07 | 1 | Opus | LingoCore: dominio, elegibilidad y almacén SQLite | T-06 | pendiente |
 | T-08 | 1 | Opus | SensorSessionCoordinator y NFCService | T-03, T-05, T-07 | pendiente |
 | T-11 | 1 | Sonnet | Shell de la app, Hoy y Sensor con Liquid Glass | T-06, T-07 | pendiente |

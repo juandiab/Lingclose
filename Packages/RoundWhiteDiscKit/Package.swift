@@ -23,7 +23,8 @@ let package = Package(
         .testTarget(
             name: "RoundWhiteDiscKitTests",
             dependencies: ["RoundWhiteDiscKit"],
-            path: "Tests/RoundWhiteDiscKitTests"
+            path: "Tests/RoundWhiteDiscKitTests",
+            exclude: ["Fixtures"]   // T-04: ccm_vectors.json se carga por #filePath; sin resources para no tapar Bundle.module del paquete
         ),
     ]
 )

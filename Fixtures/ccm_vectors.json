@@ -1,0 +1,599 @@
+{
+ "generator": "gen_ccm_vectors.py",
+ "seed": 20260101,
+ "library": "python-cryptography AESCCM(tag_length=4)",
+ "profiles": {
+  "data_plane": {
+   "nonce_length": 13,
+   "L": 2,
+   "M": 4,
+   "aad": ""
+  },
+  "challenge": {
+   "nonce_length": 7,
+   "L": 8,
+   "M": 4,
+   "aad": ""
+  }
+ },
+ "vectors": {
+  "data_plane": [
+   {
+    "id": "data_plane-pos-01",
+    "key_hex": "0b024cf5011ae1f4f10c62b7e5052de5",
+    "nonce_hex": "831f0943478323d0435ed2d8d2",
+    "plaintext_hex": "55",
+    "ciphertext_hex": "45",
+    "tag_hex": "bbef3f97",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-02",
+    "key_hex": "38445a9f8954be03a5ddac270f31b12f",
+    "nonce_hex": "a4b85fc8f953dc8c57ab556fee",
+    "plaintext_hex": "93b90e74c20e9af1fab5bec365ceac",
+    "ciphertext_hex": "d676be56f4e5356f58953b3838933d",
+    "tag_hex": "37fe1ab1",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-03",
+    "key_hex": "6e04d2c19401fc68b9547e9acce0e12a",
+    "nonce_hex": "f00baf57210833ab22541636b3",
+    "plaintext_hex": "4063ddbe2ce8a083d31597678a12fcdee96318564882fc1bfd790828af",
+    "ciphertext_hex": "a39ba1d8c82565f3c6b0791184b1a88a904088f3ef4b1e30959be942ba",
+    "tag_hex": "b5df0466",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-04",
+    "key_hex": "8198d7dcbb6d7b77bc5532781a917c80",
+    "nonce_hex": "4eeb1be24eec0d32c0589226d9",
+    "plaintext_hex": "56da6fb26c3733a6cb608315d49150b713d178c23a4c3783decd38bd4905cfccc6566b",
+    "ciphertext_hex": "4ac44668cece34df82372010e46435530164b0d6756b3a59c2de234b927ad7a2766e6c",
+    "tag_hex": "ff6a87aa",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-05",
+    "key_hex": "68c3647af942c26c08f868eb61b6d492",
+    "nonce_hex": "dfcd03f74aad0a2ae106fe994f",
+    "plaintext_hex": "5a92e66177ba9321d20d434538cef1066e113e88445bd24fb8bd9f01d4f4933211ee31ba17ab16ceef0a09a588620a2c863c56",
+    "ciphertext_hex": "d4d34e4aae44e02944281d6041495892c4603b4061dbceacb4a31064af2c25c91b987a9782dd6a890c13c82323145555fa07da",
+    "tag_hex": "6758b156",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-06",
+    "key_hex": "5748cb95d131da16196c4d348ebe7d01",
+    "nonce_hex": "1eb3ae7cc6798ab058e5fcf698",
+    "plaintext_hex": "ec33d81bff9643c3601b7cad3b72a2e0f8df5403cdd4806a33dcc2d113da561659dfb57d06fc78e4235be6a2cfee9e25151999ba4a70d5361e",
+    "ciphertext_hex": "593018de9af603d33f635b58dfbe6d6e41ce5e2189d465c9be34cede4fd5da4049cf9dfc2314e5f20ac4612fefa687af3c075fd03f9ece6225",
+    "tag_hex": "5583e247",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-07",
+    "key_hex": "557389769e05eeea5d5ca4f09b0a40b6",
+    "nonce_hex": "5f94cf0643febe71067b63f8a1",
+    "plaintext_hex": "6d34",
+    "ciphertext_hex": "12c4",
+    "tag_hex": "741db24c",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-08",
+    "key_hex": "97eab6ffd35a0d7e9df33163f9949a92",
+    "nonce_hex": "b97c843fc70800be1b5e242831",
+    "plaintext_hex": "4de1607ad3b5670b8d2c4919d07ec6e9",
+    "ciphertext_hex": "8c51af8bd579b07a254760fcbcf99363",
+    "tag_hex": "e56ed4da",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-09",
+    "key_hex": "2f1d43e235adac670f50e7e72c1217a8",
+    "nonce_hex": "6952bfc89a8b55ecb17eee1ec7",
+    "plaintext_hex": "49f6b4a7e161b97f720ba1e29efcdcf9e5",
+    "ciphertext_hex": "5b738a1fa91ac60ef27a83b85a4ec787e8",
+    "tag_hex": "41a8c955",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-10",
+    "key_hex": "2f29b79fdaa0aafd85710890515d53e3",
+    "nonce_hex": "894969793e008e1dd58c2dff2d",
+    "plaintext_hex": "1d1c12b5eb4ee55a1c51de8b19f9d4b4737720b1466b12201ed56beb80518a",
+    "ciphertext_hex": "472fd8feee17a93b7bdbd4a1be1cd145c4a5ef34f19d88077fb53f79d421a9",
+    "tag_hex": "cba199d9",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-11",
+    "key_hex": "663d9cf2a6be0022ad35e7d120d824c8",
+    "nonce_hex": "2571f8ba117cd572d362ae19b3",
+    "plaintext_hex": "9653249f531caa03b4b82e68e3759298adb7aca907a6cb33786a06939a1c7f02",
+    "ciphertext_hex": "8486e3123f8bd2da4e6e100da40db47acf5f4fb9253add36d733a5edc3776a10",
+    "tag_hex": "cae1a0a3",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-12",
+    "key_hex": "6d6ac4d1aa092c9bb8deef0da586566f",
+    "nonce_hex": "925a4d7b8db19f6b996b111378",
+    "plaintext_hex": "0533fcd7f2d7ffa43a103d6a36c476a7cce0edb4b9cc2b1f5d44cc57de0732bc1d",
+    "ciphertext_hex": "d65792b324be8ca3bd9adfe511a83bb967381213b6afe7e7e799c5ce65f557951a",
+    "tag_hex": "a60d0904",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-13",
+    "key_hex": "215f6f9f4df076f59442778f83767ddb",
+    "nonce_hex": "5810072acab1e587ee99ee22bf",
+    "plaintext_hex": "d437b0bb2ebdd40028ea589b1c52fec753529eb0351d85fc3e95d100e5c2b46da39aa2b43c1922d95f8c27e89e73647f",
+    "ciphertext_hex": "8639bfcbeddf8b593b2448024b58690551a80a7cc795e964abede7bafd0cefd1f5265348a0de127c212a3347da29530a",
+    "tag_hex": "55d9ffa1",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-14",
+    "key_hex": "85988f26fd7c0f451a3686dd7b1889b4",
+    "nonce_hex": "43bc21d2903c83ed9938eb98e1",
+    "plaintext_hex": "e909cc5eea8cce3ccb77aadfefac8992b17df076a239053484d76376faf4f83843f0eaad77a35f0c8bd25fb2034f635c0774f137d5c240e17590bcf66c3e17",
+    "ciphertext_hex": "efa144eabc30cfffa61efb2539c59223cf83132e114392dd7de42d9b93437d9721e87c8b88e6b3890ef505ffdfecf792a6a39fb94ba06f46390a25f1098519",
+    "tag_hex": "e1b28ab5",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-15",
+    "key_hex": "68f37b71f70666af73dc7da3e31be4b3",
+    "nonce_hex": "cd1e36f2cddb860a91f3d5fa1b",
+    "plaintext_hex": "2481ebed98441853a78a8e8801691c5ed2888e21b2917ddd6c8684061bf7e994d162ef1ea9b9fbc3b1971b0a0995323143fb317209f1610714da0bfe031e8d95",
+    "ciphertext_hex": "df5bdb098013dad5b319d89032b9637985167562548ae3f087340a63f9facf3c288b34410e3706f33b490897696a14d523c9541440bea4bf2a602789b202ba15",
+    "tag_hex": "70e51534",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-16",
+    "key_hex": "88da419ebb5559163e1242d5a57b9840",
+    "nonce_hex": "8c08673dc739b1ce149b42dc48",
+    "plaintext_hex": "0418497b080bcd5461ad42d293c483a6b866cdec39aba653ce2b32c932f2554d5081fc81c6c45419d9b0aec78cbafb712a9189b8744478fecfd1d16d77b3e12b3c",
+    "ciphertext_hex": "e3f4b2300d015dccc6190c5c5e15d016d90c78fe711e9a489a70175924ef8555327e829370521b9178514a9a269672cc359e39faed89ecf378deb16a4ff6b6cd65",
+    "tag_hex": "7b7a2031",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-17",
+    "key_hex": "76e2a304cdb7a7db818b1c0f83dc2e1d",
+    "nonce_hex": "91259aac0dad5a7bff0bb8646f",
+    "plaintext_hex": "8254535b9b89bff8d0e7c84db7a4fa07476965d183a0f3537863000ae9f8ab2e56d04fa075e2148795b1ed33c6f5f1760b28c895dbe49cad540477d9e57fe74466e665ad1aa828d8143d7a21dff0cf1f",
+    "ciphertext_hex": "caf9e7daebcddb4c5af7c049570644cfcd54778516214fdf440a8066f86ddfed3ea0ec09193d129e6ee3c39865f3c524898dfb75fdf6047c84f476c972d4765dd040cabae253e5375a27dee2aaf7968f",
+    "tag_hex": "c1666a24",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-18",
+    "key_hex": "0cdd7c75e45de13a9717c7b0258c5eb7",
+    "nonce_hex": "e67dede55703ecb1330363cc6c",
+    "plaintext_hex": "2819b2331785c24a682d3615fbf28ba9213350b9a0317609d2340176553aba6cc1b9ccf80b523148a803bfd92c73d1d7661c8a0b96cd29d5ecc527571c73d364bfc5a7b61ed77e4e41c3d0dd6fd3b4787563ae27b0a61f8d50b393fca9a52edf008f32",
+    "ciphertext_hex": "1ea615efc8a4744a0cd09f7bcd90bba740d91f9cd56f5861dad47e44109be060a6a9e845fbcfb6d75a082a7dec0ee575a2175498f1a8fb2a84d019ce7f80582a76e78be35f74b4826b6b16c41d5fdda45bc62598f0211a731756c366ad4954167cef24",
+    "tag_hex": "bbe0346c",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-19",
+    "key_hex": "fa937958211d1aa827708a1617491770",
+    "nonce_hex": "d16f3d2b422487152c1512aa8f",
+    "plaintext_hex": "f970207fe3b505d4d830d355d68dd0aeed59aed538cbcbb34a7cbe776d2594fba1023baa3a04dcf33d7a5e867eb239549b61ba4a6ca72f46865162b3b7471502db8e10b2932035275e8463efa5e03f569eae87c61998db1d2e282cde8579bd3108345a43f233639c5aa216b715e3",
+    "ciphertext_hex": "f56deae231573bd59a9f9d4fe106f0d037c38dd5b59436fcc9704cfe9853d943495c57015e061cdbc9ce368f6d24107a9c82807e4f7c2ed4d2a3cc86b45746fb6b5ad6786c36f30733d6c39a0f57e4d1c9ee7c9e40ea740e76be319c1eb73232952625a61cdb906f428dc2ca586f",
+    "tag_hex": "a70031bb",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-pos-20",
+    "key_hex": "779829da64b8d6189b22f7b6ff9fc4c1",
+    "nonce_hex": "289f01ce8c23c9c94e944ca62d",
+    "plaintext_hex": "9cf76accb5acfa5650e1e0ff5f676381b877bbd1a90114ac4f0543fae9fc52cdca6bd400f94ff5c9d586ef623b2d45c943fb08dd44d7b35492c448eaa5c1e5392435aa339343acd8b16703a7425e072dcc854e81e053e2fde6be7cc783f8b6b4b5f0b4fb729afdb17c32f197d4c06b9097562876156b4e41",
+    "ciphertext_hex": "5eb3b4c677bbd21485137df3094b3cacb37a87a2b49daf96a608a8b8312d9fe47c3315277a9d951c7b4853e50e82918adde2df06334299e51260d3d61781d3a2d2b90aa1204702319b9babe956c67ac730a55dcc55a5ca8bc370269fb15130ad0494fc36d477b2ea8256f98f9c7493ad8884ea2415563f96",
+    "tag_hex": "d92662e7",
+    "expect": "ok"
+   },
+   {
+    "id": "data_plane-neg-01",
+    "key_hex": "38445a9f8954be03a5ddac270f31b12f",
+    "nonce_hex": "a4b85fc8f953dc8c57ab556fee",
+    "plaintext_hex": "93b90e74c20e9af1fab5bec365ceac",
+    "ciphertext_hex": "d676be56f4e5356f58953b3838933d",
+    "tag_hex": "defe1ab1",
+    "expect": "auth_failure",
+    "mutation": "tag_flip"
+   },
+   {
+    "id": "data_plane-neg-02",
+    "key_hex": "6e04d2c19401fc68b9547e9acce0e12a",
+    "nonce_hex": "f00baf57210833ab22541636b3",
+    "plaintext_hex": "4063ddbe2ce8a083d31597678a12fcdee96318564882fc1bfd790828af",
+    "ciphertext_hex": "a39ba1d8c82565f3c6b0791184b1a88a904088f3ef4b1e30959be942ba",
+    "tag_hex": "fcdf0466",
+    "expect": "auth_failure",
+    "mutation": "tag_flip"
+   },
+   {
+    "id": "data_plane-neg-03",
+    "key_hex": "8198d7dcbb6d7b77bc5532781a917c80",
+    "nonce_hex": "4eeb1be24e690d32c0589226d9",
+    "plaintext_hex": "56da6fb26c3733a6cb608315d49150b713d178c23a4c3783decd38bd4905cfccc6566b",
+    "ciphertext_hex": "4ac44668cece34df82372010e46435530164b0d6756b3a59c2de234b927ad7a2766e6c",
+    "tag_hex": "ff6a87aa",
+    "expect": "auth_failure",
+    "mutation": "nonce_flip"
+   },
+   {
+    "id": "data_plane-neg-04",
+    "key_hex": "68c3647af942c26c08f868eb61b6d492",
+    "nonce_hex": "dfcd03f74aad0a2a7706fe994f",
+    "plaintext_hex": "5a92e66177ba9321d20d434538cef1066e113e88445bd24fb8bd9f01d4f4933211ee31ba17ab16ceef0a09a588620a2c863c56",
+    "ciphertext_hex": "d4d34e4aae44e02944281d6041495892c4603b4061dbceacb4a31064af2c25c91b987a9782dd6a890c13c82323145555fa07da",
+    "tag_hex": "6758b156",
+    "expect": "auth_failure",
+    "mutation": "nonce_flip"
+   },
+   {
+    "id": "data_plane-neg-05",
+    "key_hex": "5748cb95d131da16196c4d348ebe7d01",
+    "nonce_hex": "1eb3ae7cc6798ab058e5fcf698",
+    "plaintext_hex": "ec33d81bff9643c3601b7cad3b72a2e0f8df5403cdd4806a33dcc2d113da561659dfb57d06fc78e4235be6a2cfee9e25151999ba4a70d5361e",
+    "ciphertext_hex": "593011de9af603d33f635b58dfbe6d6e41ce5e2189d465c9be34cede4fd5da4049cf9dfc2314e5f20ac4612fefa687af3c075fd03f9ece6225",
+    "tag_hex": "5583e247",
+    "expect": "auth_failure",
+    "mutation": "ciphertext_flip"
+   },
+   {
+    "id": "data_plane-neg-06",
+    "key_hex": "557389769e05eeea5d5ca4f09b0a40b6",
+    "nonce_hex": "5f94cf0643febe71067b63f8a1",
+    "plaintext_hex": "6d34",
+    "ciphertext_hex": "a5c4",
+    "tag_hex": "741db24c",
+    "expect": "auth_failure",
+    "mutation": "ciphertext_flip"
+   },
+   {
+    "id": "data_plane-neg-07",
+    "key_hex": "2f1d43e235adac670f50e7e72c1217a8",
+    "nonce_hex": "6952bfc89a8b55ecb17eee1ec7",
+    "plaintext_hex": "49f6b4a7e161b97f720ba1e29efcdcf9e5",
+    "ciphertext_hex": "5b738a1fa91ac60ef27a83b85a4e",
+    "tag_hex": "41a8c955",
+    "expect": "auth_failure",
+    "mutation": "truncated"
+   },
+   {
+    "id": "data_plane-neg-08",
+    "key_hex": "2f29b79fdaa0aafd85710890515d53e3",
+    "nonce_hex": "894969793e008e1dd58c2dff2d",
+    "plaintext_hex": "1d1c12b5eb4ee55a1c51de8b19f9d4b4737720b1466b12201ed56beb80518a",
+    "ciphertext_hex": "472fd8feee17a93b7bdbd4a1be1cd145c4a5ef34f19d88077fb53f79d4",
+    "tag_hex": "cba199d9",
+    "expect": "auth_failure",
+    "mutation": "truncated"
+   },
+   {
+    "id": "data_plane-neg-09",
+    "key_hex": "663df8f2a6be0022ad35e7d120d824c8",
+    "nonce_hex": "2571f8ba117cd572d362ae19b3",
+    "plaintext_hex": "9653249f531caa03b4b82e68e3759298adb7aca907a6cb33786a06939a1c7f02",
+    "ciphertext_hex": "8486e3123f8bd2da4e6e100da40db47acf5f4fb9253add36d733a5edc3776a10",
+    "tag_hex": "cae1a0a3",
+    "expect": "auth_failure",
+    "mutation": "wrong_key"
+   },
+   {
+    "id": "data_plane-neg-10",
+    "key_hex": "df6ac4d1aa092c9bb8deef0da586566f",
+    "nonce_hex": "925a4d7b8db19f6b996b111378",
+    "plaintext_hex": "0533fcd7f2d7ffa43a103d6a36c476a7cce0edb4b9cc2b1f5d44cc57de0732bc1d",
+    "ciphertext_hex": "d65792b324be8ca3bd9adfe511a83bb967381213b6afe7e7e799c5ce65f557951a",
+    "tag_hex": "a60d0904",
+    "expect": "auth_failure",
+    "mutation": "wrong_key"
+   }
+  ],
+  "challenge": [
+   {
+    "id": "challenge-pos-01",
+    "key_hex": "76eb9fdb45ac64063b6e0d8c4cd7ec88",
+    "nonce_hex": "a886538e5fb348",
+    "plaintext_hex": "de",
+    "ciphertext_hex": "34",
+    "tag_hex": "b46099c5",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-02",
+    "key_hex": "747218f51f709b36ecdae7f61f409b08",
+    "nonce_hex": "cf8a44c1c9f33b",
+    "plaintext_hex": "86d3a612e7d025646498e5b553308d",
+    "ciphertext_hex": "493e6bd0bbc9035d9e530383e59ea5",
+    "tag_hex": "46c386cd",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-03",
+    "key_hex": "11d03c2ae078a49aff4d2d62491962eb",
+    "nonce_hex": "b83a140381e432",
+    "plaintext_hex": "34051663f212f3c60e71208a91e5e3ecda6b9233bb351833f6295e7577",
+    "ciphertext_hex": "e73ced33e321fb180b47731ce393685c3fe15cdf988aa4251e4985ec43",
+    "tag_hex": "edb64768",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-04",
+    "key_hex": "f072d08de4ce8fc5b871bfa6eb4760c0",
+    "nonce_hex": "5121253cd7c7a7",
+    "plaintext_hex": "859932e056ebb3d0badb33981a15428d733632919b4fbded2aa11107dc5ac9c876f541",
+    "ciphertext_hex": "b269d5532bd0b4e8504a1310276a50ef59d8216281efcdae85403b66575170f5762832",
+    "tag_hex": "cca51dbb",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-05",
+    "key_hex": "b46a592cc2ae683c52f6710a3f466d68",
+    "nonce_hex": "9552d82d20cc03",
+    "plaintext_hex": "4fdb0972b5bec2a836009177010f687a7e9c96cd3b6ee48d4faf9e0e6ab99aede1472680ca9bb80473aa9aeed92697aad20cc8",
+    "ciphertext_hex": "e6a5104d02b3ef817dc0321f400724270e0c665716e15245a454a19ca21eed3e6fb5838bbc1c5f7fefb87324d027a6351f3c96",
+    "tag_hex": "2c95f746",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-06",
+    "key_hex": "1bbb9ae1fdea31709f797e51390fc430",
+    "nonce_hex": "675e10e0fafbff",
+    "plaintext_hex": "0f0932d343e575b29639be1bd69ef1f23cf076042a54e65f42c6af3e18855a0ab50ad6141ca0ee524cb3ac088fa39aa63c1dcad32c6d285018",
+    "ciphertext_hex": "8dca992da183ef827e9e405fd71c8a54aa3997c541ecf131cb3502fe64a4fd3505fb73f89e16ee45034d9b1d536d6a380891cabd09ca8b2c62",
+    "tag_hex": "4d4ddf29",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-07",
+    "key_hex": "1a60c47c37854cba67b8eb6bde6d9182",
+    "nonce_hex": "45ad29de6304a1",
+    "plaintext_hex": "cb67",
+    "ciphertext_hex": "0b90",
+    "tag_hex": "024a4d02",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-08",
+    "key_hex": "b23d778698d7811d311eddbd3d17f4ec",
+    "nonce_hex": "479460385c7fd3",
+    "plaintext_hex": "01d9cec965fadd36945e85464ff2becd",
+    "ciphertext_hex": "ce7d1ef31861da5da41dc9409239c5b4",
+    "tag_hex": "bd1bffd2",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-09",
+    "key_hex": "cf04b87fa655efa805c24f541a93ddd8",
+    "nonce_hex": "5914307c10c36a",
+    "plaintext_hex": "d3c54864c109c9454081e6edbc59aec229",
+    "ciphertext_hex": "2dd112e774bf5ea75840a02e86fd7b1aaf",
+    "tag_hex": "76b634d5",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-10",
+    "key_hex": "974ddebe19b30822732421536ae30eab",
+    "nonce_hex": "782d592b1a46d4",
+    "plaintext_hex": "36805794c06fd2de0091b9a02daccfabaae5cfaf4555dac14c36079b5aee67",
+    "ciphertext_hex": "914a78b6d675d0005e7b48d69a7820830787376d861bca15c44b318a956edd",
+    "tag_hex": "a5277bd0",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-11",
+    "key_hex": "49e8184f1be29eea0470f1acfa2dc6e7",
+    "nonce_hex": "32a8236ef8b5b0",
+    "plaintext_hex": "878a2692e68c4e7cda2ad993accfe3ae62dff981976b403e37d51137625b5ea1",
+    "ciphertext_hex": "55a3b5607117bc7eb67a6dd39bf0269f3abf892f08c63710f4d03c9e44302e5b",
+    "tag_hex": "a5a2489d",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-12",
+    "key_hex": "2535f3252af0276d8f314d6abba3342d",
+    "nonce_hex": "e0146f259c3f21",
+    "plaintext_hex": "deb766cfdcab68e83a379ce8b8dd4094030016c814eb56d9d1760ae36b6e757b64",
+    "ciphertext_hex": "cee9892d0cf8460ac5a3edf745798f1a6f85e3382afce04079f47635747a81f9ec",
+    "tag_hex": "61457d6d",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-13",
+    "key_hex": "e6fc811c913472d7db7c6d9eae85405b",
+    "nonce_hex": "4e71a3133de3ce",
+    "plaintext_hex": "d2394b5b5cfb3d4a334903f894b6b7dce8dccbf97e9fd903803f1e6c41b24886fedafb331f8c3f5b00ac0f45ff2be6ba",
+    "ciphertext_hex": "b11df4dd979686a43ed6547f456d71682e11420fd949dddfe78d2f1e479852965fb2fc8584755ae53b50f03ab050182f",
+    "tag_hex": "829cf7da",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-14",
+    "key_hex": "5702e2f161aac2ec06869670579aebe3",
+    "nonce_hex": "6026e41be9a817",
+    "plaintext_hex": "c18d994f67826bb8ec9dad4c0030a2117e7abc0d630ad2f85a5428c9d09c6bde8d2211c6cebc5e01475c74c95148f0addf2b673e889facb86ee220c822fef8",
+    "ciphertext_hex": "07483e6367eadfdc1f54fee8652452d62e61f573dda905a0e91fc70e867f9ed7afb8ca181492c24b0bafb24da6fbaa95d4d46d92d061009cc248e2da43a9a5",
+    "tag_hex": "5a85647c",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-15",
+    "key_hex": "99bb35939dd785484c24fb8372b92816",
+    "nonce_hex": "6ac7d4c97feb67",
+    "plaintext_hex": "ccfebf330eaa39d23abe5b4d3413179c1cc657e9351b9d53cfde2c9b3aaad2c1f9a891b930c3405906ec0c6dabe61871654c31b31ae1fe57f60f19439aa56e80",
+    "ciphertext_hex": "add09fd66fe2f3c208b9e51ae62da6398d987e7f89a709b36c39faa004f1e5b1f7c58d870da8f0035bed024637438ffee29f1cb556a39bc394bf254d831994b7",
+    "tag_hex": "f9c69412",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-16",
+    "key_hex": "95d2b272f34ac8d0a1ce5a84723b7c40",
+    "nonce_hex": "9b8f4a15a06d1c",
+    "plaintext_hex": "233c49278a4d199ba3386a108b5b091f49b3d4fbe1929e08b5b067ce34f7d7c4c1b52c50ef940a7f593a45a730e186482b49423ef299f992d8d2f2915b67a34a4c",
+    "ciphertext_hex": "dfe825f5c6b9e7bf5879fdf0ee05dc745ad156f10cc3d363f3f20b7cf445b85049ae5b52073c01e84db9ec1a24925c5938135043143e6f8c194deeb99221a5da80",
+    "tag_hex": "4b8b5b6c",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-17",
+    "key_hex": "90abd025e530c65648193323361dbf39",
+    "nonce_hex": "a1cdf6dd28c526",
+    "plaintext_hex": "1863b4b1167f91c3d110cc33b1c9d8f57bc0fb8c00e55ef456b158aed15421126aace0c2772ae0865d357e04ea50c834f73d1cdd9de1c4d41e2237053a93e93bf87b17b472ac738613ed95d3b6a4dfa3",
+    "ciphertext_hex": "5fde806b059f6fb754eb3347e7d60f9614bdee27300521530e4a1cb75bc531ac5d427a292e7d67ec0fe652295aa8f75ead7f81334ffd51b1e89295cc4cc968df4a1361d6ea1a0cda81960e217971e757",
+    "tag_hex": "cece761c",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-18",
+    "key_hex": "1661c1e41697470da809a5f403ca4063",
+    "nonce_hex": "dfc9a4a312f239",
+    "plaintext_hex": "f7be28d64936f2442a40b8a8a460ce5be49ac03a706a0b2dedf9440c14ec6fb9408dad5367e066fb5a63a51f2fe56b71d255ada41eb9289ec0c28c4f46f897296b17b06b8e3ada6845610776998ba748d10628f94a2c0d69ebdfe5a7fde8a1a99ccf5a",
+    "ciphertext_hex": "ec4ae29c7746fd89bf458a57ad74798aebed0fce2daa4102d5d5be77fea86495ca94e96c928135eeacbcd50dddbf240b65e5bca380d76773ad29baeb798fc2d8c12ebb115ed6475758261874f89ceafa445cb5f872865e780e4bf60fc5896387dc61bd",
+    "tag_hex": "46a4b587",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-19",
+    "key_hex": "a33a9f38b263d18e6dbd41ed2b9d2248",
+    "nonce_hex": "11157dde23d20d",
+    "plaintext_hex": "63495818c7bf928b94230f70128c6372a09f36e003f393407937517127d2eeffa5c23c5daad5d67645c30ca86b158a2f236782165ca3b801ed4c160cc8ed1cdaadcdfce674ec6d193b7a46788d0346a64e948a23d87b7ae1338abfdb17206572cfbd2f1f713cf86c2a620444fcab",
+    "ciphertext_hex": "e29b5d3b2f4e7140e7f24db248c3d7455637e6e5731ceb437beaad8f1bfe4248da037fd301d5300f61cd3a53f3c32e37ffa2453b47426d9ad234b92d5af8e0732ce731515a241c01a14937ee5f81b1a23e78f9ca2e220d1d22c5b6650aa984cd3167add17ed6da8f69cf72b124e0",
+    "tag_hex": "82292f98",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-pos-20",
+    "key_hex": "63a0582fae514699c6984831eac2dba8",
+    "nonce_hex": "1e7f846799e3be",
+    "plaintext_hex": "547c86889cad3fb3e795ace00f4809578129e19810c072a1929043c834558fb3456d3200096e93d1bb239fd99a59bbd36fb9df45877c33734d6666764d1e5304dbc99ee2b98913d2f7c17ce77ea0cd9819539ef80d80a9b3e58ccb8a57bba5b28ab898f245d1f5c44489003ed701624e7ff10727174adb2b",
+    "ciphertext_hex": "e34a52802e4f0d09cafd38a082d6c10ca9d155f94094bde9d92b028c18425e06709c866b9f1b6a4fb11f6ad422362ca1c1c7c396906a0912f403367dc794dbc34ec19a018da59bb63fffeac0956f3190b0d2c328331d325091b9eb1ff1c0f6b66529402212ed5b633f9a40cfc8f74651dfa7bdbba530ff3a",
+    "tag_hex": "a225a285",
+    "expect": "ok"
+   },
+   {
+    "id": "challenge-neg-01",
+    "key_hex": "747218f51f709b36ecdae7f61f409b08",
+    "nonce_hex": "cf8a44c1c9f33b",
+    "plaintext_hex": "86d3a612e7d025646498e5b553308d",
+    "ciphertext_hex": "493e6bd0bbc9035d9e530383e59ea5",
+    "tag_hex": "469d86cd",
+    "expect": "auth_failure",
+    "mutation": "tag_flip"
+   },
+   {
+    "id": "challenge-neg-02",
+    "key_hex": "11d03c2ae078a49aff4d2d62491962eb",
+    "nonce_hex": "b83a140381e432",
+    "plaintext_hex": "34051663f212f3c60e71208a91e5e3ecda6b9233bb351833f6295e7577",
+    "ciphertext_hex": "e73ced33e321fb180b47731ce393685c3fe15cdf988aa4251e4985ec43",
+    "tag_hex": "edb60468",
+    "expect": "auth_failure",
+    "mutation": "tag_flip"
+   },
+   {
+    "id": "challenge-neg-03",
+    "key_hex": "f072d08de4ce8fc5b871bfa6eb4760c0",
+    "nonce_hex": "512125d7d7c7a7",
+    "plaintext_hex": "859932e056ebb3d0badb33981a15428d733632919b4fbded2aa11107dc5ac9c876f541",
+    "ciphertext_hex": "b269d5532bd0b4e8504a1310276a50ef59d8216281efcdae85403b66575170f5762832",
+    "tag_hex": "cca51dbb",
+    "expect": "auth_failure",
+    "mutation": "nonce_flip"
+   },
+   {
+    "id": "challenge-neg-04",
+    "key_hex": "b46a592cc2ae683c52f6710a3f466d68",
+    "nonce_hex": "7252d82d20cc03",
+    "plaintext_hex": "4fdb0972b5bec2a836009177010f687a7e9c96cd3b6ee48d4faf9e0e6ab99aede1472680ca9bb80473aa9aeed92697aad20cc8",
+    "ciphertext_hex": "e6a5104d02b3ef817dc0321f400724270e0c665716e15245a454a19ca21eed3e6fb5838bbc1c5f7fefb87324d027a6351f3c96",
+    "tag_hex": "2c95f746",
+    "expect": "auth_failure",
+    "mutation": "nonce_flip"
+   },
+   {
+    "id": "challenge-neg-05",
+    "key_hex": "1bbb9ae1fdea31709f797e51390fc430",
+    "nonce_hex": "675e10e0fafbff",
+    "plaintext_hex": "0f0932d343e575b29639be1bd69ef1f23cf076042a54e65f42c6af3e18855a0ab50ad6141ca0ee524cb3ac088fa39aa63c1dcad32c6d285018",
+    "ciphertext_hex": "8dca992da183ef827e9e405fd71c8a54aa3997c541ecf131cb3502fe64a4fd3505fb73f89e16ee45034d9b1d536d6a380880cabd09ca8b2c62",
+    "tag_hex": "4d4ddf29",
+    "expect": "auth_failure",
+    "mutation": "ciphertext_flip"
+   },
+   {
+    "id": "challenge-neg-06",
+    "key_hex": "1a60c47c37854cba67b8eb6bde6d9182",
+    "nonce_hex": "45ad29de6304a1",
+    "plaintext_hex": "cb67",
+    "ciphertext_hex": "0b19",
+    "tag_hex": "024a4d02",
+    "expect": "auth_failure",
+    "mutation": "ciphertext_flip"
+   },
+   {
+    "id": "challenge-neg-07",
+    "key_hex": "cf04b87fa655efa805c24f541a93ddd8",
+    "nonce_hex": "5914307c10c36a",
+    "plaintext_hex": "d3c54864c109c9454081e6edbc59aec229",
+    "ciphertext_hex": "2dd112e774bf5ea75840a02e86fd",
+    "tag_hex": "76b634d5",
+    "expect": "auth_failure",
+    "mutation": "truncated"
+   },
+   {
+    "id": "challenge-neg-08",
+    "key_hex": "974ddebe19b30822732421536ae30eab",
+    "nonce_hex": "782d592b1a46d4",
+    "plaintext_hex": "36805794c06fd2de0091b9a02daccfabaae5cfaf4555dac14c36079b5aee67",
+    "ciphertext_hex": "914a78b6d675d0005e7b48d69a7820830787376d861bca15c44b318a",
+    "tag_hex": "a5277bd0",
+    "expect": "auth_failure",
+    "mutation": "truncated"
+   },
+   {
+    "id": "challenge-neg-09",
+    "key_hex": "49e8184f1be29eeaaa70f1acfa2dc6e7",
+    "nonce_hex": "32a8236ef8b5b0",
+    "plaintext_hex": "878a2692e68c4e7cda2ad993accfe3ae62dff981976b403e37d51137625b5ea1",
+    "ciphertext_hex": "55a3b5607117bc7eb67a6dd39bf0269f3abf892f08c63710f4d03c9e44302e5b",
+    "tag_hex": "a5a2489d",
+    "expect": "auth_failure",
+    "mutation": "wrong_key"
+   },
+   {
+    "id": "challenge-neg-10",
+    "key_hex": "2535f3252af0276d8f314d37bba3342d",
+    "nonce_hex": "e0146f259c3f21",
+    "plaintext_hex": "deb766cfdcab68e83a379ce8b8dd4094030016c814eb56d9d1760ae36b6e757b64",
+    "ciphertext_hex": "cee9892d0cf8460ac5a3edf745798f1a6f85e3382afce04079f47635747a81f9ec",
+    "tag_hex": "61457d6d",
+    "expect": "auth_failure",
+    "mutation": "wrong_key"
+   }
+  ]
+ },
+ "reference_vectors": [
+  {
+   "id": "nist-sp800-38c-ex1",
+   "source": "NIST SP 800-38C Appendix C, Example 1",
+   "key_hex": "404142434445464748494a4b4c4d4e4f",
+   "nonce_hex": "10111213141516",
+   "aad_hex": "0001020304050607",
+   "plaintext_hex": "20212223",
+   "ciphertext_hex": "7162015b",
+   "tag_hex": "4dac255d",
+   "expect": "ok"
+  }
+ ],
+ "notes": "RFC 3610 no aporta vectores con M=4 (sus paquetes usan M=8 y M=10); se incluye NIST SP 800-38C Ej.1 (M=4, con AAD)."
+}

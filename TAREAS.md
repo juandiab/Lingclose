@@ -24,7 +24,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-05 | 1 | Sonnet | Cargador de credenciales JSON → Keychain | T-02, T-06 | cerrada |
 | T-06 | 1 | Sonnet | Proyecto Xcode LingoScan + paquete LingoCore | — | cerrada |
 | T-07 | 1 | Opus | LingoCore: dominio, elegibilidad y almacén SQLite | T-06 | cerrada |
-| T-08 | 1 | Opus | SensorSessionCoordinator y NFCService | T-03, T-05, T-07 | pendiente |
+| T-08 | 1 | Opus | SensorSessionCoordinator y NFCService | T-03, T-05, T-07 | cerrada |
 | T-11 | 1 | Sonnet | Shell de la app, Hoy y Sensor con Liquid Glass | T-06, T-07 | cerrada |
 | T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | pendiente |
 | T-09 | 2 | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | pendiente |

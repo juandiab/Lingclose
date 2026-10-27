@@ -5,6 +5,7 @@ import SwiftUI
 struct MealInputSection: View {
     @Bindable var model: MealAnalysisViewModel
     let services: MealAssistantServices
+    var onManualEntry: (() -> Void)?
 
     var body: some View {
         switch model.readiness {
@@ -27,7 +28,11 @@ struct MealInputSection: View {
     @ViewBuilder
     private func readyContent(_ llm: LLMModel) -> some View {
         Section {
-            MealPhotoPicker(photoJPEG: model.photoJPEG) { model.setPhoto($0) }
+            MealPhotoPicker(
+                photoJPEG: model.photoJPEG, onPhoto: { model.setPhoto($0) },
+                openCameraOnAppear: model.autoCameraPending, onCameraAutoOpened: { _ = model.consumeAutoCamera() },
+                onCameraCancelled: { model.cameraCancelled() },
+                onManualEntry: onManualEntry)
             TextField(
                 String(localized: "meal.description", defaultValue: "Describe el plato o snack, o escribe «etiqueta»"),
                 text: $model.descriptionText,

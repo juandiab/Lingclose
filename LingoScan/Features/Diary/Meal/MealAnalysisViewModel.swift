@@ -70,12 +70,17 @@ final class MealAnalysisViewModel: Identifiable {
     @ObservationIgnored private let now: @Sendable () -> Date
     @ObservationIgnored private let newID: @Sendable () -> String
 
+    /// Desde el "+" de Hoy → Comida: abrir la cámara al entrar y analizar en cuanto haya foto (un solo botón).
+    private(set) var autoCameraPending = false
+    private var autoAnalyzeOnNextPhoto = false
+
     /// Alta de una comida (o análisis sobre un evento sin fila de nutrición).
     init(
         services: MealAssistantServices,
         editing: DiaryEvent? = nil,
         at: Date,
         initialDescription: String? = nil,
+        autoCamera: Bool = false,
         calendar: Calendar = .current,
         now: @escaping @Sendable () -> Date = { Date() },
         newID: @escaping @Sendable () -> String = { UUID().uuidString.lowercased() }
@@ -88,6 +93,21 @@ final class MealAnalysisViewModel: Identifiable {
         self.newID = newID
         descriptionText = initialDescription ?? ""
         phase = .input
+        autoCameraPending = autoCamera
+    }
+
+    /// La vista lo consume una sola vez al mostrar la entrada: `true` = abrir la cámara ahora. La foto que
+    /// llegue de esa cámara lanza el análisis sin otro toque.
+    func consumeAutoCamera() -> Bool {
+        guard autoCameraPending else { return false }
+        autoCameraPending = false
+        autoAnalyzeOnNextPhoto = true
+        return true
+    }
+
+    /// La cámara automática se cerró sin foto: la siguiente foto ya no analiza sola.
+    func cameraCancelled() {
+        autoAnalyzeOnNextPhoto = false
     }
 
     /// Reabre una comida guardada: base, multiplicador y correcciones cargados.
@@ -144,6 +164,10 @@ final class MealAnalysisViewModel: Identifiable {
 
     func setPhoto(_ jpeg: Data?) {
         photoJPEG = jpeg
+        if jpeg != nil, autoAnalyzeOnNextPhoto {
+            autoAnalyzeOnNextPhoto = false
+            startAnalysis()
+        }
     }
 
     var trimmedDescription: String? {

@@ -68,3 +68,7 @@ Skill `apple-design` (principios, no CSS): respuesta inmediata al toque, animaci
 ## Datos de previsualización
 
 `PreviewData` en el target de app genera una sesión sintética de 3 días (marcada `synthetic`) a partir de los vectores públicos de Juggluco más una curva simulada, para `#Preview` y para la pantalla de Reportes antes de la Fase 3. Nunca se exporta a Health.
+
+## "+" de Hoy (27-oct, petición de Juampa)
+
+El "+" se despliega con animación (morfología Liquid Glass, `glassEffectID`) en Comida / Ejercicio / Nota. Comida va directo a "Analizar con IA" con la cámara abierta; la foto tomada ahí lanza el análisis sin otro toque (un análisis = una llamada; cancelable). Sobre la cámara hay un botón "Entrada manual" que cierra el análisis y abre el registro de comida a mano. Ejercicio y Nota abren el registro rápido con el tipo ya elegido. Reducir movimiento: fundido sin resorte.

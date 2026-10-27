@@ -6,6 +6,8 @@ import SwiftUI
 struct MealAnalysisView: View {
     @Bindable var model: MealAnalysisViewModel
     let onSaved: () -> Void
+    /// "Entrada manual" desde la cámara: quien presenta la hoja la cierra y abre el registro a mano.
+    var onManualEntry: (() -> Void)?
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.mealAssistant) private var services
@@ -15,7 +17,7 @@ struct MealAnalysisView: View {
             Form {
                 switch model.phase {
                 case .input:
-                    MealInputSection(model: model, services: services)
+                    MealInputSection(model: model, services: services, onManualEntry: onManualEntry)
                 case .analyzing:
                     analyzingSection
                 case .failed(let message):

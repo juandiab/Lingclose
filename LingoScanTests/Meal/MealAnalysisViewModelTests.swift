@@ -264,3 +264,46 @@ struct MealAnalysisViewModelTests {
         #expect(model.confidenceText?.contains("70") == true)
     }
 }
+
+/// "+" → Comida: la cámara se abre sola una vez y la foto que llega de ahí lanza el análisis sin otro toque.
+struct MealAutoCameraTests {
+    @Test func autoCameraIsConsumedOnceAndThePhotoStartsTheAnalysis() async throws {
+        let env = try await MealTestEnvironment.make()
+        let model = await MainActor.run {
+            MealAnalysisViewModel(services: env.services, at: MealTestEnvironment.now, autoCamera: true,
+                                  calendar: MealTestEnvironment.calendar, now: { MealTestEnvironment.now })
+        }
+        await model.prepare()
+        await MainActor.run {
+            #expect(model.autoCameraPending)
+            #expect(model.consumeAutoCamera())
+            #expect(!model.autoCameraPending)
+            #expect(!model.consumeAutoCamera(), "solo una vez")
+            model.setPhoto(Data([0xFF, 0xD8, 0xFF]))
+            #expect(model.phase == .analyzing, "la foto de la cámara automática analiza sola")
+            model.cancelAnalysis()
+        }
+    }
+
+    @Test func cancelledCameraOrManualFlowNeverAnalyzesAlone() async throws {
+        let env = try await MealTestEnvironment.make()
+        let auto = await MainActor.run {
+            MealAnalysisViewModel(services: env.services, at: MealTestEnvironment.now, autoCamera: true,
+                                  calendar: MealTestEnvironment.calendar, now: { MealTestEnvironment.now })
+        }
+        await auto.prepare()
+        await MainActor.run {
+            _ = auto.consumeAutoCamera()
+            auto.cameraCancelled()
+            auto.setPhoto(Data([0xFF, 0xD8, 0xFF]))
+            #expect(auto.phase == .input, "tras cancelar la cámara, la foto espera al botón Analizar")
+        }
+        let manual = await MainActor.run { env.viewModel() }
+        await manual.prepare()
+        await MainActor.run {
+            #expect(!manual.autoCameraPending)
+            manual.setPhoto(Data([0xFF, 0xD8, 0xFF]))
+            #expect(manual.phase == .input)
+        }
+    }
+}

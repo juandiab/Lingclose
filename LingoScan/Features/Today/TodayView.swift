@@ -1,3 +1,4 @@
+import LingoCore
 import SwiftUI
 
 /// Pantalla Hoy: navegación por día, valor actual, curva 6 h / 12 h / 24 h con picos, marcas y arrastre,
@@ -10,6 +11,8 @@ struct TodayView: View {
     @AppStorage(ReferenceLines.lowKey) private var referenceLow = ReferenceLines.defaultLow
     @AppStorage(ReferenceLines.highKey) private var referenceHigh = ReferenceLines.defaultHigh
     @State private var quickAdd: QuickAddModel?
+    @State private var mealAnalysis: MealAnalysisViewModel?
+    @Environment(\.mealAssistant) private var mealServices
 
     var body: some View {
         NavigationStack {
@@ -51,7 +54,7 @@ struct TodayView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 HStack {
                     Spacer(minLength: 0)
-                    TodayAddButton { quickAdd = makeQuickAdd() }
+                    TodayAddMenu { kind in choose(kind) }
                 }
             }
             .navigationTitle(String(localized: "today.title", defaultValue: "Hoy"))
@@ -72,6 +75,15 @@ struct TodayView: View {
                     Task { await viewModel.refresh() }
                 }
             }
+            .sheet(item: $mealAnalysis) { analysis in
+                MealAnalysisView(model: analysis, onSaved: {
+                    Task { await viewModel.refresh() }
+                }, onManualEntry: {
+                    // "Entrada manual" desde la cámara: se cierra el análisis y se abre el registro de comida a mano.
+                    mealAnalysis = nil
+                    quickAdd = makeQuickAdd(preselecting: .meal)
+                })
+            }
         }
         .modifier(TodayLifecycle(viewModel: viewModel, storedHours: $storedHours, referenceLow: $referenceLow, referenceHigh: $referenceHigh))
     }
@@ -86,16 +98,32 @@ struct TodayView: View {
         )
     }
 
-    private func makeQuickAdd() -> QuickAddModel {
+    /// Comida: directo a "Analizar con IA" con la cámara abierta (si el asistente está configurado y hay cámara).
+    /// Ejercicio y nota: registro rápido con el tipo ya elegido.
+    private func choose(_ kind: DiaryEventKind) {
+        switch kind {
+        case .meal:
+            mealAnalysis = MealAnalysisViewModel(services: mealServices, at: quickAddDate(), autoCamera: true)
+        case .exercise, .note, .sensorNote:
+            quickAdd = makeQuickAdd(preselecting: kind)
+        }
+    }
+
+    private func makeQuickAdd(preselecting kind: DiaryEventKind? = nil) -> QuickAddModel {
+        let model = QuickAddModel(store: viewModel.diaryStore, at: quickAddDate(), calendar: viewModel.calendar)
+        if let kind { model.choose(kind) }
+        return model
+    }
+
+    private func quickAddDate() -> Date {
         let now = viewModel.now
         let calendar = viewModel.calendar
         // Hoy: ahora. Otro día: la misma hora del reloj en ese día.
-        let at: Date = viewModel.isToday
+        return viewModel.isToday
             ? now
             : calendar.date(
                 bySettingHour: calendar.component(.hour, from: now),
                 minute: calendar.component(.minute, from: now), second: 0, of: viewModel.shownDay) ?? now
-        return QuickAddModel(store: viewModel.diaryStore, at: at, calendar: calendar)
     }
 }
 

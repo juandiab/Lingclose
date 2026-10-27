@@ -10,6 +10,13 @@ import UIKit
 struct MealPhotoPicker: View {
     let photoJPEG: Data?
     let onPhoto: (Data?) -> Void
+    /// Abre la cámara nada más aparecer (flujo "+" → Comida). Se evalúa una vez.
+    var openCameraOnAppear = false
+    /// Se llama cuando la cámara se abrió sola, para que el modelo lo consuma fuera del `body`.
+    var onCameraAutoOpened: () -> Void = {}
+    var onCameraCancelled: () -> Void = {}
+    /// Si existe, la cámara muestra "Entrada manual" para registrar la comida a mano.
+    var onManualEntry: (() -> Void)?
 
     @State private var pickerItem: PhotosPickerItem?
     @State private var isCameraPresented = false
@@ -62,13 +69,40 @@ struct MealPhotoPicker: View {
             guard let item else { return }
             Task { await load(item) }
         }
+        .onAppear {
+            if openCameraOnAppear, cameraAvailable, photoJPEG == nil {
+                isCameraPresented = true
+                onCameraAutoOpened()
+            }
+        }
         .fullScreenCover(isPresented: $isCameraPresented) {
             CameraPicker { image in
                 isCameraPresented = false
-                guard let image else { return }
+                guard let image else {
+                    onCameraCancelled()
+                    return
+                }
                 Task { await reduce(image.jpegData(compressionQuality: 0.9)) }
             }
             .ignoresSafeArea()
+            .overlay(alignment: .topTrailing) {
+                if let onManualEntry {
+                    Button {
+                        isCameraPresented = false
+                        onCameraCancelled()
+                        onManualEntry()
+                    } label: {
+                        Label(String(localized: "meal.manualEntry", defaultValue: "Entrada manual"), systemImage: "keyboard")
+                            .font(.subheadline.weight(.semibold))
+                            .padding(.horizontal, Tokens.Spacing.sm)
+                            .frame(height: 40)
+                            .glassEffect(.regular.interactive(), in: .capsule)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 56)
+                    .padding(.trailing, Tokens.Spacing.sm)
+                }
+            }
         }
     }
 

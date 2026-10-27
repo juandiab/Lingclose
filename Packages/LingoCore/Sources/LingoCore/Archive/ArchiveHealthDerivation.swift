@@ -48,13 +48,16 @@ public enum ArchiveHealthDerivation {
     /// sin estado `written` para ninguna escritora.
     public static func pendingSubjects(readings: [GlucoseReading], events: [DiaryEvent],
                                        ledger: [HealthLedgerEntry]) -> [PendingHealthSubject] {
-        let best = bestStates(ledger)
+        // Por tipo: una comida comparte `subject_id` con energía, proteína y grasa (draft.5). Estos tres no
+        // cuentan aquí: dependen de `meal_nutrition`, que no viaja en el paquete.
+        let best = bestStates(ledger.filter { $0.subjectKind == .glucose })
+        let bestCarbs = bestStates(ledger.filter { $0.subjectKind == .carbs })
         var out: [PendingHealthSubject] = []
         for r in readings where r.eligibility.isEligible && !r.deleted && !r.synthetic && best[r.recordID] != .written {
             out.append(PendingHealthSubject(subjectID: r.recordID, subjectKind: .glucose, measuredAt: r.measuredAt))
         }
         for e in events where e.kind == .meal && e.carbsG != nil && !e.deleted && !e.synthetic
-            && best[e.eventID] != .written {
+            && bestCarbs[e.eventID] != .written {
             out.append(PendingHealthSubject(subjectID: e.eventID, subjectKind: .carbs, measuredAt: e.at))
         }
         return out.sorted { ($0.measuredAt, $0.subjectID) < ($1.measuredAt, $1.subjectID) }

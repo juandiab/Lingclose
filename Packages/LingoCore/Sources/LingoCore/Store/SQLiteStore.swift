@@ -561,12 +561,15 @@ public actor SQLiteStore {
         }
     }
 
-    public func ledgerEntries(subjectID: String) throws -> [HealthLedgerEntry] {
+    /// Intentos de un sujeto. Con `subjectKind`, solo los de ese tipo: una comida comparte `subject_id` entre
+    /// `carbs`, `energy_kcal`, `protein_g` y `fat_g` (draft.5).
+    public func ledgerEntries(subjectID: String, subjectKind: HealthSubjectKind? = nil) throws -> [HealthLedgerEntry] {
         try connection.query("""
             SELECT attempt_id, subject_id, subject_kind, writer_app_id, sync_identifier, sync_version,
               exported_at_epoch_s, result
-            FROM health_export_ledger WHERE subject_id = ? ORDER BY exported_at_epoch_s, seq
-            """, [SQLiteValue(subjectID)]) { s in
+            FROM health_export_ledger WHERE subject_id = ? AND (? IS NULL OR subject_kind = ?)
+            ORDER BY exported_at_epoch_s, seq
+            """, [SQLiteValue(subjectID), SQLiteValue(subjectKind?.rawValue), SQLiteValue(subjectKind?.rawValue)]) { s in
             guard let attempt = s.text(0), let subject = s.text(1),
                   let kind = s.text(2).flatMap(HealthSubjectKind.init(rawValue:)), let writer = s.text(3),
                   let sync = s.text(4), let version = s.int(5), let at = s.int64(6),
@@ -580,24 +583,35 @@ public actor SQLiteStore {
 
     /// Estado derivado (contrato §5.4, C4): `written` si hay un `written` con el `sync_version` más alto
     /// conocido (un fallo posterior no lo borra); si no, el resultado del último intento de esa versión.
-    public func derivedHealthState(subjectID: String, writerAppID: String) throws -> DerivedHealthState {
+    /// `subjectKind` separa los tipos que comparten `subject_id` (comidas, draft.5). Con `currentVersion`, si
+    /// ningún intento llega a esa versión (evento editado después de escribirse) el estado es `none`.
+    public func derivedHealthState(subjectID: String, writerAppID: String, subjectKind: HealthSubjectKind? = nil,
+                                   currentVersion: Int? = nil) throws -> DerivedHealthState {
         let attempts: [(version: Int, result: HealthLedgerResult)] = try connection.query("""
             SELECT sync_version, result FROM health_export_ledger
-            WHERE subject_id = ? AND writer_app_id = ? ORDER BY exported_at_epoch_s, seq
-            """, [SQLiteValue(subjectID), SQLiteValue(writerAppID)]) { s in
+            WHERE subject_id = ? AND writer_app_id = ? AND (? IS NULL OR subject_kind = ?)
+            ORDER BY exported_at_epoch_s, seq
+            """, [SQLiteValue(subjectID), SQLiteValue(writerAppID), SQLiteValue(subjectKind?.rawValue),
+                  SQLiteValue(subjectKind?.rawValue)]) { s in
             guard let v = s.int(0), let r = s.text(1).flatMap(HealthLedgerResult.init(rawValue:)) else {
                 throw StoreError.corruptRow(table: "health_export_ledger", detail: "sync_version/result")
             }
             return (v, r)
         }
         guard let maxVersion = attempts.map(\.version).max() else { return .none }
+        if let currentVersion, maxVersion < currentVersion { return .none }
         let atMax = attempts.filter { $0.version == maxVersion }
         if atMax.contains(where: { $0.result == .written }) { return .written }
         return atMax.last?.result == .unknown ? .unknown : .failed
     }
 
     /// Huecos pendientes (§5.4): lecturas elegibles, no borradas, no sintéticas y de sesión no sintética,
-    /// y comidas con carbohidratos, sin estado `written` para ninguna escritora. En orden de tiempo.
+    /// sin estado `written` para ninguna escritora; y de cada comida no borrada ni sintética, los carbohidratos
+    /// (`carbs_g` del evento) y la energía, proteína y grasa **conocidas** de su fila `meal_nutrition`
+    /// (`overrides ?? base`, como `effectiveNutrients`), sin un `written` de ese `subject_kind` que cubra la
+    /// `revision` actual del evento. Una edición (revisión nueva) vuelve a dejarlos pendientes.
+    /// Limitación: si en una edición un nutriente pasa a desconocido, no se escribe nada y la muestra anterior
+    /// sigue en Health. En orden de tiempo.
     public func pendingHealthSubjects() throws -> [PendingHealthSubject] {
         let readings: [PendingHealthSubject] = try connection.query("""
             SELECT r.record_id, r.measured_at_epoch_s FROM readings r
@@ -614,19 +628,40 @@ public actor SQLiteStore {
                                  measuredAt: UTCInstant(epochSeconds: s.int64(1) ?? 0))
         }
         let carbs: [PendingHealthSubject] = try connection.query("""
-            SELECT e.event_id, e.at_epoch_s FROM events e
+            SELECT e.event_id, e.at_epoch_s, e.revision FROM events e
             WHERE e.kind = 'meal' AND e.carbs_g IS NOT NULL AND e.deleted = 0 AND e.synthetic = 0
               AND NOT EXISTS (
                 SELECT 1 FROM health_export_ledger l
-                WHERE l.subject_id = e.event_id AND l.result = 'written'
-                  AND l.sync_version = (SELECT MAX(l2.sync_version) FROM health_export_ledger l2
-                                        WHERE l2.subject_id = l.subject_id AND l2.writer_app_id = l.writer_app_id))
+                WHERE l.subject_id = e.event_id AND l.subject_kind = 'carbs' AND l.result = 'written'
+                  AND l.sync_version >= e.revision)
             ORDER BY e.at_epoch_s
             """) { s in
             PendingHealthSubject(subjectID: s.text(0) ?? "", subjectKind: .carbs,
-                                 measuredAt: UTCInstant(epochSeconds: s.int64(1) ?? 0))
+                                 measuredAt: UTCInstant(epochSeconds: s.int64(1) ?? 0), revision: s.int(2))
         }
-        return (readings + carbs).sorted { ($0.measuredAt, $0.subjectID) < ($1.measuredAt, $1.subjectID) }
+        let nutrients: [PendingHealthSubject] = try connection.query("""
+            WITH kinds(kind, path) AS (VALUES ('energy_kcal', '$.kcal'), ('protein_g', '$.protein_g'), ('fat_g', '$.fat_g'))
+            SELECT e.event_id, k.kind, e.at_epoch_s, e.revision FROM events e
+            JOIN meal_nutrition n ON n.event_id = e.event_id
+            CROSS JOIN kinds k
+            WHERE e.kind = 'meal' AND e.deleted = 0 AND e.synthetic = 0
+              AND (json_extract(n.overrides_json, k.path) IS NOT NULL OR json_extract(n.base_json, k.path) IS NOT NULL)
+              AND NOT EXISTS (
+                SELECT 1 FROM health_export_ledger l
+                WHERE l.subject_id = e.event_id AND l.subject_kind = k.kind AND l.result = 'written'
+                  AND l.sync_version >= e.revision)
+            ORDER BY e.at_epoch_s
+            """) { s in
+            guard let kind = s.text(1).flatMap(HealthSubjectKind.init(rawValue:)) else {
+                throw StoreError.corruptRow(table: "meal_nutrition", detail: "subject_kind")
+            }
+            return PendingHealthSubject(subjectID: s.text(0) ?? "", subjectKind: kind,
+                                        measuredAt: UTCInstant(epochSeconds: s.int64(2) ?? 0), revision: s.int(3))
+        }
+        let order: [HealthSubjectKind: Int] = Dictionary(uniqueKeysWithValues: HealthSubjectKind.allCases.enumerated().map { ($1, $0) })
+        return (readings + carbs + nutrients).sorted {
+            ($0.measuredAt, $0.subjectID, order[$0.subjectKind] ?? 0) < ($1.measuredAt, $1.subjectID, order[$1.subjectKind] ?? 0)
+        }
     }
 
     // MARK: - Conflictos

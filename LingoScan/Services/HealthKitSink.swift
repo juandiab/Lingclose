@@ -8,13 +8,22 @@ final class HealthKitSink: HealthSink {
 
     private static let glucoseType = HKQuantityType(.bloodGlucose)
     private static let carbsType = HKQuantityType(.dietaryCarbohydrates)
+    private static let energyType = HKQuantityType(.dietaryEnergyConsumed)
+    private static let proteinType = HKQuantityType(.dietaryProtein)
+    private static let fatType = HKQuantityType(.dietaryFatTotal)
+    /// Deciden `authorizationStatus`: sin ellos no se escribe nada.
+    private static let coreTypes = [glucoseType, carbsType]
+    /// Energía, proteína y grasa (T-21): opcionales. Si no tienen permiso, solo fallan esas muestras; la glucosa
+    /// no se bloquea por ellas.
+    private static let nutrientTypes = [energyType, proteinType, fatType]
+    private static let shareTypes: Set<HKSampleType> = Set(coreTypes + nutrientTypes)
     private static let mgPerDL = HKUnit.gramUnit(with: .milli).unitDivided(by: .literUnit(with: .deci))
 
     private var isAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
 
     func authorizationStatus() async -> HealthAuthorizationStatus {
         guard isAvailable else { return .unavailable }
-        let statuses = [Self.glucoseType, Self.carbsType].map { store.authorizationStatus(for: $0) }
+        let statuses = Self.coreTypes.map { store.authorizationStatus(for: $0) }
         if statuses.allSatisfy({ $0 == .sharingAuthorized }) { return .authorized }
         if statuses.contains(.sharingDenied) { return .denied }
         return .notDetermined
@@ -24,7 +33,7 @@ final class HealthKitSink: HealthSink {
         guard isAvailable else { throw HealthSinkError.unavailable }
         do {
             try await store.requestAuthorization(
-                toShare: [Self.glucoseType, Self.carbsType], read: [HKObjectType.workoutType()])
+                toShare: Self.shareTypes, read: [HKObjectType.workoutType()])
         } catch {
             throw HealthSinkError.failed(Self.describe(error))
         }
@@ -33,6 +42,17 @@ final class HealthKitSink: HealthSink {
     func write(samples: [HealthSampleSpec]) async throws -> [HealthWriteResult] {
         guard isAvailable else { throw HealthSinkError.unavailable }
         guard await authorizationStatus() == .authorized else { throw HealthSinkError.authorizationDenied }
+        // Nutrientes sin permiso de escritura: `failed` sin llamar a `save` (no bloquean al resto de la tanda).
+        let allowed = samples.map { store.authorizationStatus(for: Self.quantityType(for: $0.kind)) == .sharingAuthorized }
+        guard allowed.allSatisfy({ $0 }) else {
+            let writable = zip(samples, allowed).filter(\.1).map(\.0)
+            var written = writable.isEmpty ? [] : try await write(samples: writable)
+            return zip(samples, allowed).map { spec, ok in
+                ok ? written.removeFirst()
+                   : HealthWriteResult(syncIdentifier: spec.syncIdentifier, outcome: .failed,
+                                       detail: "Salud no permite escribir \(spec.kind.rawValue)")
+            }
+        }
         let hkSamples = samples.map(Self.makeSample)
         do {
             try await store.save(hkSamples)
@@ -67,7 +87,7 @@ final class HealthKitSink: HealthSink {
             let byID = HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeySyncIdentifier, allowedValues: chunk)
             let ours = HKQuery.predicateForObjects(from: HKSource.default())
             let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [byID, ours])
-            for type in [Self.glucoseType, Self.carbsType] {
+            for type in Self.coreTypes + Self.nutrientTypes {
                 do {
                     let descriptor = HKSampleQueryDescriptor(
                         predicates: [.quantitySample(type: type, predicate: predicate)], sortDescriptors: [])
@@ -111,17 +131,24 @@ final class HealthKitSink: HealthSink {
         if let v = spec.origin { metadata[HealthSampleSpec.originKey] = v }
         if let v = spec.trend { metadata[HealthSampleSpec.trendKey] = v }
         if let v = spec.note { metadata[HealthSampleSpec.noteKey] = v }
-        let type: HKQuantityType
-        let quantity: HKQuantity
-        switch spec.kind {
-        case .glucose:
-            type = glucoseType
-            quantity = HKQuantity(unit: mgPerDL, doubleValue: spec.value)
-        case .carbs:
-            type = carbsType
-            quantity = HKQuantity(unit: .gram(), doubleValue: spec.value)
+        let unit: HKUnit = switch spec.unit {
+        case .milligramsPerDeciliter: mgPerDL
+        case .grams: .gram()
+        case .kilocalories: .kilocalorie()
         }
-        return HKQuantitySample(type: type, quantity: quantity, start: spec.date.date, end: spec.date.date, metadata: metadata)
+        let quantity = HKQuantity(unit: unit, doubleValue: spec.value)
+        return HKQuantitySample(type: quantityType(for: spec.kind), quantity: quantity, start: spec.date.date,
+                                end: spec.date.date, metadata: metadata)
+    }
+
+    static func quantityType(for kind: HealthSubjectKind) -> HKQuantityType {
+        switch kind {
+        case .glucose: glucoseType
+        case .carbs: carbsType
+        case .energyKcal: energyType
+        case .proteinG: proteinType
+        case .fatG: fatType
+        }
     }
 
     private static func describe(_ error: any Error) -> String {

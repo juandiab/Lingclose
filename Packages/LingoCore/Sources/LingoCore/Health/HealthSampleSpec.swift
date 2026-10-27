@@ -5,9 +5,11 @@ public struct HealthSampleSpec: Sendable, Hashable {
     public enum Unit: String, Sendable, Hashable {
         case milligramsPerDeciliter = "mg/dL"
         case grams = "g"
+        case kilocalories = "kcal"
     }
 
-    /// `glucose` → `HKQuantityType(.bloodGlucose)`; `carbs` → `.dietaryCarbohydrates`.
+    /// `glucose` → `HKQuantityType(.bloodGlucose)`; `carbs` → `.dietaryCarbohydrates`;
+    /// `energyKcal` → `.dietaryEnergyConsumed`; `proteinG` → `.dietaryProtein`; `fatG` → `.dietaryFatTotal`.
     public let kind: HealthSubjectKind
     public let value: Double
     /// Inicio = fin.
@@ -26,10 +28,16 @@ public struct HealthSampleSpec: Sendable, Hashable {
     public let origin: String?
     /// `com.otalvaro.lingoscan.trend`
     public let trend: Int?
-    /// `com.otalvaro.lingoscan.note` (carbohidratos).
+    /// `com.otalvaro.lingoscan.note` (comidas).
     public let note: String?
 
-    public var unit: Unit { kind == .glucose ? .milligramsPerDeciliter : .grams }
+    public var unit: Unit {
+        switch kind {
+        case .glucose: .milligramsPerDeciliter
+        case .energyKcal: .kilocalories
+        case .carbs, .proteinG, .fatG: .grams
+        }
+    }
 
     public static let metadataPrefix = "com.otalvaro.lingoscan"
     public static let sessionKey = metadataPrefix + ".session"
@@ -109,7 +117,7 @@ public enum HealthSinkError: Error, Sendable, Hashable, CustomStringConvertible 
 /// Destino de las muestras. LingoCore no importa HealthKit: la app inyecta `HealthKitSink`; los tests, uno en memoria.
 public protocol HealthSink: Sendable {
     func authorizationStatus() async -> HealthAuthorizationStatus
-    /// Muestra la hoja de permisos (escritura de glucosa y carbohidratos; lectura de entrenamientos).
+    /// Muestra la hoja de permisos (escritura de glucosa, carbohidratos, energía, proteína y grasa; lectura de entrenamientos).
     func requestAuthorization() async throws
     /// Un resultado por muestra y en el mismo orden. Lanza `unavailable` o `authorizationDenied` si no escribió nada.
     func write(samples: [HealthSampleSpec]) async throws -> [HealthWriteResult]

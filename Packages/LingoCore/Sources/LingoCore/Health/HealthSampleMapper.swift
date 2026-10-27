@@ -38,4 +38,18 @@ public enum HealthSampleMapper {
             syncIdentifier: syncIdentifier ?? meal.eventID, syncVersion: meal.syncVersion, note: meal.note
         )
     }
+
+    public static func spec(for nutrient: HealthNutrientExportable, syncIdentifier: String? = nil) -> HealthSampleSpec {
+        HealthSampleSpec(
+            kind: nutrient.kind, value: nutrient.value, date: nutrient.at,
+            syncIdentifier: syncIdentifier ?? nutrient.syncIdentifier, syncVersion: nutrient.syncVersion, note: nutrient.note
+        )
+    }
+
+    /// Todas las muestras de una comida: carbohidratos desde `event.carbsG` (como siempre) y energía, proteína y
+    /// grasa desde `nutrition.effectiveNutrients`, una por valor conocido. Sin registro solo salen carbohidratos.
+    public static func specs(for event: DiaryEvent, nutrition: MealNutritionRecord?) -> [HealthSampleSpec] {
+        let carbs = HealthCarbExportable(event: event).map { spec(for: $0) }
+        return (carbs.map { [$0] } ?? []) + HealthNutrientExportable.all(event: event, nutrition: nutrition).map { spec(for: $0) }
+    }
 }

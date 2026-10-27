@@ -53,6 +53,24 @@ struct HealthPlanTests {
         #expect(plan.reconcile.map(\.subjectID) == ["u"])
         #expect(plan.write.map(\.subjectID) == ["u"])
     }
+
+    @Test func mealWithKnownKcalAndFatButUnknownProteinYieldsThreeSubjects() async throws {
+        let store = try TestSupport.makeStore()
+        let id = TestSupport.newID()
+        let meal = MealNutritionStoreTests.meal(id)
+        let nutrition = MealNutritionStoreTests.nutrition(id, multiplier: 1.0, overrides: .unknown,
+                                                          base: Nutrients(kcal: 200, carbsG: 30, proteinG: nil, fatG: 5))
+        try await store.saveMeal(event: meal, nutrition: nutrition)
+        let pending = try await store.pendingHealthSubjects()
+        #expect(pending.map(\.subjectKind) == [.carbs, .energyKcal, .fatG])
+        #expect(Set(pending.map(\.subjectID)) == [id])
+        let stored = try #require(try await store.event(id: id))
+        let specs = HealthSampleMapper.specs(for: stored, nutrition: nutrition)
+        #expect(specs.map(\.kind) == [.carbs, .energyKcal, .fatG])
+        #expect(specs.map(\.value) == [30, 200, 5])
+        #expect(specs.map(\.unit) == [.grams, .kilocalories, .grams])
+        #expect(specs.map(\.syncIdentifier) == [id, "\(id):energy_kcal", "\(id):fat_g"])
+    }
 }
 
 struct HealthMapperTests {

@@ -15,7 +15,8 @@ struct HealthDrainSummary: Sendable, Hashable {
 
 /// Drena los sujetos pendientes hacia un `HealthSink` y deja cada intento en el ledger (contrato §5.4 y §7).
 ///
-/// Solo acepta `HealthExportable` y `HealthCarbExportable`, que no se pueden construir desde datos sintéticos.
+/// Solo acepta `HealthExportable`, `HealthCarbExportable` y `HealthNutrientExportable`, que no se pueden construir
+/// desde datos sintéticos.
 /// No hay interruptor en tiempo de ejecución que cambie eso.
 actor HealthExporter {
     static let writerAppID = "com.otalvaro.lingoscan"
@@ -51,7 +52,7 @@ actor HealthExporter {
         self.batchSize = max(1, batchSize)
     }
 
-    /// Pide permisos (escritura de glucosa y carbohidratos; lectura de entrenamientos). La denegación no toca el outbox.
+    /// Pide permisos (escritura de glucosa, carbohidratos, energía, proteína y grasa; lectura de entrenamientos). La denegación no toca el outbox.
     func requestAuthorization() async {
         do {
             try await sink.requestAuthorization()
@@ -125,28 +126,29 @@ actor HealthExporter {
         var errorText: String?
         do {
             // 1. Reconciliar `unknown`: si Health ya tiene la muestra, se registra como `written` sin reescribir.
-            var alreadyThere: Set<String> = []
-            var unreconciled: Set<String> = []
+            // Por sujeto completo: una comida tiene hasta cuatro sujetos con el mismo `subject_id`.
+            var alreadyThere: Set<PendingHealthSubject> = []
+            var unreconciled: Set<PendingHealthSubject> = []
             if !plan.reconcile.isEmpty {
                 let prepared = try await prepare(plan.reconcile)
                 do {
                     let found = try await sink.query(syncIdentifiers: Set(prepared.map(\.spec.syncIdentifier)))
                     for item in prepared where found.contains(item.spec.syncIdentifier) {
                         try await record(item, .written, at: instant)
-                        alreadyThere.insert(item.subject.subjectID)
+                        alreadyThere.insert(item.subject)
                         summary.reconciled += 1
                     }
                 } catch let error as HealthSinkError where error == .authorizationDenied || error == .unavailable {
                     throw error
                 } catch {
                     // Sin saber si existe, no se escribe este sujeto ahora (se reintenta en el próximo drenado).
-                    unreconciled = Set(prepared.map(\.subject.subjectID))
+                    unreconciled = Set(prepared.map(\.subject))
                     errorText = Self.describe(error)
                 }
             }
 
             // 2. Escribir en tandas, en orden de tiempo.
-            let writable = plan.write.filter { !alreadyThere.contains($0.subjectID) && !unreconciled.contains($0.subjectID) }
+            let writable = plan.write.filter { !alreadyThere.contains($0) && !unreconciled.contains($0) }
             var prepared = try await prepare(writable)
             summary.skippedIneligible = writable.count - prepared.count
             while !prepared.isEmpty {
@@ -198,8 +200,11 @@ actor HealthExporter {
 
     /// Estado derivado, último intento y fallos consecutivos de un sujeto.
     private func candidate(for subject: PendingHealthSubject) async throws -> HealthExportPlan.Candidate {
-        let state = try await store.derivedHealthState(subjectID: subject.subjectID, writerAppID: writerAppID)
-        let own = try await store.ledgerEntries(subjectID: subject.subjectID).filter { $0.writerAppID == writerAppID }
+        let state = try await store.derivedHealthState(
+            subjectID: subject.subjectID, writerAppID: writerAppID, subjectKind: subject.subjectKind,
+            currentVersion: subject.revision)
+        let own = try await store.ledgerEntries(subjectID: subject.subjectID, subjectKind: subject.subjectKind)
+            .filter { $0.writerAppID == writerAppID }
         var failures = 0
         for entry in own.reversed() {
             guard entry.result == .failed else { break }
@@ -214,7 +219,7 @@ actor HealthExporter {
         var out: [Prepared] = []
         for subject in subjects {
             // Conserva el identificador ya usado por esta escritora en intentos previos (contrato §7.3).
-            let previousID = try await store.ledgerEntries(subjectID: subject.subjectID)
+            let previousID = try await store.ledgerEntries(subjectID: subject.subjectID, subjectKind: subject.subjectKind)
                 .last { $0.writerAppID == writerAppID }?.syncIdentifier
             switch subject.subjectKind {
             case .glucose:
@@ -228,6 +233,14 @@ actor HealthExporter {
                       let meal = HealthCarbExportable(event: event)
                 else { continue }
                 out.append(Prepared(subject: subject, spec: HealthSampleMapper.spec(for: meal, syncIdentifier: previousID)))
+            case .energyKcal, .proteinG, .fatG:
+                // Valor efectivo actual; si dejó de conocerse, no se escribe nada (la muestra anterior queda).
+                guard let event = try await store.event(id: subject.subjectID),
+                      let nutrient = HealthNutrientExportable(
+                        event: event, nutrition: try await store.mealNutrition(eventID: subject.subjectID),
+                        kind: subject.subjectKind)
+                else { continue }
+                out.append(Prepared(subject: subject, spec: HealthSampleMapper.spec(for: nutrient, syncIdentifier: previousID)))
             }
         }
         return out

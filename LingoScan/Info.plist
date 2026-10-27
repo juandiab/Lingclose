@@ -56,7 +56,7 @@
 	<key>NSHealthShareUsageDescription</key>
 	<string>LingoScan lee tus entrenamientos de Apple Salud para mostrarlos junto a la curva de glucosa.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>LingoScan guarda tus lecturas de glucosa y carbohidratos en Apple Salud.</string>
+	<string>LingoScan guarda en Apple Salud tus lecturas de glucosa y, de cada comida, los carbohidratos, las calorías, las proteínas y las grasas.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

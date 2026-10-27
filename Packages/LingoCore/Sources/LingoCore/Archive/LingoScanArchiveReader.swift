@@ -264,8 +264,8 @@ public struct LingoScanArchiveReader: Sendable {
             switch l.subjectKind {
             case .glucose:
                 guard RecordID(parsing: l.subjectID) != nil else { throw lineError(file, n, "subject_id de glucosa no es un record_id") }
-            case .carbs:
-                guard RecordID.isLowercaseUUIDv4(l.subjectID) else { throw lineError(file, n, "subject_id de carbohidratos no es un event_id") }
+            case .carbs, .energyKcal, .proteinG, .fatG:
+                guard RecordID.isLowercaseUUIDv4(l.subjectID) else { throw lineError(file, n, "subject_id de comida no es un event_id") }
             }
             out.append(l)
         }

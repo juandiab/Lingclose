@@ -47,3 +47,10 @@ Cada agente devuelve: archivos cambiados, comandos ejecutados con su salida real
 3. Skill de revisión correspondiente sobre los archivos tocados.
 4. Actualizar `TAREAS.md` (estado, commit) y, si cambia una decisión, `DECISIONES.md`.
 5. Commit en este repo con mensaje `T-nn: <qué>`.
+
+## Con el sensor activo (desde el 27-oct-2026, 17:55)
+
+- Antes de **cada** instalación en el iPhone: copiar `Library/Application Support/LingoScan/lingoscan.sqlite` (+ `-wal`, `-shm`) del dispositivo con `devicectl device copy from` a `~/Documents/LingoScan-backup/<fecha-hora>/`, y comprobar que la carpeta de iCloud tiene una copia `.lingoscan` y de recuperación del día.
+- Después de instalar: comprobar en el registro (`event_log`) que la sesión sigue `authenticated` y que llegan lecturas; si no, no tocar el sensor ni reactivar: restaurar desde el backup y avisar a Juampa.
+- Las migraciones de esquema son solo aditivas (tablas o columnas nuevas); nunca se borra ni se reescribe `readings`, `sensor_sessions`, `events` ni el ledger. Ninguna tarea escribe en el sensor por NFC (`0xA0`/`0xA8` siguen prohibidos fuera del flujo de activación confirmado).
+- Nunca desinstalar la app, cambiar bundle ID/team ni borrar el Keychain: ahí viven los secretos de la sesión activa.

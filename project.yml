@@ -55,6 +55,21 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.otalvaro.lingoscan.tests
         GENERATE_INFOPLIST_FILE: YES
+  LingoScanHealthSimTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - LingoScanHealthSimTests
+      - path: LingoScanTests/HealthTestSupport.swift
+    dependencies:
+      - target: LingoScan
+      - package: LingoCore
+        product: LingoCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.otalvaro.lingoscan.healthsimtests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) LINGOSCAN_HEALTH_SIM_TESTS"
 schemes:
   LingoScan:
     build:
@@ -64,3 +79,11 @@ schemes:
     test:
       targets:
         - LingoScanTests
+  LingoScanHealthSim:
+    build:
+      targets:
+        LingoScan: all
+        LingoScanHealthSimTests: [test]
+    test:
+      targets:
+        - LingoScanHealthSimTests

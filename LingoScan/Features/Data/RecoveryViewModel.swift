@@ -11,6 +11,8 @@ final class RecoveryViewModel {
     private(set) var message: String?
     private(set) var isWorking = false
     var passphrase = ""
+    /// Guardar la frase en el Llavero del iPhone (solo este dispositivo) para no pedirla en cada arranque.
+    var rememberPassphrase = false
     var includeMaterial = false
 
     let service: RecoveryService
@@ -23,6 +25,7 @@ final class RecoveryViewModel {
 
     /// Sigue los cambios del servicio (exportaciones de transición incluidas) mientras la vista vive.
     func observe() async {
+        await service.start()
         await refreshImported()
         for await status in await service.updates() {
             self.status = status
@@ -32,9 +35,12 @@ final class RecoveryViewModel {
 
     func usePassphrase() async {
         await run {
-            try await self.service.setPassphrase(self.passphrase)
+            let remember = self.rememberPassphrase
+            try await self.service.setPassphrase(self.passphrase, remember: remember)
             self.passphrase = ""
-            return String(localized: "recovery.passphrase.saved", defaultValue: "Frase guardada solo en memoria hasta cerrar la app")
+            return remember
+                ? String(localized: "recovery.passphrase.remembered", defaultValue: "Frase guardada en el Llavero de este iPhone")
+                : String(localized: "recovery.passphrase.saved", defaultValue: "Frase guardada solo en memoria hasta cerrar la app")
         }
     }
 

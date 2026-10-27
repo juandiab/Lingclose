@@ -5298,16 +5298,16 @@
     "recovery.passphrase.inMemory" : {
       "extractionState" : "manual",
       "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Frase en memoria"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Passphrase in memory"
+            "value" : "Passphrase in memory until the app closes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase en memoria hasta cerrar la app"
           }
         }
       }
@@ -6345,6 +6345,142 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opens the Diary tab to view and edit entries"
+          }
+        }
+      }
+    },
+    "recovery.error.remember" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The passphrase could not be saved in the Keychain; it stays in memory only"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo guardar la frase en el Llavero; queda solo en memoria"
+          }
+        }
+      }
+    },
+    "recovery.folder.container" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved in the app's own iCloud Drive: no folder has been chosen in Data yet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guarda en el iCloud Drive de la app: aún no hay carpeta elegida en Datos."
+          }
+        }
+      }
+    },
+    "recovery.folder.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpeta"
+          }
+        }
+      }
+    },
+    "recovery.folder.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The chosen folder is no longer accessible: saved in the app's Documents. Choose the folder again in Data."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La carpeta elegida ya no es accesible: se guarda en Documentos de la app. Elige la carpeta de nuevo en Datos."
+          }
+        }
+      }
+    },
+    "recovery.passphrase.footer.remember" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored in this iPhone's Keychain, protected by the passcode and Face ID, and never uploaded to iCloud. Also write it down outside the phone: without it there is no recovery."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guarda en el Llavero de este iPhone, protegida por el código y Face ID, y no se sube a iCloud. Anótala también fuera del teléfono: sin ella no hay recuperación."
+          }
+        }
+      }
+    },
+    "recovery.passphrase.inKeychain" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passphrase saved in this iPhone's Keychain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase guardada en el Llavero de este iPhone"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.remember" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remember in Keychain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordar en el Llavero"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.remembered" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passphrase saved in this iPhone's Keychain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase guardada en el Llavero de este iPhone"
           }
         }
       }

@@ -1,3 +1,4 @@
+import LingoCore
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -53,7 +54,11 @@ struct RecoveryView: View {
     private var passphraseSection: some View {
         Section {
             if model.status.hasPassphrase {
-                Label(String(localized: "recovery.passphrase.inMemory", defaultValue: "Frase en memoria"), systemImage: "key.fill")
+                if model.status.passphraseRemembered {
+                    Label(String(localized: "recovery.passphrase.inKeychain", defaultValue: "Frase guardada en el Llavero de este iPhone"), systemImage: "key.icloud.fill")
+                } else {
+                    Label(String(localized: "recovery.passphrase.inMemory", defaultValue: "Frase en memoria hasta cerrar la app"), systemImage: "key.fill")
+                }
                 Button(String(localized: "recovery.passphrase.forget", defaultValue: "Olvidar frase"), role: .destructive) {
                     Task { await model.forgetPassphrase() }
                 }
@@ -61,25 +66,35 @@ struct RecoveryView: View {
                 SecureField(String(localized: "recovery.passphrase.field", defaultValue: "Frase (12 caracteres o más)"), text: $model.passphrase)
                     .textContentType(.password)
                     .submitLabel(.done)
-                    .onSubmit { Task { await model.usePassphrase() } }
+                    .onSubmit { if passphraseIsLongEnough { Task { await model.usePassphrase() } } }
+                Toggle(String(localized: "recovery.passphrase.remember", defaultValue: "Recordar en el Llavero"), isOn: $model.rememberPassphrase)
                 Button(String(localized: "recovery.passphrase.use", defaultValue: "Usar frase")) {
                     Task { await model.usePassphrase() }
                 }
-                .disabled(model.passphrase.isEmpty)
+                .disabled(!passphraseIsLongEnough)
             }
         } header: {
             Text(String(localized: "recovery.passphrase.title", defaultValue: "Frase de recuperación"))
         } footer: {
-            Text(String(localized: "recovery.passphrase.footer", defaultValue: "Se pide una vez por sesión de la app y no se guarda en el teléfono. Anótala fuera (gestor de contraseñas o papel): sin ella no hay recuperación."))
+            Text(passphraseFooter)
         }
+    }
+
+    /// Mismo mínimo que el servicio, para que el botón no ofrezca lo que va a fallar.
+    private var passphraseIsLongEnough: Bool {
+        RecoveryPassphrase.normalized(model.passphrase).count >= RecoveryService.minimumPassphraseLength
+    }
+
+    private var passphraseFooter: String {
+        if model.rememberPassphrase, !model.status.hasPassphrase {
+            return String(localized: "recovery.passphrase.footer.remember", defaultValue: "Se guarda en el Llavero de este iPhone, protegida por el código y Face ID, y no se sube a iCloud. Anótala también fuera del teléfono: sin ella no hay recuperación.")
+        }
+        return String(localized: "recovery.passphrase.footer", defaultValue: "Se pide una vez por sesión de la app y no se guarda en el teléfono. Anótala fuera (gestor de contraseñas o papel): sin ella no hay recuperación.")
     }
 
     private var exportSection: some View {
         Section {
-            if model.status.exportFolderIsFallback {
-                Label(String(localized: "recovery.folder.fallback", defaultValue: "Se guarda en Documentos de la app: aún no hay carpeta elegida. Compártelo a otro sitio tras exportar."), systemImage: "folder.badge.questionmark")
-                    .font(.footnote)
-            }
+            folderRow
             if !model.status.pendingSessionIDs.isEmpty {
                 Label(String(localized: "recovery.pending", defaultValue: "Exportación pendiente: introduce la frase"), systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
@@ -108,6 +123,24 @@ struct RecoveryView: View {
             }
         } header: {
             Text(String(localized: "recovery.export.title", defaultValue: "Exportar"))
+        }
+    }
+
+    @ViewBuilder
+    private var folderRow: some View {
+        switch model.status.exportFolderKind {
+        case .chosen, .fixed:
+            LabeledContent(String(localized: "recovery.folder.label", defaultValue: "Carpeta"), value: model.status.exportFolderName)
+        case .appICloudContainer:
+            Label(String(localized: "recovery.folder.container", defaultValue: "Se guarda en el iCloud Drive de la app: aún no hay carpeta elegida en Datos."), systemImage: "folder.badge.questionmark")
+                .font(.footnote)
+        case .documents:
+            Label(String(localized: "recovery.folder.fallback", defaultValue: "Se guarda en Documentos de la app: aún no hay carpeta elegida. Compártelo a otro sitio tras exportar."), systemImage: "folder.badge.questionmark")
+                .font(.footnote)
+        case .unavailable:
+            Label(String(localized: "recovery.folder.unavailable", defaultValue: "La carpeta elegida ya no es accesible: se guarda en Documentos de la app. Elige la carpeta de nuevo en Datos."), systemImage: "folder.badge.minus")
+                .font(.footnote)
+                .foregroundStyle(.orange)
         }
     }
 

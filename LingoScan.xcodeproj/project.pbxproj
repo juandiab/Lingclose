@@ -94,6 +94,7 @@
 		6E3A37E24096E4089B4DF4B0 /* AppEnvironment+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B19338DAA54BD67B74F19 /* AppEnvironment+UI.swift */; };
 		7401C48468239E987CF7C550 /* ImportLineRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE686111D625DC4550810749 /* ImportLineRow.swift */; };
 		7424D94EB709F1AE89E265A9 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8FB3975E80C230A9028D3A /* Tokens.swift */; };
+		7523A1F2A19E34D2D81357DF /* SecretItemStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDA40595CD1413CF1073EB4 /* SecretItemStoring.swift */; };
 		7685AB70AAA6F9B71CCA238D /* Duration+TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BD58E067E1D6A95AFC3FE0 /* Duration+TimeInterval.swift */; };
 		7750C977F95F9B11D7F316E9 /* RecoveryExportHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5D780DB93FCBCFF1C460AF /* RecoveryExportHook.swift */; };
 		77BE18250F081276060B82C7 /* MetricText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442864B4CBEA0EEB8630E2D3 /* MetricText.swift */; };
@@ -279,6 +280,7 @@
 		1B9A19BD22E9F9C1C3CED300 /* NFCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCService.swift; sourceTree = "<group>"; };
 		1BBD7683D1347B613B6B4690 /* DiaryMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryMark.swift; sourceTree = "<group>"; };
 		1BBDC85F733FAD1AE9981D70 /* TodayQuickAddTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayQuickAddTests.swift; sourceTree = "<group>"; };
+		1BDA40595CD1413CF1073EB4 /* SecretItemStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretItemStoring.swift; sourceTree = "<group>"; };
 		1D12B1441927E27B365ECEA4 /* Eventually.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventually.swift; sourceTree = "<group>"; };
 		1DBE8DF8DE14A6FDF5135D4F /* TrendDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendDirection.swift; sourceTree = "<group>"; };
 		1F706F4A80C8F0A402D8F23E /* AppLaunchModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchModeTests.swift; sourceTree = "<group>"; };
@@ -620,6 +622,7 @@
 				3CEFE1DF7B0C415478B2E41B /* RecoveryService.swift */,
 				5DE71D1DBC7AB51AF6F816DE /* RoundWhiteDiscSensorLink.swift */,
 				CA48AA33D433A62B540D0030 /* RWDKSensorFamily.swift */,
+				1BDA40595CD1413CF1073EB4 /* SecretItemStoring.swift */,
 				EA09857ECE81D9E87E0D2371 /* SensorLink.swift */,
 				1350D4C7551519B6B1F0A606 /* SensorLinkError.swift */,
 				A11FE12827E4E00784E73758 /* SensorLinkEvent.swift */,
@@ -1132,6 +1135,7 @@
 				5FBC488BB8B6F6C8D66B569E /* ReportsView.swift in Sources */,
 				64F64E06BA1FFE566570FDDB /* RootTabView.swift in Sources */,
 				52B94A8DDC2B1E1F2706051E /* RoundWhiteDiscSensorLink.swift in Sources */,
+				7523A1F2A19E34D2D81357DF /* SecretItemStoring.swift in Sources */,
 				CFFEEAA46278D2499529AF0A /* SelectionReadout.swift in Sources */,
 				075F1DE2C810806BEFC8A2C7 /* SensorActionFailure.swift in Sources */,
 				EC99E28A06B93F4A7C142D6B /* SensorActions.swift in Sources */,

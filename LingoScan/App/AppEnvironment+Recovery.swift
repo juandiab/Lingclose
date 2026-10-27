@@ -15,8 +15,9 @@ extension AppEnvironment {
         RecoveryContext.current = RecoveryContext(
             service: service, connector: RecoveryLiveSensorConnector(coordinator: coordinator)
         )
-        if let hook = pairingStore.recoveryHook as? LiveRecoveryExportHook {
-            Task { await hook.attach(service) }
+        Task {
+            if let hook = pairingStore.recoveryHook as? LiveRecoveryExportHook { await hook.attach(service) }
+            await service.start()
         }
         return service
     }

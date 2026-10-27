@@ -163,3 +163,110 @@ struct RecoveryServiceTests {
         await #expect(throws: RecoveryCryptoError.authenticationFailed) { try await service.importData(files[2].data) }
     }
 }
+
+/// Secreto en memoria: sustituye al Keychain en pruebas.
+final class InMemorySecretItem: SecretItemStoring, @unchecked Sendable {
+    private var data: Data?
+    private let lock = NSLock()
+    func read() throws -> Data? { lock.withLock { data } }
+    func save(_ data: Data) throws { lock.withLock { self.data = data } }
+    func delete() throws { lock.withLock { data = nil } }
+}
+
+/// Carpeta de exportación (bookmark elegido, como el `.lingoscan`) y frase recordada en el Llavero.
+@Suite(.serialized)
+struct RecoveryFolderAndPassphraseTests {
+    @Test func exportsIntoTheChosenFolderBookmark() async throws {
+        let chosen = try RecoveryServiceTests.tempDir("chosen")
+        let bookmarks = InMemoryBookmarkStore()
+        bookmarks.save(try FolderBookmark.make(from: chosen))
+        let hook = LiveRecoveryExportHook()
+        let pairing = InMemoryPairingStateStore(recoveryHook: hook)
+        let h = try await CoordinatorHarness(pairing: pairing)
+        let service = RecoveryService(
+            pairingStore: pairing, credentials: h.credentials, store: h.store, exportDirectory: nil, bookmarks: bookmarks,
+            fallbackContainer: { nil }, stateDirectory: try RecoveryServiceTests.tempDir("state"), evidenceItem: nil,
+            passphraseItem: nil, iterations: 1_000
+        )
+        try await service.setPassphrase(RecoveryServiceTests.passphrase)
+        await hook.attach(service)
+        await service.start()
+        let status = await service.status()
+        #expect(status.exportFolderKind == .chosen)
+        #expect(!status.exportFolderIsFallback)
+        #expect(status.exportFolderName == chosen.lastPathComponent)
+
+        _ = try await h.pairUntilSubscribed()
+        #expect(try RecoveryServiceTests.exported(chosen).count == 3, "las tres copias van a la carpeta elegida")
+        #expect(await service.status().lastExport?.fileURL.deletingLastPathComponent().standardizedFileURL == chosen.standardizedFileURL)
+    }
+
+    @Test func withoutBookmarkFallsBackToContainerThenDocuments() async throws {
+        let container = try RecoveryServiceTests.tempDir("container")
+        let pairing = InMemoryPairingStateStore(recoveryHook: LiveRecoveryExportHook())
+        let withContainer = RecoveryService(
+            pairingStore: pairing, credentials: nil, store: nil, exportDirectory: nil, bookmarks: InMemoryBookmarkStore(),
+            fallbackContainer: { container }, stateDirectory: try RecoveryServiceTests.tempDir("state"), evidenceItem: nil,
+            passphraseItem: nil, iterations: 1_000
+        )
+        await withContainer.start()
+        #expect(await withContainer.status().exportFolderKind == .appICloudContainer)
+        #expect(await withContainer.status().exportFolderIsFallback)
+
+        let withoutICloud = RecoveryService(
+            pairingStore: pairing, credentials: nil, store: nil, exportDirectory: nil, bookmarks: InMemoryBookmarkStore(),
+            fallbackContainer: { nil }, stateDirectory: try RecoveryServiceTests.tempDir("state"), evidenceItem: nil,
+            passphraseItem: nil, iterations: 1_000
+        )
+        await withoutICloud.start()
+        #expect(await withoutICloud.status().exportFolderKind == .documents)
+
+        // Bookmark que ya no resuelve: no se cae en silencio al contenedor; la UI avisa.
+        let gone = try RecoveryServiceTests.tempDir("gone")
+        let stale = InMemoryBookmarkStore()
+        stale.save(try FolderBookmark.make(from: gone))
+        try FileManager.default.removeItem(at: gone)
+        let unavailable = RecoveryService(
+            pairingStore: pairing, credentials: nil, store: nil, exportDirectory: nil, bookmarks: stale,
+            fallbackContainer: { container }, stateDirectory: try RecoveryServiceTests.tempDir("state"), evidenceItem: nil,
+            passphraseItem: nil, iterations: 1_000
+        )
+        await unavailable.start()
+        #expect(await unavailable.status().exportFolderKind == .unavailable)
+    }
+
+    @Test func rememberedPassphraseSurvivesANewInstanceAndForgetErasesIt() async throws {
+        let item = InMemorySecretItem()
+        let pairing = InMemoryPairingStateStore(recoveryHook: LiveRecoveryExportHook())
+        func make() throws -> RecoveryService {
+            RecoveryService(
+                pairingStore: pairing, credentials: nil, store: nil, exportDirectory: try RecoveryServiceTests.tempDir("export"),
+                stateDirectory: try RecoveryServiceTests.tempDir("state"), evidenceItem: nil, passphraseItem: item, iterations: 1_000
+            )
+        }
+        // Por defecto no se recuerda.
+        let first = try make()
+        try await first.setPassphrase(RecoveryServiceTests.passphrase)
+        #expect(await first.status().hasPassphrase)
+        #expect(await first.status().passphraseRemembered == false)
+        #expect(try item.read() == nil)
+        #expect(await (try make()).status().hasPassphrase == false, "sin recordar, otra ejecución no la tiene")
+
+        // Recordar: otra instancia (otro arranque) la tiene sin pedirla.
+        try await first.setPassphrase(RecoveryServiceTests.passphrase, remember: true)
+        #expect(await first.status().passphraseRemembered)
+        #expect(try item.read() == Data(RecoveryServiceTests.passphrase.utf8))
+        let second = try make()
+        #expect(await second.status().hasPassphrase)
+        #expect(await second.status().passphraseRemembered)
+
+        // Olvidar borra la copia del Llavero.
+        await second.forgetPassphrase()
+        #expect(try item.read() == nil)
+        #expect(await (try make()).status().hasPassphrase == false)
+
+        // Una frase corta en el Llavero se ignora.
+        try item.save(Data("corta".utf8))
+        #expect(await (try make()).status().hasPassphrase == false)
+    }
+}

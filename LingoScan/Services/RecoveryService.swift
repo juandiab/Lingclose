@@ -21,29 +21,38 @@ actor RecoveryService {
     static let ledgerFileName = "recovery-ledger.json"
     static let evidenceService = "com.otalvaro.lingoscan.recovery"
     static let evidenceAccount = "recovery-evidence"
+    static let passphraseAccount = "recovery-passphrase"
     static let minimumPassphraseLength = 12
 
     private let pairingStore: any PairingStatePersisting
     private let credentials: (any PairingCredentialsProviding)?
     private let store: SQLiteStore?
-    private let exportDirectory: URL
-    private let exportDirectoryIsFallback: Bool
+    /// Carpeta fija (tests). `nil` resuelve el bookmark de la carpeta elegida en cada exportación.
+    private let fixedExportDirectory: URL?
+    private let bookmarks: any FolderBookmarkStoring
+    private let fallbackContainer: @Sendable () async -> URL?
     private let ledgerURL: URL
     private let evidenceItem: KeychainItem?
+    private let passphraseItem: (any SecretItemStoring)?
     private let iterations: UInt32
     private let appID: String
     private let appVersion: String
     private let now: @Sendable () -> Date
 
     private var passphrase: String?
+    private var passphraseRemembered = false
+    private var folder: ExportFolder
     private var ledger: Ledger
     private var evidence: Evidence
     private var lastError: String?
     private var observers: [UUID: AsyncStream<Status>.Continuation] = [:]
 
     /// - Parameters:
-    ///   - exportDirectory: carpeta elegida por el usuario. Mientras T-10 no deje `FolderBookmark`,
-    ///     es `Documents/` y `exportDirectoryIsFallback` lo dice en la UI.
+    ///   - exportDirectory: carpeta fija (tests). Con `nil`, cada exportación resuelve el mismo bookmark que el
+    ///     archivo `.lingoscan` (`bookmarks`); sin carpeta elegida cae al contenedor iCloud propio y, si no hay
+    ///     iCloud, a `Documents/`. `Status.exportFolder` lo dice en la UI.
+    ///   - passphraseItem: ítem del Keychain donde se guarda la frase solo si Juampa marca "recordar"
+    ///     (`AfterFirstUnlockThisDeviceOnly`, sin iCloud). `nil` la deja solo en memoria (tests).
     ///   - stateDirectory: donde vive `recovery-ledger.json` (sin secretos).
     ///   - evidenceItem: ítem de Keychain para las copias íntegras de conflictos e intentos históricos
     ///     (contienen secretos). `nil` las deja solo en memoria (tests).
@@ -52,10 +61,12 @@ actor RecoveryService {
         pairingStore: any PairingStatePersisting,
         credentials: (any PairingCredentialsProviding)?,
         store: SQLiteStore?,
-        exportDirectory: URL = .documentsDirectory,
-        exportDirectoryIsFallback: Bool = true,
+        exportDirectory: URL? = nil,
+        bookmarks: any FolderBookmarkStoring = UserDefaultsFolderBookmarkStore(),
+        fallbackContainer: @escaping @Sendable () async -> URL? = ArchiveService.iCloudContainerDocuments,
         stateDirectory: URL = .applicationSupportDirectory,
         evidenceItem: KeychainItem? = KeychainItem(service: RecoveryService.evidenceService, account: RecoveryService.evidenceAccount),
+        passphraseItem: (any SecretItemStoring)? = KeychainItem(service: RecoveryService.evidenceService, account: RecoveryService.passphraseAccount),
         iterations: UInt32 = RecoveryKDF.defaultIterations,
         appID: String = SensorSessionCoordinator.appID,
         appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0",
@@ -64,10 +75,13 @@ actor RecoveryService {
         self.pairingStore = pairingStore
         self.credentials = credentials
         self.store = store
-        self.exportDirectory = exportDirectory
-        self.exportDirectoryIsFallback = exportDirectoryIsFallback
+        self.fixedExportDirectory = exportDirectory
+        self.bookmarks = bookmarks
+        self.fallbackContainer = fallbackContainer
+        self.folder = exportDirectory.map { ExportFolder(url: $0, kind: .fixed) } ?? ExportFolder(url: .documentsDirectory, kind: .documents)
         self.ledgerURL = stateDirectory.appending(path: Self.ledgerFileName)
         self.evidenceItem = evidenceItem
+        self.passphraseItem = passphraseItem
         self.iterations = iterations
         self.appID = appID
         self.appVersion = appVersion
@@ -77,25 +91,78 @@ actor RecoveryService {
         self.evidence = (try? evidenceItem?.read())
             .flatMap { $0 }
             .flatMap { try? JSONDecoder().decode(Evidence.self, from: $0) } ?? Evidence()
+        // Frase recordada en el Keychain (opcional): disponible desde el arranque, sin pedirla.
+        if let data = try? passphraseItem?.read(), let remembered = String(data: data, encoding: .utf8),
+           RecoveryPassphrase.normalized(remembered).count >= Self.minimumPassphraseLength {
+            passphrase = remembered
+            passphraseRemembered = true
+        }
     }
 
-    // MARK: - Frase (solo memoria)
+    /// Resuelve la carpeta de exportación y hace las exportaciones pendientes si hay frase (recordada o dada).
+    /// Lo llama `installRecovery()` al arrancar y la pantalla de Recuperación al abrirse.
+    func start() async {
+        await refreshFolder()
+        if passphrase != nil { await flushPending() }
+        publish()
+    }
+
+    // MARK: - Frase (memoria y, si se pide, Keychain)
 
     var hasPassphrase: Bool { passphrase != nil }
 
-    /// Guarda la frase en memoria y hace las exportaciones pendientes.
-    func setPassphrase(_ text: String) async throws {
+    /// Guarda la frase en memoria (y en el Keychain si `remember`) y hace las exportaciones pendientes.
+    func setPassphrase(_ text: String, remember: Bool = false) async throws {
         guard RecoveryPassphrase.normalized(text).count >= Self.minimumPassphraseLength else {
             throw RecoveryServiceError.passphraseTooShort(minimum: Self.minimumPassphraseLength)
         }
         passphrase = text
+        if remember, let passphraseItem {
+            do {
+                try passphraseItem.save(Data(text.utf8))
+                passphraseRemembered = true
+            } catch {
+                passphraseRemembered = false
+                lastError = String(localized: "recovery.error.remember", defaultValue: "No se pudo guardar la frase en el Llavero; queda solo en memoria")
+            }
+        } else {
+            try? passphraseItem?.delete()
+            passphraseRemembered = false
+        }
         await flushPending()
         publish()
     }
 
+    /// Olvida la frase en memoria y borra la copia del Keychain si la había.
     func forgetPassphrase() {
         passphrase = nil
+        passphraseRemembered = false
+        try? passphraseItem?.delete()
         publish()
+    }
+
+    // MARK: - Carpeta de exportación
+
+    /// Carpeta elegida (bookmark) > carpeta fija (tests) > contenedor iCloud propio > Documents.
+    func refreshFolder() async {
+        if let fixedExportDirectory {
+            folder = ExportFolder(url: fixedExportDirectory, kind: .fixed)
+            return
+        }
+        if let data = bookmarks.load() {
+            if let resolved = try? FolderBookmark.resolve(data) {
+                if let fresh = resolved.refreshedData { bookmarks.save(fresh) }
+                folder = ExportFolder(url: resolved.url, kind: .chosen)
+                return
+            }
+            folder = ExportFolder(url: .documentsDirectory, kind: .unavailable)
+            return
+        }
+        if let container = await fallbackContainer() {
+            folder = ExportFolder(url: container, kind: .appICloudContainer)
+            return
+        }
+        folder = ExportFolder(url: .documentsDirectory, kind: .documents)
     }
 
     // MARK: - Exportación
@@ -190,9 +257,14 @@ actor RecoveryService {
             producer: .init(appID: appID, producerTag: Self.producerTag, appVersion: appVersion), iterations: iterations
         )
         let fileName = Self.fileName(createdUTC: createdUTC, archiveID: archiveID)
-        try FileManager.default.createDirectory(at: exportDirectory, withIntermediateDirectories: true)
+        await refreshFolder()
+        let exportDirectory = folder.url
         let url = exportDirectory.appending(path: fileName)
-        try envelope.encoded().write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        let data = try envelope.encoded()
+        try SecurityScopedAccess.run(exportDirectory) {
+            try FileManager.default.createDirectory(at: exportDirectory, withIntermediateDirectories: true)
+            try data.write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        }
 
         for (id, session) in zip(sessionIDs, sessions) {
             ledger.exportSequences[id] = session.sequence
@@ -493,14 +565,15 @@ actor RecoveryService {
     func status() -> Status {
         Status(
             hasPassphrase: passphrase != nil,
+            passphraseRemembered: passphraseRemembered,
             pendingSessionIDs: ledger.pendingSessionIDs,
             lastExport: ledger.lastExport,
             lastError: lastError,
             conflicts: ledger.conflicts,
             historical: ledger.historical,
             imported: ledger.imported.values.sorted { $0.importedAt > $1.importedAt },
-            exportFolderName: exportDirectory.lastPathComponent,
-            exportFolderIsFallback: exportDirectoryIsFallback
+            exportFolderName: folder.url.lastPathComponent,
+            exportFolderKind: folder.kind
         )
     }
 
@@ -681,8 +754,27 @@ extension RecoveryService {
         var historicalCount: Int { decisions.filter { if case .historicalAttempt = $0 { true } else { false } }.count }
     }
 
+    /// Dónde se escribe el archivo de recuperación y por qué.
+    struct ExportFolder: Sendable, Equatable {
+        enum Kind: Sendable, Equatable {
+            /// Carpeta elegida por Juampa (bookmark del archivo `.lingoscan`).
+            case chosen
+            /// Carpeta fija pasada al `init` (tests).
+            case fixed
+            /// Sin carpeta elegida: contenedor iCloud propio de la app.
+            case appICloudContainer
+            /// Sin carpeta ni iCloud: `Documents/` de la app.
+            case documents
+            /// Había carpeta elegida pero el bookmark ya no resuelve: se escribe en `Documents/` y la UI avisa.
+            case unavailable
+        }
+        let url: URL
+        let kind: Kind
+    }
+
     struct Status: Sendable, Equatable {
         var hasPassphrase: Bool
+        var passphraseRemembered: Bool
         var pendingSessionIDs: [String]
         var lastExport: ExportRecord?
         var lastError: String?
@@ -690,11 +782,14 @@ extension RecoveryService {
         var historical: [HistoricalSummary]
         var imported: [ImportRecord]
         var exportFolderName: String
-        var exportFolderIsFallback: Bool
+        var exportFolderKind: ExportFolder.Kind
 
-        static let empty = Status(hasPassphrase: false, pendingSessionIDs: [], lastExport: nil, lastError: nil,
-                                  conflicts: [], historical: [], imported: [], exportFolderName: "Documents",
-                                  exportFolderIsFallback: true)
+        /// `true` salvo que se escriba en la carpeta elegida por Juampa (o la fija de los tests).
+        var exportFolderIsFallback: Bool { exportFolderKind != .chosen && exportFolderKind != .fixed }
+
+        static let empty = Status(hasPassphrase: false, passphraseRemembered: false, pendingSessionIDs: [], lastExport: nil,
+                                  lastError: nil, conflicts: [], historical: [], imported: [], exportFolderName: "Documents",
+                                  exportFolderKind: .documents)
     }
 
     struct ImportedSessionDetail: Sendable, Equatable {

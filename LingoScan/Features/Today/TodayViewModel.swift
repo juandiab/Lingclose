@@ -18,6 +18,8 @@ final class TodayViewModel {
     private(set) var segments: [GlucoseSegment] = []
     private(set) var gaps: [GlucoseGap] = []
     private(set) var marks: [DiaryMark] = []
+    /// Tiempo en rango, media y SD del período visible (informativo, no médico).
+    private(set) var stats = BasicStats(samples: [])
     private(set) var sensor: SensorStatusSnapshot = .noSensor
     private(set) var failure: LoadFailure?
     /// `true` tras la primera carga, para no mostrar el estado vacío antes de tiempo.
@@ -137,6 +139,12 @@ final class TodayViewModel {
             let newSegments = GlucoseSegmenter.segments(from: newReadings.compactMap(GlucosePoint.init))
             segments = newSegments
             gaps = GlucoseSegmenter.gaps(in: newSegments)
+            stats = BasicStats(
+                samples: newSegments.flatMap(\.points).map {
+                    BasicStats.Sample(measuredAt: UTCInstant($0.date), valueMgdl: $0.value)
+                },
+                range: Tokens.ReferenceRange.bounds,
+                window: range)
             marks = newEvents.compactMap(DiaryMark.init).sorted { $0.date < $1.date }
             failure = nil
         } catch {

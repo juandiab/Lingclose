@@ -27,11 +27,11 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-08 | 1 | Opus | SensorSessionCoordinator y NFCService | T-03, T-05, T-07 | cerrada |
 | T-11 | 1 | Sonnet | Shell de la app, Hoy y Sensor con Liquid Glass | T-06, T-07 | cerrada |
 | T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | cerrada |
-| T-09 | 2a | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | en verificación |
-| T-10 | 2a | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | en verificación |
-| T-19 | 2a | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | en verificación |
-| T-12a | 2a | Sonnet | Diario, Datos, Ajustes y gráfica básica (sin reportes avanzados) | T-09, T-10, T-11 | pendiente |
-| T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | en verificación (falta cableado en Ajustes y en) |
+| T-09 | 2a | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | cerrada |
+| T-10 | 2a | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | cerrada |
+| T-19 | 2a | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | cerrada |
+| T-12a | 2a | Sonnet | Diario, Datos, Ajustes y gráfica básica (sin reportes avanzados) | T-09, T-10, T-11 | cerrada |
+| T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | cerrada |
 | T-15 | 2a | Fable + Sonnet | Pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) con paquetes de ambas apps y el verificador externo; app de prueba solo si hace falta | T-10, T-19 | pendiente |
 | T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2a cerrada (T-09, T-10, T-12a, T-13, T-15, **T-19**) | pendiente |
 | T-11b | 2a | Sonnet | Hoy según la referencia de la caja Lingo: navegación por día, 6/12/24 h, picos sombreados con índice, marcadores de comida, arrastre con lectura, "+" para registrar | T-12a | pendiente |

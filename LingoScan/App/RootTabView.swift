@@ -4,6 +4,7 @@ import SwiftUI
 struct RootTabView: View {
     @State private var todayViewModel: TodayViewModel
     @State private var sensorViewModel: SensorViewModel
+    @State private var ui: AppUIModels
     private let identityImport: IdentityImportModel?
 
     /// Fuentes reales: `SQLiteStore` y `SensorSessionCoordinator`.
@@ -14,6 +15,7 @@ struct RootTabView: View {
         _sensorViewModel = State(initialValue: SensorViewModel(
             statusSource: environment.sensorStatus, actions: environment.sensorActions
         ))
+        _ui = State(initialValue: environment.ui)
         identityImport = environment.identityImport
     }
 
@@ -22,6 +24,7 @@ struct RootTabView: View {
         let data = PreviewData(sensorState: previewState)
         _todayViewModel = State(initialValue: TodayViewModel(dataSource: data, sensorSource: data))
         _sensorViewModel = State(initialValue: SensorViewModel(statusSource: data, actions: PreviewSensorActions()))
+        _ui = State(initialValue: .preview(events: data.events))
         identityImport = nil
     }
 
@@ -31,16 +34,16 @@ struct RootTabView: View {
                 TodayView(viewModel: todayViewModel, sensorViewModel: sensorViewModel)
             }
             Tab(String(localized: "tab.diary", defaultValue: "Diario"), systemImage: "book.closed") {
-                DiaryView()
+                DiaryView(viewModel: ui.diary)
             }
             Tab(String(localized: "tab.reports", defaultValue: "Reportes"), systemImage: "chart.xyaxis.line") {
                 ReportsView()
             }
             Tab(String(localized: "tab.data", defaultValue: "Datos"), systemImage: "externaldrive") {
-                DataView()
+                DataView(viewModel: ui.data)
             }
             Tab(String(localized: "tab.settings", defaultValue: "Ajustes"), systemImage: "gearshape") {
-                SettingsView(identity: identityImport)
+                SettingsView(viewModel: ui.settings, identity: identityImport, alarms: ui.alarmModel)
             }
         }
         .modifier(IdentityImportAlert(model: identityImport))

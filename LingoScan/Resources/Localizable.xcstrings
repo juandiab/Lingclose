@@ -1707,6 +1707,4137 @@
           }
         }
       }
+    },
+    "app.failed.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo abrir la base de datos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not open the database"
+          }
+        }
+      }
+    },
+    "common.ok": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceptar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "identity.import.ok.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identidad importada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identity imported"
+          }
+        }
+      }
+    },
+    "identity.import.ok.text": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardada en el llavero de este iPhone: %@."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved in this iPhone's keychain: %@."
+          }
+        }
+      }
+    },
+    "identity.import.failed.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se importó la identidad"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identity not imported"
+          }
+        }
+      }
+    },
+    "identity.import.failed.generic": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo guardar en el llavero."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not save to the keychain."
+          }
+        }
+      }
+    },
+    "identity.import.picker": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo abrir el archivo elegido."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not open the chosen file."
+          }
+        }
+      }
+    },
+    "settings.unit": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unidad de glucosa"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glucose unit"
+          }
+        }
+      }
+    },
+    "settings.unit.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fija en mg/dL por ahora."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fixed to mg/dL for now."
+          }
+        }
+      }
+    },
+    "settings.alarms": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarmas"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarms"
+          }
+        }
+      }
+    },
+    "settings.alarms.loading": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarmas (preparando…)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarms (getting ready…)"
+          }
+        }
+      }
+    },
+    "settings.alarms.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informativas; LingoScan no es un dispositivo médico."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informational; LingoScan is not a medical device."
+          }
+        }
+      }
+    },
+    "settings.permission.bluetooth": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth"
+          }
+        }
+      }
+    },
+    "settings.permission.nfc": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC"
+          }
+        }
+      }
+    },
+    "settings.permission.health": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Salud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Health"
+          }
+        }
+      }
+    },
+    "settings.permission.open": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir Ajustes de iOS"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open iOS Settings"
+          }
+        }
+      }
+    },
+    "settings.permissions": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permisos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permissions"
+          }
+        }
+      }
+    },
+    "settings.permission.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC \"disponible\" significa que este iPhone puede leer sensores. Apple Salud se pide desde Datos."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC \"available\" means this iPhone can read sensors. Apple Health is requested from Data."
+          }
+        }
+      }
+    },
+    "settings.appearance": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apariencia"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appearance"
+          }
+        }
+      }
+    },
+    "settings.appearance.system": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistema"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        }
+      }
+    },
+    "settings.appearance.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sigue el modo claro u oscuro y el tamaño de texto de iOS."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follows the iOS light or dark mode and text size."
+          }
+        }
+      }
+    },
+    "settings.diagnostics": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diagnóstico privado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Private diagnostics"
+          }
+        }
+      }
+    },
+    "settings.diagnostics.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo guarda la preferencia en este iPhone. El registro detallado llega en la Fase 3; nada sale del dispositivo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only stores the preference on this iPhone. Detailed logging arrives in Phase 3; nothing leaves the device."
+          }
+        }
+      }
+    },
+    "settings.about.version": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versión"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        }
+      }
+    },
+    "settings.about.build": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compilación"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build"
+          }
+        }
+      }
+    },
+    "settings.about.fork": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Base del fork"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fork base"
+          }
+        }
+      }
+    },
+    "settings.about": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acerca de"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        }
+      }
+    },
+    "settings.about.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan es un proyecto personal de bienestar, no un dispositivo médico."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan is a personal wellness project, not a medical device."
+          }
+        }
+      }
+    },
+    "identity.import.action": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importar identidad de app"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import app identity"
+          }
+        }
+      }
+    },
+    "identity.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay identidad cargada."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No identity loaded."
+          }
+        }
+      }
+    },
+    "identity.signingKeys": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claves de firma Lingo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lingo signing keys"
+          }
+        }
+      }
+    },
+    "identity.signingKeys.present": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Presentes"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Present"
+          }
+        }
+      }
+    },
+    "identity.signingKeys.missing": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faltan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing"
+          }
+        }
+      }
+    },
+    "identity.header": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identidad de app"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App identity"
+          }
+        }
+      }
+    },
+    "identity.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archivo JSON. Se valida y se guarda solo en el llavero de este iPhone; el archivo original no se modifica."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JSON file. It is validated and stored only in this iPhone's keychain; the original file is not modified."
+          }
+        }
+      }
+    },
+    "identity.families.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguna familia"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No families"
+          }
+        }
+      }
+    },
+    "alarms.disclaimer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan no es un dispositivo médico; estas alarmas son informativas"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan is not a medical device; these alarms are informational"
+          }
+        }
+      }
+    },
+    "alarms.permission.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notificaciones"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
+        }
+      }
+    },
+    "alarms.permission.on": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permitidas"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allowed"
+          }
+        }
+      }
+    },
+    "alarms.permission.ask": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permitir notificaciones"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow notifications"
+          }
+        }
+      }
+    },
+    "alarms.permission.denied": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desactivadas en Ajustes de iOS. Actívalas para recibir alarmas."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turned off in iOS Settings. Turn them on to receive alarms."
+          }
+        }
+      }
+    },
+    "alarms.low.toggle": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarma baja"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low alarm"
+          }
+        }
+      }
+    },
+    "alarms.low.threshold": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umbral bajo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low threshold"
+          }
+        }
+      }
+    },
+    "alarms.low.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La alarma baja puede sonar aunque tengas un modo de concentración activo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The low alarm can sound even if a Focus mode is on."
+          }
+        }
+      }
+    },
+    "alarms.high.toggle": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarma alta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High alarm"
+          }
+        }
+      }
+    },
+    "alarms.high.threshold": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umbral alto"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High threshold"
+          }
+        }
+      }
+    },
+    "alarms.nodata.toggle": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aviso de sin datos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No-data alert"
+          }
+        }
+      }
+    },
+    "alarms.nodata.minutes": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tras"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After"
+          }
+        }
+      }
+    },
+    "alarms.repeat.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada alarma no se repite hasta pasados 15 minutos."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each alarm does not repeat until 15 minutes have passed."
+          }
+        }
+      }
+    },
+    "alarms.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarmas"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarms"
+          }
+        }
+      }
+    },
+    "settings.permission.granted": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concedido"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Granted"
+          }
+        }
+      }
+    },
+    "settings.permission.denied": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denegado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denied"
+          }
+        }
+      }
+    },
+    "settings.permission.notDetermined": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin decidir"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not decided"
+          }
+        }
+      }
+    },
+    "settings.permission.unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No disponible"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unavailable"
+          }
+        }
+      }
+    },
+    "today.empty.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin lecturas todavía"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No readings yet"
+          }
+        }
+      }
+    },
+    "today.empty.noSensor": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estado del sensor: %@. Toca el estado de arriba para leer o activar un sensor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor status: %@. Tap the status above to read or activate a sensor."
+          }
+        }
+      }
+    },
+    "today.empty.warmingUp": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El sensor está calentando. Las lecturas aparecerán al terminar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sensor is warming up. Readings will appear when it finishes."
+          }
+        }
+      }
+    },
+    "today.empty.state": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estado del sensor: %@. Las lecturas aparecerán aquí en cuanto lleguen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor status: %@. Readings will appear here as soon as they arrive."
+          }
+        }
+      }
+    },
+    "today.stats.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Período visible (%@)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visible period (%@)"
+          }
+        }
+      }
+    },
+    "today.stats.coverage": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Con datos el %@ del período."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data for %@ of the period."
+          }
+        }
+      }
+    },
+    "today.stats.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informativo; no es un dispositivo médico. Rango de referencia %1$lld–%2$lld mg/dL."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informational; not a medical device. Reference range %1$lld–%2$lld mg/dL."
+          }
+        }
+      }
+    },
+    "today.stats.tir": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En rango"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In range"
+          }
+        }
+      }
+    },
+    "today.stats.tir.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En rango, %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In range, %@"
+          }
+        }
+      }
+    },
+    "today.stats.mean": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mean"
+          }
+        }
+      }
+    },
+    "today.stats.mean.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media, %lld miligramos por decilitro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mean, %lld milligrams per deciliter"
+          }
+        }
+      }
+    },
+    "today.stats.sd": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SD"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SD"
+          }
+        }
+      }
+    },
+    "today.stats.sd.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desviación estándar, %lld miligramos por decilitro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard deviation, %lld milligrams per deciliter"
+          }
+        }
+      }
+    },
+    "today.stats.none.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, sin datos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, no data"
+          }
+        }
+      }
+    },
+    "activation.serial": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serial"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serial"
+          }
+        }
+      }
+    },
+    "activation.warmup": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calentamiento"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warm-up"
+          }
+        }
+      }
+    },
+    "activation.wear": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duración"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duration"
+          }
+        }
+      }
+    },
+    "activation.blocker.notRead": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Primero lee el sensor por NFC: solo se activa un Lingo sin activar (state 1)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read the sensor by NFC first: only an unactivated Lingo (state 1) can be activated."
+          }
+        }
+      }
+    },
+    "activation.blocker.variant": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este sensor no es un Lingo compatible (productType 9, securityVersion 3)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This sensor is not a compatible Lingo (productType 9, securityVersion 3)."
+          }
+        }
+      }
+    },
+    "activation.blocker.identity": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falta una identidad de app que sirva a Lingo. Impórtala en Ajustes."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An app identity that serves Lingo is missing. Import it in Settings."
+          }
+        }
+      }
+    },
+    "activation.blocker.keys": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La identidad no trae claves de firma del sensor. Sin ellas no se empareja."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The identity has no sensor signing keys. Without them pairing is not possible."
+          }
+        }
+      }
+    },
+    "activation.blocker.unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La activación no está disponible en este modo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activation is not available in this mode."
+          }
+        }
+      }
+    },
+    "sensor.state.paused": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En pausa"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused"
+          }
+        }
+      }
+    },
+    "sensor.spoken.paused": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sensor en pausa"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sensor paused"
+          }
+        }
+      }
+    },
+    "sensor.error.ticket.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activación no autorizada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activation not authorized"
+          }
+        }
+      }
+    },
+    "sensor.error.ticket.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La sesión preparada no coincide con el sensor leído. Vuelve a leer el sensor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The prepared session does not match the sensor that was read. Read the sensor again."
+          }
+        }
+      }
+    },
+    "sensor.error.state.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acción no disponible"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Action not available"
+          }
+        }
+      }
+    },
+    "sensor.error.state.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El sensor no está en el estado necesario para esta acción. Vuelve a leerlo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sensor is not in the state this action needs. Read it again."
+          }
+        }
+      }
+    },
+    "sensor.error.generic.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo completar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not complete"
+          }
+        }
+      }
+    },
+    "sensor.error.cancelled.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lectura cancelada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading cancelled"
+          }
+        }
+      }
+    },
+    "sensor.error.cancelled.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se cerró la sesión NFC antes de leer el sensor. No se envió nada."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The NFC session was closed before the sensor was read. Nothing was sent."
+          }
+        }
+      }
+    },
+    "sensor.error.timeout.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiempo agotado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timed out"
+          }
+        }
+      }
+    },
+    "sensor.error.timeout.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La sesión NFC expiró sin encontrar el sensor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The NFC session expired without finding the sensor."
+          }
+        }
+      }
+    },
+    "sensor.error.noTag.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor no encontrado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor not found"
+          }
+        }
+      }
+    },
+    "sensor.error.noTag.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acerca la parte superior del iPhone al sensor y mantenlo quieto."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the top of the iPhone against the sensor and keep it still."
+          }
+        }
+      }
+    },
+    "sensor.error.invalid.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Respuesta no válida"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid response"
+          }
+        }
+      }
+    },
+    "sensor.error.invalid.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El sensor respondió con datos que no se pudieron interpretar. Inténtalo de nuevo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sensor answered with data that could not be interpreted. Try again."
+          }
+        }
+      }
+    },
+    "sensor.error.unavailable.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC no disponible"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC not available"
+          }
+        }
+      }
+    },
+    "sensor.error.unavailable.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este dispositivo no puede leer NFC (el simulador no tiene NFC)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This device cannot read NFC (the simulator has no NFC)."
+          }
+        }
+      }
+    },
+    "sensor.error.busy.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lector ocupado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reader busy"
+          }
+        }
+      }
+    },
+    "sensor.error.busy.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ya hay una sesión NFC abierta. Espera a que termine."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An NFC session is already open. Wait for it to finish."
+          }
+        }
+      }
+    },
+    "sensor.error.nfc.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo leer el sensor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read the sensor"
+          }
+        }
+      }
+    },
+    "sensor.row.failurePhase": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fase"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phase"
+          }
+        }
+      }
+    },
+    "sensor.failure.incomplete": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intento de activación incompleto. No se reenvía nada automáticamente; investiga antes de usar otro sensor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incomplete activation attempt. Nothing is resent automatically; investigate before using another sensor."
+          }
+        }
+      }
+    },
+    "sensor.failure.interrupted": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fue un corte o un tiempo agotado: no indica credenciales equivocadas."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It was a cut or a timeout: it does not indicate wrong credentials."
+          }
+        }
+      }
+    },
+    "sensor.row.serial": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serial"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serial"
+          }
+        }
+      }
+    },
+    "sensor.row.stateByte": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estado del parche (NFC)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patch state (NFC)"
+          }
+        }
+      }
+    },
+    "sensor.row.warmupDeclared": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calentamiento declarado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Declared warm-up"
+          }
+        }
+      }
+    },
+    "sensor.row.wearDeclared": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duración declarada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Declared duration"
+          }
+        }
+      }
+    },
+    "pairing.phase.activation": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activación NFC"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NFC activation"
+          }
+        }
+      }
+    },
+    "pairing.phase.connecting": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conexión Bluetooth"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth connection"
+          }
+        }
+      }
+    },
+    "pairing.phase.certificateLoad": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envío del certificado de la app"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sending the app certificate"
+          }
+        }
+      }
+    },
+    "pairing.phase.certificateAcceptance": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceptación del certificado de la app"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App certificate acceptance"
+          }
+        }
+      }
+    },
+    "pairing.phase.sensorCertificate": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Certificado del sensor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor certificate"
+          }
+        }
+      }
+    },
+    "pairing.phase.ephemeral": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intercambio de claves"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key exchange"
+          }
+        }
+      }
+    },
+    "pairing.phase.challenge": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafío"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenge"
+          }
+        }
+      }
+    },
+    "pairing.phase.phase6": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fase 6"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phase 6"
+          }
+        }
+      }
+    },
+    "pairing.phase.subscribing": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suscripción de datos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data subscription"
+          }
+        }
+      }
+    },
+    "connect.state": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estado importado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported state"
+          }
+        }
+      }
+    },
+    "connect.receiver": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receiver ID"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receiver ID"
+          }
+        }
+      }
+    },
+    "connect.origin": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Origen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Origin"
+          }
+        }
+      }
+    },
+    "connect.sequence": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
+          }
+        }
+      }
+    },
+    "connect.pin": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PIN BLE"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BLE PIN"
+          }
+        }
+      }
+    },
+    "connect.kauth": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kAuth"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kAuth"
+          }
+        }
+      }
+    },
+    "connect.paused": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En pausa: no se conecta solo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused: it does not connect on its own"
+          }
+        }
+      }
+    },
+    "connect.conflicts": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hay conflictos de secretos sin resolver; no se conecta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There are unresolved secret conflicts; it will not connect"
+          }
+        }
+      }
+    },
+    "connect.button": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conectar sensor activo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect active sensor"
+          }
+        }
+      }
+    },
+    "connect.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor activo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active sensor"
+          }
+        }
+      }
+    },
+    "connect.unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El coordinador del sensor no está disponible en esta pantalla."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sensor coordinator is not available on this screen."
+          }
+        }
+      }
+    },
+    "connect.footer.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenta el handshake corto con kAuth y PIN; si el sensor lo rechaza, el completo con la identidad de esta app. Nunca activa un sensor nuevo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tries the short handshake with kAuth and PIN; if the sensor rejects it, the full one with this app's identity. It never activates a new sensor."
+          }
+        }
+      }
+    },
+    "connect.footer.full": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin kAuth: handshake completo con el PIN y la identidad de esta app. Nunca activa un sensor nuevo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No kAuth: full handshake with the PIN and this app's identity. It never activates a new sensor."
+          }
+        }
+      }
+    },
+    "connect.started": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conexión iniciada; sigue el estado en la pestaña Sensor."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection started; follow the status in the Sensor tab."
+          }
+        }
+      }
+    },
+    "sensor.note.variant": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Variante no compatible (productType %1$lld, securityVersion %2$lld). No se intenta activar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported variant (productType %1$lld, securityVersion %2$lld). Activation is not attempted."
+          }
+        }
+      }
+    },
+    "sensor.note.ended": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El sensor informa que terminó (state %lld)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sensor reports it has ended (state %lld)."
+          }
+        }
+      }
+    },
+    "activation.blocked.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se puede activar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot activate"
+          }
+        }
+      }
+    },
+    "diary.editor.kind": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tipo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type"
+          }
+        }
+      }
+    },
+    "diary.editor.time": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time"
+          }
+        }
+      }
+    },
+    "diary.editor.carbs": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carbohidratos (g), opcional"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carbohydrates (g), optional"
+          }
+        }
+      }
+    },
+    "diary.editor.duration": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duración (min)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duration (min)"
+          }
+        }
+      }
+    },
+    "diary.failure.save": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo guardar. Inténtalo de nuevo."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not save. Try again."
+          }
+        }
+      }
+    },
+    "diary.editor.title.new": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuevo registro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New entry"
+          }
+        }
+      }
+    },
+    "diary.editor.title.edit": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editar registro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit entry"
+          }
+        }
+      }
+    },
+    "common.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "common.save": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "diary.editor.text.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
+        }
+      }
+    },
+    "diary.editor.text.optional": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descripción, opcional"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Description, optional"
+          }
+        }
+      }
+    },
+    "diary.problem.carbs": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los carbohidratos deben ser entre 0 y 1000 g."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carbohydrates must be between 0 and 1000 g."
+          }
+        }
+      }
+    },
+    "diary.problem.duration": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indica la duración en minutos (1 a 1440)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the duration in minutes (1 to 1440)."
+          }
+        }
+      }
+    },
+    "diary.problem.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escribe el texto de la nota."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write the note text."
+          }
+        }
+      }
+    },
+    "diary.empty.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin registros"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No entries"
+          }
+        }
+      }
+    },
+    "diary.empty.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca + para anotar una comida, ejercicio o nota. Aparecen como marcas en la curva de Hoy."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to log a meal, exercise or note. They show up as marks on the Today curve."
+          }
+        }
+      }
+    },
+    "diary.delete.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Borrar este registro?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this entry?"
+          }
+        }
+      }
+    },
+    "diary.delete.confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Borrar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "diary.delete.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se conserva el historial de ediciones; el registro deja de mostrarse."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The edit history is kept; the entry stops being shown."
+          }
+        }
+      }
+    },
+    "diary.failure.load": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo leer el diario."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read the diary."
+          }
+        }
+      }
+    },
+    "diary.add": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir al diario"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to diary"
+          }
+        }
+      }
+    },
+    "diary.synthetic": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ejemplo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sample"
+          }
+        }
+      }
+    },
+    "diary.synthetic.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dato de ejemplo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sample data"
+          }
+        }
+      }
+    },
+    "diary.carbs.value": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ g de carbohidratos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ g of carbohydrates"
+          }
+        }
+      }
+    },
+    "diary.duration.value": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        }
+      }
+    },
+    "diary.kind.meal": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comida"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meal"
+          }
+        }
+      }
+    },
+    "diary.kind.exercise": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ejercicio"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercise"
+          }
+        }
+      }
+    },
+    "diary.kind.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
+        }
+      }
+    },
+    "diary.kind.sensorNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota del sensor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sensor note"
+          }
+        }
+      }
+    },
+    "data.recovery": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archivo de recuperación"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovery file"
+          }
+        }
+      }
+    },
+    "data.recovery.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia cifrada con frase para recuperar el sensor activo en otra instalación."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passphrase-encrypted copy to recover the active sensor on another installation."
+          }
+        }
+      }
+    },
+    "data.health.permission": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permiso"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permission"
+          }
+        }
+      }
+    },
+    "data.health.authorized": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concedido"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Granted"
+          }
+        }
+      }
+    },
+    "data.health.notAuthorized": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No concedido"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not granted"
+          }
+        }
+      }
+    },
+    "data.health.request": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pedir permiso de Apple Salud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Request Apple Health permission"
+          }
+        }
+      }
+    },
+    "data.health.pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Huecos pendientes"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pending gaps"
+          }
+        }
+      }
+    },
+    "data.health.lastAttempt": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Último intento"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last attempt"
+          }
+        }
+      }
+    },
+    "data.health.never": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguno"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
+          }
+        }
+      }
+    },
+    "data.health.paused": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En pausa: no se escribe en Apple Salud."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused: nothing is written to Apple Health."
+          }
+        }
+      }
+    },
+    "data.health.fill": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rellenar huecos…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill gaps…"
+          }
+        }
+      }
+    },
+    "data.health.header": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Salud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Health"
+          }
+        }
+      }
+    },
+    "data.health.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo se escriben lecturas reales y elegibles; los datos de ejemplo nunca se envían."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only real, eligible readings are written; sample data is never sent."
+          }
+        }
+      }
+    },
+    "data.health.fill.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Rellenar huecos en Apple Salud?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill gaps in Apple Health?"
+          }
+        }
+      }
+    },
+    "data.health.fill.confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rellenar huecos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill gaps"
+          }
+        }
+      }
+    },
+    "data.health.fill.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escribe todas las lecturas y comidas pendientes, también las anteriores a un traspaso de rol. Es opcional y solo se hace cuando lo pides."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Writes all pending readings and meals, including those before a role handover. It is optional and only happens when you ask."
+          }
+        }
+      }
+    },
+    "data.health.fill.paused": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se escribió nada: la app está en pausa."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing was written: the app is paused."
+          }
+        }
+      }
+    },
+    "data.health.fill.error": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se detuvo por un error; los pendientes siguen intactos."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopped by an error; pending items are untouched."
+          }
+        }
+      }
+    },
+    "data.health.fill.result": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escritas %1$lld, reconciliadas %2$lld, fallidas %3$lld."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Written %1$lld, reconciled %2$lld, failed %3$lld."
+          }
+        }
+      }
+    },
+    "recovery.passphrase.saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frase guardada solo en memoria hasta cerrar la app"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passphrase kept in memory only until the app is closed"
+          }
+        }
+      }
+    },
+    "recovery.export.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportado %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exported %@"
+          }
+        }
+      }
+    },
+    "recovery.import.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importado: %1$lld sesión(es) actualizadas, %2$lld conflicto(s), %3$lld intento(s) histórico(s)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported: %1$lld session(s) updated, %2$lld conflict(s), %3$lld historical attempt(s)"
+          }
+        }
+      }
+    },
+    "recovery.connect.notConnectable": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una sesión en %@ no se puede conectar: no hay activación desde aquí"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A session in %@ cannot be connected: there is no activation from here"
+          }
+        }
+      }
+    },
+    "recovery.connect.busy": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hay una sesión en curso (%@); páusala antes"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A session is in progress (%@); pause it first"
+          }
+        }
+      }
+    },
+    "recovery.connect.unexpected": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estado inesperado del sensor: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unexpected sensor state: %@"
+          }
+        }
+      }
+    },
+    "data.archive.choose": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elegir carpeta…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose folder…"
+          }
+        }
+      }
+    },
+    "data.archive.useICloud": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volver al iCloud de LingoScan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to LingoScan iCloud"
+          }
+        }
+      }
+    },
+    "data.archive.export": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportar ahora"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export now"
+          }
+        }
+      }
+    },
+    "data.archive.import": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importar paquete…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import package…"
+          }
+        }
+      }
+    },
+    "data.archive.header": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archivo .lingoscan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ".lingoscan archive"
+          }
+        }
+      }
+    },
+    "data.archive.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia portable de tus datos. \"Disponible en iCloud\" solo aparece cuando el sistema confirma la subida."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portable copy of your data. \"Available in iCloud\" only appears when the system confirms the upload."
+          }
+        }
+      }
+    },
+    "data.archive.recent": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Últimas copias"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latest copies"
+          }
+        }
+      }
+    },
+    "data.archive.folder": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carpeta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder"
+          }
+        }
+      }
+    },
+    "data.archive.fallback": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud de LingoScan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan iCloud"
+          }
+        }
+      }
+    },
+    "data.archive.fallback.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es el destino por omisión: aún no elegiste una carpeta."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is the default destination: you have not chosen a folder yet."
+          }
+        }
+      }
+    },
+    "data.archive.export.ok": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia creada y verificada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy created and verified"
+          }
+        }
+      }
+    },
+    "data.archive.export.unverified": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia creada, sin verificar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy created, not verified"
+          }
+        }
+      }
+    },
+    "data.archive.export.counts": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld lecturas, %2$lld eventos del diario"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld readings, %2$lld diary events"
+          }
+        }
+      }
+    },
+    "data.upload.local": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archivo creado, pendiente de subir a iCloud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archive created, waiting to upload to iCloud"
+          }
+        }
+      }
+    },
+    "data.upload.uploading": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subiendo a iCloud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uploading to iCloud"
+          }
+        }
+      }
+    },
+    "data.upload.uploaded": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disponible en iCloud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available in iCloud"
+          }
+        }
+      }
+    },
+    "data.upload.error": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error de iCloud: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud error: %@"
+          }
+        }
+      }
+    },
+    "data.upload.unknown": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archivo creado; la carpeta no informa de iCloud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archive created; the folder does not report iCloud status"
+          }
+        }
+      }
+    },
+    "data.archive.own": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LingoScan"
+          }
+        }
+      }
+    },
+    "data.errors.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin errores recientes"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No recent errors"
+          }
+        }
+      }
+    },
+    "data.errors.header": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Errores recientes"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent errors"
+          }
+        }
+      }
+    },
+    "data.import.ok": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importado de %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported from %@"
+          }
+        }
+      }
+    },
+    "data.import.counts": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld nuevos, %2$lld actualizados, %3$lld idénticos, %4$lld conflictos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld new, %2$lld updated, %3$lld identical, %4$lld conflicts"
+          }
+        }
+      }
+    },
+    "data.import.skipped": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ya conocido, sin cambios (%@)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already known, no changes (%@)"
+          }
+        }
+      }
+    },
+    "data.import.rejected": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechazado: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rejected: %@"
+          }
+        }
+      }
+    },
+    "recovery.imported.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesión importada"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported session"
+          }
+        }
+      }
+    },
+    "recovery.imported.state": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estado"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "State"
+          }
+        }
+      }
+    },
+    "recovery.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recuperación"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovery"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.inMemory": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frase en memoria"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passphrase in memory"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.forget": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Olvidar frase"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forget passphrase"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.field": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frase (12 caracteres o más)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passphrase (12 characters or more)"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.use": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usar frase"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use passphrase"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frase de recuperación"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovery passphrase"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se pide una vez por sesión de la app y no se guarda en el teléfono. Anótala fuera (gestor de contraseñas o papel): sin ella no hay recuperación."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asked once per app session and not stored on the phone. Write it down elsewhere (password manager or paper): without it there is no recovery."
+          }
+        }
+      }
+    },
+    "recovery.folder.fallback": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se guarda en Documentos de la app: aún no hay carpeta elegida. Compártelo a otro sitio tras exportar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved in the app's Documents: no folder has been chosen yet. Share it somewhere else after exporting."
+          }
+        }
+      }
+    },
+    "recovery.pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportación pendiente: introduce la frase"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export pending: enter the passphrase"
+          }
+        }
+      }
+    },
+    "recovery.last": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Última copia"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last copy"
+          }
+        }
+      }
+    },
+    "recovery.share": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compartir última copia"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share last copy"
+          }
+        }
+      }
+    },
+    "recovery.includeMaterial": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incluir material de identidad"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Include identity material"
+          }
+        }
+      }
+    },
+    "recovery.exportNow": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportar ahora"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export now"
+          }
+        }
+      }
+    },
+    "recovery.export.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export"
+          }
+        }
+      }
+    },
+    "recovery.import": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importar desde archivo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import from file"
+          }
+        }
+      }
+    },
+    "recovery.import.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import"
+          }
+        }
+      }
+    },
+    "recovery.import.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importar solo guarda los datos; no lee NFC ni conecta por Bluetooth. La sesión queda en pausa."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing only stores the data; it does not read NFC or connect by Bluetooth. The session stays paused."
+          }
+        }
+      }
+    },
+    "recovery.conflicts.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conflictos e intentos históricos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conflicts and historical attempts"
+          }
+        }
+      }
+    },
+    "recovery.conflict.row": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesión %@: secretos distintos"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session %@: different secrets"
+          }
+        }
+      }
+    },
+    "recovery.historical.row": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesión %@: otro intento"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session %@: another attempt"
+          }
+        }
+      }
+    },
+    "alarm.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informativo; no es un dispositivo médico."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informational; not a medical device."
+          }
+        }
+      }
+    },
+    "alarm.low.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glucosa baja"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low glucose"
+          }
+        }
+      }
+    },
+    "alarm.low.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld mg/dL, por debajo de %2$lld. %3$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld mg/dL, below %2$lld. %3$@"
+          }
+        }
+      }
+    },
+    "alarm.high.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glucosa alta"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High glucose"
+          }
+        }
+      }
+    },
+    "alarm.high.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld mg/dL, por encima de %2$lld. %3$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld mg/dL, above %2$lld. %3$@"
+          }
+        }
+      }
+    },
+    "alarm.nodata.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin datos del sensor"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No sensor data"
+          }
+        }
+      }
+    },
+    "alarm.nodata.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No llegan lecturas desde hace %1$lld min. %2$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No readings for %1$lld min. %2$@"
+          }
+        }
+      }
+    },
+    "recovery.error.passphrase": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falta la frase de recuperación"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The recovery passphrase is missing"
+          }
+        }
+      }
+    },
+    "recovery.error.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La frase debe tener al menos %lld caracteres"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The passphrase must be at least %lld characters"
+          }
+        }
+      }
+    },
+    "recovery.error.nothing": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay sesión que exportar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no session to export"
+          }
+        }
+      }
+    },
+    "recovery.error.incomplete": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La sesión %@ no tiene Receiver ID o serial"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session %@ has no Receiver ID or serial"
+          }
+        }
+      }
+    },
+    "recovery.error.identity": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay identidad de app con clave de firma"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no app identity with a signing key"
+          }
+        }
+      }
+    },
+    "recovery.error.unreadable": {
+      "extractionState": "manual",
+      "localizations": {
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo leer el archivo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read the file"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -25,6 +25,7 @@ struct TodayView: View {
                         }
                         PeriodPicker(period: $viewModel.period)
                         GlucoseChartCard(viewModel: viewModel)
+                        PeriodStatsCard(stats: viewModel.stats, period: viewModel.period)
                     }
                     if viewModel.isSynthetic {
                         Label(
@@ -46,6 +47,8 @@ struct TodayView: View {
         }
         .task { await viewModel.observe() }
         .task(id: viewModel.period) { await viewModel.refresh() }
+        // Al volver desde el Diario hay marcas nuevas, editadas o borradas.
+        .onAppear { Task { await viewModel.refresh() } }
         .sensoryFeedback(.warning, trigger: viewModel.sensor.state) { _, newState in
             newState == .stale
         }

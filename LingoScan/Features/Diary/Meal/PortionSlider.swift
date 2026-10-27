@@ -1,7 +1,7 @@
 import LingoCore
 import SwiftUI
 
-/// Porciones consumidas sobre la base: 1,0…5,0 en pasos de 0,1. Solo cambia el multiplicador; el
+/// Porciones consumidas sobre la base: 0,5…5,0 en pasos de 0,1 (media porción a cinco); arranca en 1,0, la base. Solo cambia el multiplicador; el
 /// recálculo (siempre desde la base) lo hace quien la usa.
 struct PortionSlider: View {
     @Binding var multiplier: Double

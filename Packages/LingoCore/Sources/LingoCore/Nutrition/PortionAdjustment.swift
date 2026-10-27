@@ -1,10 +1,10 @@
 /// Reglas puras del slider de porciones y de las correcciones manuales. La UI solo las muestra.
 public enum PortionAdjustment {
-    /// Lleva `m` al paso de 0,1 y al rango 1,0…5,0. Primero redondea a 1 decimal con
-    /// `.toNearestOrAwayFromZero` (1,25 → 1,3; 1,24 → 1,2) y después acota (0,96 → 1,0; 5,3 → 5,0).
-    /// Un valor no finito vuelve a 1,0.
+    /// Lleva `m` al paso de 0,1 y al rango 0,5…5,0. Primero redondea a 1 decimal con
+    /// `.toNearestOrAwayFromZero` (1,25 → 1,3; 1,24 → 1,2) y después acota (0,3 → 0,5; 5,3 → 5,0).
+    /// Un valor no finito vuelve a 1,0 (la base).
     public static func clamp(_ m: Double) -> Double {
-        guard m.isFinite else { return NutrientLimits.portionMultiplier.lowerBound }
+        guard m.isFinite else { return NutrientLimits.defaultPortionMultiplier }
         // Paso 0,1 = décimas. Se multiplica y divide por 10 (no por 0,1) para que el resultado sea
         // exactamente el literal de 1 decimal: 13 / 10 == 1.3.
         let rounded = (m * 10).rounded(.toNearestOrAwayFromZero) / 10

@@ -56,13 +56,17 @@ struct MealNutritionRecordTests {
 
     @Test func clampRoundsToTenthsAndLimitsRange() {
         #expect(PortionAdjustment.clamp(0.96) == 1.0)
+        #expect(PortionAdjustment.clamp(0.5) == 0.5, "media porción es el mínimo")
+        #expect(PortionAdjustment.clamp(0.3) == 0.5)
+        #expect(PortionAdjustment.clamp(0.75) == 0.8)
+        #expect(Nutrients(kcal: 200, carbsG: 30).scaled(by: 0.5) == Nutrients(kcal: 100, carbsG: 15))
         #expect(PortionAdjustment.clamp(5.3) == 5.0)
         // Redondeo documentado: a la décima más cercana, mitades lejos de cero.
         #expect(PortionAdjustment.clamp(1.25) == 1.3)
         #expect(PortionAdjustment.clamp(1.24) == 1.2)
         #expect(PortionAdjustment.clamp(2.0) == 2.0)
-        #expect(PortionAdjustment.clamp(0) == 1.0)
-        #expect(PortionAdjustment.clamp(-3) == 1.0)
+        #expect(PortionAdjustment.clamp(0) == 0.5, "por debajo del mínimo: media porción")
+        #expect(PortionAdjustment.clamp(-3) == 0.5)
         #expect(PortionAdjustment.clamp(.nan) == 1.0)
         #expect(PortionAdjustment.clamp(.infinity) == 1.0)
         // Cada paso del slider da exactamente el literal de 1 decimal.

@@ -4,8 +4,9 @@ public enum NutrientLimits {
     public static let gramsPerNutrient = 0.0...2_000.0
     public static let basisGrams = 0.0...5_000.0
     public static let confidence = 0.0...1.0
-    /// Multiplicador de porciones de la UI.
-    public static let portionMultiplier = 1.0...5.0
+    /// Multiplicador de porciones de la UI: desde media porción (0,5) hasta cinco. Arranca en 1,0 (la base).
+    public static let portionMultiplier = 0.5...5.0
+    public static let defaultPortionMultiplier = 1.0
     public static let portionStep = 0.1
 
     public static func range(for field: NutrientField) -> ClosedRange<Double> {

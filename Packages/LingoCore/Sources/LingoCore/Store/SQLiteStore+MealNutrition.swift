@@ -62,7 +62,7 @@ extension SQLiteStore {
             throw StoreError.invalidMealNutrition(eventID: r.eventID, reason: "kind not_food")
         }
         guard r.multiplier.isFinite, NutrientLimits.portionMultiplier.contains(r.multiplier) else {
-            throw StoreError.invalidMealNutrition(eventID: r.eventID, reason: "multiplicador fuera de 1,0…5,0")
+            throw StoreError.invalidMealNutrition(eventID: r.eventID, reason: "multiplicador fuera de 0,5…5,0")
         }
     }
 

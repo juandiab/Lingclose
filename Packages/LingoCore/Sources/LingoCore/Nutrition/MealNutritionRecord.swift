@@ -10,7 +10,7 @@ public struct MealNutritionRecord: Sendable, Hashable, Codable {
     public var basis: PortionBasis
     /// La base original, intacta. Nunca se reescribe con valores escalados.
     public var baseNutrients: Nutrients
-    /// Porciones consumidas sobre la base: 1,0…5,0, paso 0,1 (`PortionAdjustment.clamp`).
+    /// Porciones consumidas sobre la base: 0,5…5,0, paso 0,1; 1,0 = la base (`PortionAdjustment.clamp`).
     public var multiplier: Double
     /// Correcciones manuales campo a campo sobre el valor ya ajustado; `nil` = sin corrección.
     public var overrides: Nutrients

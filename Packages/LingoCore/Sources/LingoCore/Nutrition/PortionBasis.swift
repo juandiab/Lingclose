@@ -1,5 +1,5 @@
 /// A qué cantidad se refieren los nutrientes **base**. No es la cantidad consumida: esa la fija el
-/// multiplicador de porciones (1,0–5,0) sobre esta base.
+/// multiplicador de porciones (0,5–5,0) sobre esta base.
 public enum PortionBasis: Sendable, Hashable, Codable {
     /// Etiqueta: valores por 100 g.
     case per100g

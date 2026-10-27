@@ -43,7 +43,7 @@ final class MealAnalysisViewModel: Identifiable {
     var name = ""
     private(set) var basis: PortionBasis?
     private(set) var baseNutrients = Nutrients.unknown
-    private(set) var multiplier = NutrientLimits.portionMultiplier.lowerBound
+    private(set) var multiplier = NutrientLimits.defaultPortionMultiplier
     private(set) var overrides = Nutrients.unknown
     private(set) var assumptions: String?
     private(set) var confidence: Double?
@@ -240,7 +240,7 @@ final class MealAnalysisViewModel: Identifiable {
         name = analysis.name ?? trimmedDescription ?? ""
         basis = analysis.basis
         baseNutrients = analysis.baseNutrients
-        multiplier = NutrientLimits.portionMultiplier.lowerBound
+        multiplier = NutrientLimits.defaultPortionMultiplier
         overrides = .unknown
         rawEdits = [:]
         assumptions = analysis.assumptions

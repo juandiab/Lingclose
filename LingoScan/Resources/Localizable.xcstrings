@@ -6484,6 +6484,329 @@
           }
         }
       }
+    },
+    "recovery.passphrase.enter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introducir frase…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter passphrase…"
+          }
+        }
+      }
+    },
+    "recovery.passphrase.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin frase"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No passphrase"
+          }
+        }
+      }
+    },
+    "recovery.sheet.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase de recuperación"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery passphrase"
+          }
+        }
+      }
+    },
+    "recovery.sheet.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "recovery.sheet.hide" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar frase"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide passphrase"
+          }
+        }
+      }
+    },
+    "recovery.sheet.show" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar frase"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show passphrase"
+          }
+        }
+      }
+    },
+    "recovery.sheet.phrase.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passphrase"
+          }
+        }
+      }
+    },
+    "recovery.sheet.phrase.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escribe la frase (12 caracteres o más)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type the passphrase (12 characters or more)"
+          }
+        }
+      }
+    },
+    "recovery.sheet.confirm.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repite la frase"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat the passphrase"
+          }
+        }
+      }
+    },
+    "recovery.sheet.missing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faltan %lld caracteres"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld characters missing"
+          }
+        }
+      }
+    },
+    "recovery.sheet.match" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las frases coinciden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The passphrases match"
+          }
+        }
+      }
+    },
+    "recovery.sheet.mismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las frases no coinciden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The passphrases do not match"
+          }
+        }
+      }
+    },
+    "recovery.sheet.before.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de usarla"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before using it"
+          }
+        }
+      }
+    },
+    "recovery.sheet.saved" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya guardé la frase fuera del teléfono"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I saved the passphrase outside the phone"
+          }
+        }
+      }
+    },
+    "recovery.sheet.before.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin la frase no se pueden abrir los archivos de recuperación. LingoScan no puede recuperarla."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without the passphrase the recovery files cannot be opened. LingoScan cannot recover it."
+          }
+        }
+      }
+    },
+    "recovery.sheet.keychain.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardado en el iPhone"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored on the iPhone"
+          }
+        }
+      }
+    },
+    "recovery.sheet.keychain.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guarda en el Llavero de este iPhone, protegida por el código y Face ID, y no se sube a iCloud."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored in this iPhone's Keychain, protected by passcode and Face ID, and not uploaded to iCloud."
+          }
+        }
+      }
+    },
+    "recovery.sheet.keychain.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se pide una vez por sesión de la app y se olvida al cerrarla."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asked once per app session and forgotten when it closes."
+          }
+        }
+      }
+    },
+    "recovery.sheet.repeat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repite la frase para comprobarla"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat the passphrase to check it"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

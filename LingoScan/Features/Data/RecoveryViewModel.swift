@@ -11,6 +11,9 @@ final class RecoveryViewModel {
     private(set) var message: String?
     private(set) var isWorking = false
     var passphrase = ""
+    var passphraseConfirmation = ""
+    /// Confirmación obligatoria de que la frase ya está guardada fuera del teléfono.
+    var passphraseSavedElsewhere = false
     /// Guardar la frase en el Llavero del iPhone (solo este dispositivo) para no pedirla en cada arranque.
     var rememberPassphrase = false
     var includeMaterial = false
@@ -33,15 +36,31 @@ final class RecoveryViewModel {
         }
     }
 
+    /// `true` solo si el último `usePassphrase()` terminó sin error (la hoja se cierra con esto).
+    private(set) var passphraseAccepted = false
+
     func usePassphrase() async {
+        passphraseAccepted = false
         await run {
             let remember = self.rememberPassphrase
             try await self.service.setPassphrase(self.passphrase, remember: remember)
             self.passphrase = ""
+            self.passphraseConfirmation = ""
+            self.passphraseSavedElsewhere = false
+            self.passphraseAccepted = true
             return remember
                 ? String(localized: "recovery.passphrase.remembered", defaultValue: "Frase guardada en el Llavero de este iPhone")
                 : String(localized: "recovery.passphrase.saved", defaultValue: "Frase guardada solo en memoria hasta cerrar la app")
         }
+    }
+
+    /// Vacía lo escrito en la hoja sin tocar la frase ya registrada en el servicio.
+    func resetPassphraseEntry() {
+        passphrase = ""
+        passphraseConfirmation = ""
+        passphraseSavedElsewhere = false
+        rememberPassphrase = false
+        passphraseAccepted = false
     }
 
     func forgetPassphrase() async {

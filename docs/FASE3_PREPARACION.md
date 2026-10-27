@@ -27,6 +27,7 @@ Las capturas de Juampa (16:08 y 16:09) mostraron en Recuperación "Se guarda en 
 - Frase: interruptor opcional "Recordar en el Llavero" (`AfterFirstUnlockThisDeviceOnly`, sin iCloud; D-21). "Olvidar frase" borra la copia. El botón "Usar frase" solo se activa con 12 caracteres o más tras recortar bordes, y pulsar Intro con el campo vacío ya no dispara el aviso.
 - Al arrancar, `installRecovery()` llama a `start()`: con frase recordada, las exportaciones pendientes salen sin abrir la pantalla.
 - Tests nuevos: `RecoveryFolderAndPassphraseTests` (3). App: 155 tests.
+- Segunda captura de Juampa (16:39): el campo de la frase se veía como una fila en blanco, sin forma de comprobar lo escrito ni de confirmar que ya la guardó fuera. Rediseño (Sonnet, revisado por Fable): hoja "Frase de recuperación" con campo y botón de ojo, repetición de la frase con estado en vivo, interruptor obligatorio "Ya guardé la frase fuera del teléfono", "Recordar en el Llavero" apagado por defecto y botón "Usar frase" que solo se activa con todo correcto. Sin `textContentType(.newPassword)` para que iOS no ofrezca guardar la frase en el Llavero de iCloud. En Recuperación queda la fila de estado (Sin frase / En memoria / En el Llavero) con "Introducir frase…" u "Olvidar frase". App: 161 tests.
 
 Cuando los 12 estén en verde, la activación es: Sensor → "Activar sensor" → revisar resumen → interruptor "entiendo que es irreversible" → botón. Antes de ese toque, Juampa lo confirma por escrito en el chat (regla de `CLAUDE.md`).
 

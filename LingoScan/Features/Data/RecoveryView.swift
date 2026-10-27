@@ -7,6 +7,7 @@ import UniformTypeIdentifiers
 struct RecoveryView: View {
     @State private var model: RecoveryViewModel
     @State private var importing = false
+    @State private var showingPassphraseSheet = false
 
     init(context: RecoveryContext = .resolve()) {
         _model = State(initialValue: RecoveryViewModel(context: context))
@@ -42,6 +43,10 @@ struct RecoveryView: View {
         .overlay {
             if model.isWorking { ProgressView() }
         }
+        .sheet(isPresented: $showingPassphraseSheet) {
+            PassphraseEntrySheet(model: model)
+                .presentationDetents([.large])
+        }
         .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
             switch result {
             case .success(let url): Task { await model.importFile(url) }
@@ -53,43 +58,34 @@ struct RecoveryView: View {
 
     private var passphraseSection: some View {
         Section {
+            passphraseStatusRow
             if model.status.hasPassphrase {
-                if model.status.passphraseRemembered {
-                    Label(String(localized: "recovery.passphrase.inKeychain", defaultValue: "Frase guardada en el Llavero de este iPhone"), systemImage: "key.icloud.fill")
-                } else {
-                    Label(String(localized: "recovery.passphrase.inMemory", defaultValue: "Frase en memoria hasta cerrar la app"), systemImage: "key.fill")
-                }
                 Button(String(localized: "recovery.passphrase.forget", defaultValue: "Olvidar frase"), role: .destructive) {
                     Task { await model.forgetPassphrase() }
                 }
             } else {
-                SecureField(String(localized: "recovery.passphrase.field", defaultValue: "Frase (12 caracteres o más)"), text: $model.passphrase)
-                    .textContentType(.password)
-                    .submitLabel(.done)
-                    .onSubmit { if passphraseIsLongEnough { Task { await model.usePassphrase() } } }
-                Toggle(String(localized: "recovery.passphrase.remember", defaultValue: "Recordar en el Llavero"), isOn: $model.rememberPassphrase)
-                Button(String(localized: "recovery.passphrase.use", defaultValue: "Usar frase")) {
-                    Task { await model.usePassphrase() }
+                Button(String(localized: "recovery.passphrase.enter", defaultValue: "Introducir frase…")) {
+                    showingPassphraseSheet = true
                 }
-                .disabled(!passphraseIsLongEnough)
             }
         } header: {
             Text(String(localized: "recovery.passphrase.title", defaultValue: "Frase de recuperación"))
         } footer: {
-            Text(passphraseFooter)
+            Text(String(localized: "recovery.passphrase.footer", defaultValue: "Se pide una vez por sesión de la app y no se guarda en el teléfono. Anótala fuera (gestor de contraseñas o papel): sin ella no hay recuperación."))
         }
     }
 
-    /// Mismo mínimo que el servicio, para que el botón no ofrezca lo que va a fallar.
-    private var passphraseIsLongEnough: Bool {
-        RecoveryPassphrase.normalized(model.passphrase).count >= RecoveryService.minimumPassphraseLength
-    }
-
-    private var passphraseFooter: String {
-        if model.rememberPassphrase, !model.status.hasPassphrase {
-            return String(localized: "recovery.passphrase.footer.remember", defaultValue: "Se guarda en el Llavero de este iPhone, protegida por el código y Face ID, y no se sube a iCloud. Anótala también fuera del teléfono: sin ella no hay recuperación.")
+    @ViewBuilder
+    private var passphraseStatusRow: some View {
+        if !model.status.hasPassphrase {
+            Label(String(localized: "recovery.passphrase.none", defaultValue: "Sin frase"), systemImage: "key.slash")
+                .foregroundStyle(.secondary)
+        } else if model.status.passphraseRemembered {
+            Label(String(localized: "recovery.passphrase.inKeychain", defaultValue: "Frase guardada en el Llavero de este iPhone"), systemImage: "key.fill")
+                .foregroundStyle(.green)
+        } else {
+            Label(String(localized: "recovery.passphrase.inMemory", defaultValue: "Frase en memoria hasta cerrar la app"), systemImage: "key.fill")
         }
-        return String(localized: "recovery.passphrase.footer", defaultValue: "Se pide una vez por sesión de la app y no se guarda en el teléfono. Anótala fuera (gestor de contraseñas o papel): sin ella no hay recuperación.")
     }
 
     private var exportSection: some View {

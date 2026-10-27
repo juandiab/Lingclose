@@ -25,6 +25,7 @@
 		113FE3367F429BE8F995985C /* HealthKitSimulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A099E8AEF3DDBC702705039C /* HealthKitSimulatorTests.swift */; };
 		12F95F20727DBD5DF3812A55 /* CurrentValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C318A7C608BD1A9C297A73B7 /* CurrentValueView.swift */; };
 		1380BC1CE5F4E471B793C1E3 /* PackageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11396C60B02314CF2FE82398 /* PackageRow.swift */; };
+		14D3B2CCE5652CFA5AFBB417 /* PassphraseEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA15F941A1CA1E2A048AECA /* PassphraseEntrySheet.swift */; };
 		1530CEBBC6C43AEF28E5291D /* EventLogRecoveryExportHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B1C82EFD365365B96090EB /* EventLogRecoveryExportHook.swift */; };
 		15C82882E04C2683CEC660F0 /* DiaryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0988BE367FF3967C2B7D2142 /* DiaryRow.swift */; };
 		1AEA24801560FEBDB5830821 /* ForbiddenNFCModesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53113C5C98179474EC6C4E49 /* ForbiddenNFCModesTests.swift */; };
@@ -65,8 +66,10 @@
 		4A56FBFA7EE95DB7FEE62336 /* RecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8C7345DD761B836CA5C518 /* RecoveryView.swift */; };
 		4D6B5E174D7AD288A9415171 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5E2BC390E48F7E4D836B3 /* Card.swift */; };
 		4EEE1A00F7E3BC3272B9836D /* PairingPhase+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEEE74E535A2F351D4E0EB3 /* PairingPhase+Display.swift */; };
+		4EF325254561DC85BFB60E6C /* PassphraseEntryValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91135FFAC5C529D06B09AA05 /* PassphraseEntryValidationTests.swift */; };
 		4FFE9FB9007BE33C327BA8DF /* RecoveryActiveSensorConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A37157A12D1AA59DC2918EF /* RecoveryActiveSensorConnecting.swift */; };
 		50F5AF21553BE13346A69E25 /* SensorNFC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6281F7BA675ABB9F6BA7499 /* SensorNFC.swift */; };
+		5140DBF47AE2613C65469E69 /* PassphraseEntryValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C06B356829A96AD987DF467 /* PassphraseEntryValidation.swift */; };
 		52704A213820F7255A808921 /* DiaryDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C700E1E486E561180D9C20 /* DiaryDay.swift */; };
 		52B94A8DDC2B1E1F2706051E /* RoundWhiteDiscSensorLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE71D1DBC7AB51AF6F816DE /* RoundWhiteDiscSensorLink.swift */; };
 		57B37D9CC9EC5535C9B263F1 /* SensorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997B1071E73D63F29162C8C3 /* SensorViewModel.swift */; };
@@ -289,6 +292,7 @@
 		229198BC6257854D80BB3F53 /* ActivationRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationRecord.swift; sourceTree = "<group>"; };
 		27654D4B93E63526D9DB19B4 /* CoreSensorFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSensorFamily.swift; sourceTree = "<group>"; };
 		2854D3C0EF813634A80BECF3 /* GlucoseGap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseGap.swift; sourceTree = "<group>"; };
+		2C06B356829A96AD987DF467 /* PassphraseEntryValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassphraseEntryValidation.swift; sourceTree = "<group>"; };
 		2C6BB612D896575DECD4FDE3 /* NFCServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCServiceError.swift; sourceTree = "<group>"; };
 		2D57E1BA20CFD146041A9502 /* SystemSessionClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionClock.swift; sourceTree = "<group>"; };
 		2D8FB3975E80C230A9028D3A /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
@@ -301,6 +305,7 @@
 		3684EF37F93058182DF4BC3B /* HealthExporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthExporterTests.swift; sourceTree = "<group>"; };
 		3934621B386A40E219EB5EE9 /* DiaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewModel.swift; sourceTree = "<group>"; };
 		39928C187C5344838503B918 /* ChartLegend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartLegend.swift; sourceTree = "<group>"; };
+		3CA15F941A1CA1E2A048AECA /* PassphraseEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassphraseEntrySheet.swift; sourceTree = "<group>"; };
 		3CEFE1DF7B0C415478B2E41B /* RecoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryService.swift; sourceTree = "<group>"; };
 		3D36721DBED80353A720AEFD /* RecordingRecoveryHook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingRecoveryHook.swift; sourceTree = "<group>"; };
 		3FF1673E8DCCF62BA90AC275 /* DiaryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewModelTests.swift; sourceTree = "<group>"; };
@@ -360,6 +365,7 @@
 		8C567F74880BEBE128776180 /* GlucoseChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseChart.swift; sourceTree = "<group>"; };
 		8EB7906FD806ADBE0BF6EABB /* StaticCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCredentials.swift; sourceTree = "<group>"; };
 		91110CA43850C69D76E6F4F8 /* ActivationSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationSummary.swift; sourceTree = "<group>"; };
+		91135FFAC5C529D06B09AA05 /* PassphraseEntryValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassphraseEntryValidationTests.swift; sourceTree = "<group>"; };
 		927DB355DA4DDD61E4E101B5 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		94E47A2BA4BDB5F95DC7DF34 /* GlucosePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucosePoint.swift; sourceTree = "<group>"; };
 		95A066AB61496641D74488A9 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
@@ -520,6 +526,8 @@
 				019B2527899B9FC6CEF0F6DF /* HealthSection.swift */,
 				CE686111D625DC4550810749 /* ImportLineRow.swift */,
 				11396C60B02314CF2FE82398 /* PackageRow.swift */,
+				3CA15F941A1CA1E2A048AECA /* PassphraseEntrySheet.swift */,
+				2C06B356829A96AD987DF467 /* PassphraseEntryValidation.swift */,
 				317CC984B46CA3E4BD643EC7 /* RecentErrorsSection.swift */,
 				8A37157A12D1AA59DC2918EF /* RecoveryActiveSensorConnecting.swift */,
 				1550D6E59A19756A8C2B524D /* RecoveryContext.swift */,
@@ -769,6 +777,7 @@
 				0A741C10C19A81A62288B967 /* LiveSensorStatusSourceTests.swift */,
 				A854DDBF661D1F4D92E98238 /* LiveTodayDataSourceTests.swift */,
 				E3195E0792B7D4F5D533C5F0 /* PairingStateStoreTests.swift */,
+				91135FFAC5C529D06B09AA05 /* PassphraseEntryValidationTests.swift */,
 				3D36721DBED80353A720AEFD /* RecordingRecoveryHook.swift */,
 				456BE715C91FD2D48414A3AD /* RecoveryNoActivationPathTests.swift */,
 				5519EEE4332023D1BC482353 /* RecoveryServiceTests.swift */,
@@ -985,6 +994,7 @@
 				B4CECA191EA0DE39944D6AED /* LiveSensorStatusSourceTests.swift in Sources */,
 				69C2E1255A4E159EA41031A4 /* LiveTodayDataSourceTests.swift in Sources */,
 				BD7375F9304996AB772C458C /* PairingStateStoreTests.swift in Sources */,
+				4EF325254561DC85BFB60E6C /* PassphraseEntryValidationTests.swift in Sources */,
 				D2E0C98E927DB5E48DEE21C1 /* RecordingRecoveryHook.swift in Sources */,
 				3CF7DBAB744C7D8A15606E4E /* RecoveryNoActivationPathTests.swift in Sources */,
 				80A630C03BDAF919AF231860 /* RecoveryServiceTests.swift in Sources */,
@@ -1108,6 +1118,8 @@
 				672681BDA2B65CF598133D91 /* PairingState.swift in Sources */,
 				9CE10A8F1CFE9B6B024B4EED /* PairingStatePersisting.swift in Sources */,
 				9AF599A58431BE5FFD12C5F4 /* PairingStateStore.swift in Sources */,
+				14D3B2CCE5652CFA5AFBB417 /* PassphraseEntrySheet.swift in Sources */,
+				5140DBF47AE2613C65469E69 /* PassphraseEntryValidation.swift in Sources */,
 				0ED20E5C3AD2E118584B066F /* PeriodPicker.swift in Sources */,
 				F26C8378E6BBD4DA9E7F5D38 /* PeriodStatsCard.swift in Sources */,
 				67207AF9D541C211F5227A45 /* PermissionRow.swift in Sources */,

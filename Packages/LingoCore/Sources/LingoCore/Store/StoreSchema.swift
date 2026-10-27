@@ -2,11 +2,15 @@
 ///
 /// v1 = `DATOS_Y_HEALTHKIT.md` + columnas exigidas por `CONTRATO_V1.md` (draft.4). Las horas se
 /// guardan como segundos Unix (`*_epoch_s`) para consultas por rango con índice; RFC 3339 solo en JSON.
+///
+/// v2 (T-21) = tabla `meal_nutrition`: base, multiplicador y correcciones de un evento `meal`. Es local:
+/// no entra en el `.lingoscan` (el contrato solo lleva `carbs_g` y `text` del evento).
 enum StoreSchema {
-    static let currentVersion = 1
+    static let currentVersion = 2
 
     static let migrations: [SchemaMigration] = [
         SchemaMigration(version: 1) { try $0.executeScript(v1) },
+        SchemaMigration(version: 2) { try $0.executeScript(v2) },
     ]
 
     static func userVersion(_ c: SQLiteConnection) throws -> Int {
@@ -186,5 +190,24 @@ enum StoreSchema {
     );
 
     PRAGMA user_version = 1;
+    """
+
+    static let v2: StaticString = """
+    CREATE TABLE meal_nutrition (
+      event_id                 TEXT PRIMARY KEY REFERENCES events(event_id),
+      source_json              TEXT NOT NULL,
+      kind                     TEXT NOT NULL,
+      name                     TEXT,
+      basis_json               TEXT NOT NULL,
+      base_json                TEXT NOT NULL,
+      multiplier               REAL NOT NULL,
+      overrides_json           TEXT NOT NULL,
+      assumptions              TEXT,
+      confidence               REAL,
+      analyzed_at_epoch_s      INTEGER,
+      updated_at_epoch_s       INTEGER NOT NULL
+    );
+
+    PRAGMA user_version = 2;
     """
 }

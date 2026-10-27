@@ -5,7 +5,7 @@ import Foundation
 /// Todo el SQL es literal estático; los datos entran como parámetros ligados. Cada operación de
 /// escritura corre en una transacción. Ver `docs/T-07.md` para las reglas de reconciliación.
 public actor SQLiteStore {
-    private let connection: SQLiteConnection
+    let connection: SQLiteConnection  // interno: lo usa la extensión SQLiteStore+MealNutrition (T-21)
     private let now: @Sendable () -> Date
     private let encoder: JSONEncoder = {
         let e = JSONEncoder()

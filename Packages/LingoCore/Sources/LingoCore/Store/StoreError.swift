@@ -12,4 +12,6 @@ public enum StoreError: Error, Sendable, Hashable {
     case lifeCountOutOfRange(Int)
     case unknownReading(recordID: String)
     case corruptRow(table: String, detail: String)
+    /// Registro de nutrición incoherente con su evento o con las reglas de T-21 (`meal_nutrition`).
+    case invalidMealNutrition(eventID: String, reason: String)
 }

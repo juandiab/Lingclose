@@ -34,6 +34,17 @@ struct ActivationRecord: Sendable, Equatable, Codable {
         return copy
     }
 
+    /// D-22 (Receiver ID por sensor, no por intento): un intento `failed` antes de que el sensor
+    /// aceptara `0xA0` vuelve a `prepared` en la misma sesión, con `attempt_id` nuevo. Quien llama
+    /// comprueba que no hay respuesta guardada y que una lectura `0xA1` reciente da `state 1`.
+    func rearmed(attemptID newAttemptID: String, now: Date) throws -> ActivationRecord {
+        guard state == .failed else {
+            throw ActivationTransitionError.notAllowed(from: state, to: .prepared)
+        }
+        return ActivationRecord(sessionID: sessionID, attemptID: newAttemptID, state: .prepared,
+                                sequence: sequence + 1, failureReason: nil, updatedAt: now)
+    }
+
     static func isAllowed(from: ActivationState, to: ActivationState) -> Bool {
         switch (from, to) {
         case (.prepared, .sent), (.sent, .responseSaved), (.responseSaved, .authenticated),

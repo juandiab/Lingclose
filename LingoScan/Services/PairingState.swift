@@ -26,6 +26,9 @@ struct PairingState: Sendable, Equatable, Codable {
     var authFailureSummary: String?
     /// Rol de recolectora transferido.
     var collectorPaused: Bool
+    /// El sensor respondió `B1` al `0xA0` de esta sesión: su Receiver ID no se reutiliza (D-22).
+    /// Opcional para leer los JSON anteriores.
+    var receiverIDRejected: Bool?
 
     var sessionID: String { activation.sessionID }
 
@@ -47,6 +50,7 @@ struct PairingState: Sendable, Equatable, Codable {
         self.authFailurePhase = nil
         self.authFailureSummary = nil
         self.collectorPaused = false
+        self.receiverIDRejected = nil
     }
 
     /// Reconstruye el perfil con el serial guardado en Keychain.
@@ -75,5 +79,6 @@ struct PairingState: Sendable, Equatable, Codable {
         case authFailurePhase = "auth_failure_phase"
         case authFailureSummary = "auth_failure_summary"
         case collectorPaused = "collector_paused"
+        case receiverIDRejected = "receiver_id_rejected"
     }
 }

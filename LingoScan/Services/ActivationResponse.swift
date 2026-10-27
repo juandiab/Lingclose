@@ -12,14 +12,21 @@ struct ActivationResponse: Sendable, Equatable, CustomStringConvertible {
     /// Serial y estado leídos en la misma sesión, antes del `0xA0`.
     let scannedSerial: String
     let scannedStateByte: UInt8
+    /// Longitud de la respuesta `0xA1` cuando el fork tuvo que extraer la trama de una más larga
+    /// (`docs/PROTOCOLO_LINGO.md` §1.7); `nil` si llegó bien formada.
+    let patchInfoExtractedFromLength: Int?
 
-    init(raw: Data, pin: Data, bleAddress: String, activationTimeEpochS: Int64?, scannedSerial: String, scannedStateByte: UInt8) {
+    init(
+        raw: Data, pin: Data, bleAddress: String, activationTimeEpochS: Int64?, scannedSerial: String, scannedStateByte: UInt8,
+        patchInfoExtractedFromLength: Int? = nil
+    ) {
         self.raw = raw
         self.pin = pin
         self.bleAddress = bleAddress
         self.activationTimeEpochS = activationTimeEpochS
         self.scannedSerial = scannedSerial
         self.scannedStateByte = scannedStateByte
+        self.patchInfoExtractedFromLength = patchInfoExtractedFromLength
     }
 
     init(scan: Libre3NFCScanResult) throws {
@@ -35,7 +42,8 @@ struct ActivationResponse: Sendable, Equatable, CustomStringConvertible {
             bleAddress: response.bleAddressDisplay,
             activationTimeEpochS: seconds == 0 ? nil : Int64(seconds),
             scannedSerial: scan.patchInfo.serialNumber,
-            scannedStateByte: scan.patchInfo.stateByte
+            scannedStateByte: scan.patchInfo.stateByte,
+            patchInfoExtractedFromLength: scan.patchInfo.wasExtractedFromLongerResponse ? scan.patchInfo.inputRaw.count : nil
         )
     }
 

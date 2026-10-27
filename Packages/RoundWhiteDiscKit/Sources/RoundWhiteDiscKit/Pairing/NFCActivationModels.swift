@@ -44,14 +44,33 @@ public struct Libre3NFCPatchInfo: Sendable, Equatable {
     public let firmwareVersion: String
     public let serialNumber: String
 
+    /// Length of the `firstnfc` struct (24 data bytes + CRC16), Juggluco
+    /// `nfc.cpp:98` (`static_assert(sizeof==26)`).
+    public static let structLength = 26
+    /// `00 A5 00` + `firstnfc`.
+    public static let minimumFrameLength = 3 + structLength
+
     /// Size guard (T-02 review, unchanged): the frame after normalisation must
     /// hold at least 29 bytes (`00 A5 00` + 26-byte `firstnfc` struct incl.
     /// CRC). Juggluco uses the same minimum for Lingo (`Libre3.java:42-44`),
-    /// so this guard is not expected to reject a Lingo A1 response. Not yet
-    /// confirmed with a real Lingo capture.
+    /// so this guard is not expected to reject a Lingo A1 response.
+    ///
+    /// Fallback (27-oct, `docs/PROTOCOLO_LINGO.md` §1.7): when the direct
+    /// parse fails (the response does not start with `A5`/`00 A5`), the
+    /// response is searched for an embedded `A5…A5 00 + firstnfc` whose
+    /// trailing CRC16 matches. The CRC is the same Abbott CRC16 as the
+    /// activation command over the 24 data bytes, stored low byte first
+    /// (verified with both samples in Juggluco `nfc.cpp:36-37`). Without a
+    /// matching CRC the response is still rejected. The direct path does not
+    /// check the CRC (behaviour unchanged).
     public init(raw: Data) throws {
-        let frame = Self.normalizeResponse(raw)
-        guard frame.count >= 29, frame[0] == 0x00, frame[1] == 0xa5 else {
+        let direct = Self.normalizeResponse(Data(raw))
+        let frame: Data
+        if direct.count >= Self.minimumFrameLength, direct[0] == 0x00, direct[1] == 0xa5 {
+            frame = direct
+        } else if let embedded = Self.embeddedFrame(in: raw) {
+            frame = embedded
+        } else {
             throw Libre3NFCError.invalidPatchInfo(raw)
         }
         self.inputRaw = raw
@@ -66,6 +85,17 @@ public struct Libre3NFCPatchInfo: Sendable, Equatable {
         self.stateByte = Self.byte(frame, 17)
         let serialBytes = frame.subdata(in: (frame.startIndex + 18)..<(frame.startIndex + 27))
         self.serialNumber = String(data: serialBytes, encoding: .ascii) ?? Self.hex(serialBytes)
+    }
+
+    /// `true` when `raw` was extracted from a longer, non-conforming response.
+    public var wasExtractedFromLongerResponse: Bool {
+        inputRaw.count != raw.count && !Self.isDirectFrame(inputRaw)
+    }
+
+    /// CRC16 of the `firstnfc` struct (Abbott CRC over its 24 data bytes,
+    /// stored low byte first). Informative only on the direct path.
+    public var hasValidCRC: Bool {
+        Self.crcMatches(Array(raw.dropFirst(3).prefix(Self.structLength)))
     }
 
     public var recommendedCommandCode: NFCActivationCommandCode {
@@ -95,6 +125,44 @@ private extension Libre3NFCPatchInfo {
             return frame
         }
         return raw
+    }
+
+    static func isDirectFrame(_ raw: Data) -> Bool {
+        let direct = normalizeResponse(Data(raw))
+        return direct.count >= minimumFrameLength && direct[0] == 0x00 && direct[1] == 0xa5
+    }
+
+    /// First `A5…A5 00 <26 B>` inside `raw` whose CRC16 matches, as a
+    /// normalised 29-byte frame `00 A5 00 <26 B>`.
+    static func embeddedFrame(in raw: Data) -> Data? {
+        let bytes = [UInt8](raw)
+        var i = 0
+        while i < bytes.count {
+            guard bytes[i] == 0xa5 else {
+                i += 1
+                continue
+            }
+            var j = i
+            while j < bytes.count, bytes[j] == 0xa5 {
+                j += 1
+            }
+            // Juggluco consumes the first non-A5 byte (`nfc.cpp:79-86`); every
+            // known frame has 0x00 there, so the fallback requires it.
+            if j < bytes.count, bytes[j] == 0x00, j + 1 + structLength <= bytes.count {
+                let body = Array(bytes[(j + 1)..<(j + 1 + structLength)])
+                if crcMatches(body) {
+                    return Data([0x00, 0xa5, 0x00] + body)
+                }
+            }
+            i = j
+        }
+        return nil
+    }
+
+    static func crcMatches(_ body: [UInt8]) -> Bool {
+        guard body.count == structLength else { return false }
+        let crc = NFCActivationCommand.abbottCRC16(Data(body[0..<(structLength - 2)]))
+        return body[structLength - 2] == UInt8(crc & 0xff) && body[structLength - 1] == UInt8(crc >> 8)
     }
 
     static func hex(_ data: Data) -> String {

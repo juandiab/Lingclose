@@ -83,7 +83,7 @@ Parser (`NFCc:79-86`): `iter = buf+1; while(iter<end && *iter++ == 0xA5) ;` — 
 | 16 | 13 | 1 | `warmup` | unidades de 5 min: `warmup*5` min (`NFCc:88, 302`); muestra `0C`=60 min |
 | 17 | 14 | 1 | `state` | **1 = sin activar → comando de activación `A0`**; otro → toma de control `A8` (`NFCj:52, 78`). Valores 6 y 8 → sensor terminado (`NFCc:264-272`). Muestras: 04, 01 |
 | 18 | 15 | 9 | `serialnumber` | ASCII, 9 chars (muestra `3036385A4D524631 38` = "068ZMRF18") |
-| 27 | 24 | 2 | `crc16` | no validado |
+| 27 | 24 | 2 | `crc16` | Juggluco no lo valida; es CRC16 Abbott de los 24 B previos, LE (§1.7) |
 
 Ejemplos del comentario (`NFCc:36-37`): `00A500 0100 0100 0000 C04E 1E0D0101 04 0C 04 3036385A4D524631 38 2F97` (state=4) y `… 04 0C 01 … 164A` (state=1). Son de Libre 3, no de Lingo (producttype 4).
 
@@ -122,6 +122,29 @@ El origen/significado de 1001 no se explica en el código.
 - Éxito: **19 bytes** (`struct nfc2`, packed): `zero[1] | response[2] | deviceAddress[6] | pin[4] | activationTime u32 | crc16[2]`. Dirección BLE: bytes en orden inverso `inbuf[5..0]` (`NFCc:174-176`). `pin` = 4 bytes crudos (se usan tal cual en el challenge, §5.3). `activationTime<=0` → hora actual.
 - Error: **4 bytes** `00 | A5 01 | err` (`recogn==0x01A5`). `err==0xB1` → rechazo de account-ID (retorno 1); si no, `state 8` o `6` → sensor terminado (códigos 5/6); otro → 3.
 - Se crea el sensor con `warmup=first.warmup*5`, `wearduration=first.wearduration` (`NFCc:302`). Defaults si 0: warm-up 60 min, desgaste 14·24·60 min (`SGD:784-799`).
+
+### 1.7 patchInfo de 64 B en activación, 27-oct
+
+**Hecho (registro real, 17:55).** Dos sesiones NFC de activación terminaron con `patchInfo inválido (64 B)` y el sensor siguió en `state 1` (lo confirmaron las lecturas `0xA1` de diagnóstico de 17:55:22 y 17:55:37). El tercer intento recibió la respuesta de 19 B y llegó a `warmingUp`.
+
+**Dónde se produce (código anterior al arreglo).**
+- `Packages/RoundWhiteDiscKit/.../Pairing/CoreNFCActivationReader.swift:69-74`: cada `scan()` abre una `NFCTagReaderSession` nueva. Su primer comando es **un único** `0xA1` (mismo código y mismos parámetros vacíos en `.readPatchInfo` y en `.activateFreshSensor`), sin reintento. El resultado se parsea con `Libre3NFCPatchInfo(raw:)` **antes** de mirar el modo. Si el parseo falla, se sale por el `catch` (`:155-156`) y **nunca se llega al `0xA0`** (`:90`). Por eso el sensor no cambió de estado.
+- `NFCActivationModels.swift:52-56` (antes): `normalizeResponse` solo admite `A5 …` o `00 A5 …`. Después, el guard exige `count >= 29 && frame[0] == 00 && frame[1] == A5`. **Una respuesta de 64 B que empezara por `00 A5` o `A5` habría pasado**, porque el guard es `>=`. Por tanto, los 64 B no empezaban por la cabecera esperada.
+- `LingoScan/Services/NFCServiceError.swift:39,55` (antes): el error del fork llevaba los bytes, pero la app solo conservaba la longitud. **No hay forma de saber hoy qué contenían esos 64 B.**
+
+**Hipótesis del encargo, descartada en parte.** No hay una segunda lectura `0xA1` dentro de la misma sesión NFC, ni una concatenación de bloques en el código: el lector lee `0xA1` una sola vez por sesión. La lectura de diagnóstico y la de activación son el mismo comando con el mismo parser, así que el parser no distingue entre los dos caminos. Lo que varió fue **la respuesta que entregó CoreNFC** en esas dos sesiones.
+
+**Causa más probable.** El primer intercambio de la sesión fue transitorio o malformado: llegaron 64 B con algo antes de la cabecera, o sin la trama. Sin los bytes no se puede confirmar. Juggluco tiene en cuenta exactamente este caso: **repite `0xA1` hasta 10 veces** y acepta la respuesta cuando el bit de error está a 0 (§1.1, `AlgNfcV.java:49-51`). El fork no reintentaba.
+
+**Hallazgo nuevo: el CRC de `firstnfc` se puede verificar.** Es el mismo CRC16 Abbott del comando de activación (§1.4) aplicado a los 24 bytes de datos del struct (offsets 3..26 del frame), guardado con el byte bajo primero. Coincide con las dos muestras de `NFCc:36-37` (`2F97` y `164A`) y con el fixture sintético del fork. Sigue sin confirmarse con una trama Lingo real (la `0xA1` real del 27-oct no se guardó).
+
+**Corrección (fork + app).**
+1. `Libre3NFCPatchInfo(raw:)` (`NFCActivationModels.swift:66-75, 137-166`): el camino directo no cambia (tampoco valida el CRC, para no rechazar tramas Lingo que hoy pasan). Si el camino directo falla, busca dentro de la respuesta una secuencia `A5…A5 00 + 26 B` **cuyo CRC coincida** y la normaliza a 29 B. Sin CRC válido sigue lanzando `invalidPatchInfo`.
+2. `Libre3NFCActivationSequence` (archivo nuevo, se puede probar en macOS, y `CoreNFCActivationReader` lo usa): repite `0xA1` hasta **3 veces en la misma sesión NFC** si no parsea o si el intercambio falla. `0xA0` se envía **como máximo una vez**, solo tras un `0xA1` válido de esa misma sesión y solo si `state == 1`. Su respuesta nunca se reintenta.
+3. App: `NFCServiceError.invalidPatchInfo(length:head:a5Offset:)` registra longitud, los 3 primeros bytes y la posición del primer `A5`, nunca el serial. Si la trama se extrajo de una respuesta más larga, el coordinador lo deja en el registro (`0xA1 de la activación normalizado …`).
+4. Reintentos de la app: D-22. Un intento que falla antes de que el sensor acepte `0xA0` reutiliza la sesión y el Receiver ID (`SensorSessionCoordinator.swift:228`, `reusableActivation`).
+
+**Pendiente.** Guardar los bytes de la próxima respuesta anómala (sin el serial) para confirmar la causa. Comprobar el CRC con una `0xA1` Lingo real; ya existe la de la sesión activa (`patchInfoRaw` en el Keychain), pero no se lee desde aquí.
 
 ---
 

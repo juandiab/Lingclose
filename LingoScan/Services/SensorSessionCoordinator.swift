@@ -189,10 +189,19 @@ actor SensorSessionCoordinator {
 
     /// Paso 1 de `RECUPERACION_V1.md` §4: genera y guarda el Receiver ID, crea la sesión en
     /// `prepared` e invoca el hook de recuperación. Debe ocurrir antes de mostrar el ticket.
+    ///
+    /// D-22 (Receiver ID por sensor, no por intento): si la sesión más reciente es de este mismo
+    /// sensor y quedó en `prepared`, o en `failed` sin que el sensor llegara a aceptar `0xA0`
+    /// (sin respuesta, PIN ni kAuth guardados, sin `B1`, y la lectura `0xA1` que llevó a
+    /// `readyToActivate` da `state 1`), se reutilizan la sesión y su Receiver ID con un
+    /// `attempt_id` nuevo. Solo un sensor distinto o un rechazo `B1` generan un Receiver ID nuevo.
     func prepareActivation(for candidate: SensorProfile) async throws -> PreparedActivation {
         guard case .readyToActivate(let ready) = state, ready == candidate,
               candidate.isSupportedLingo, candidate.isFresh else {
             throw SensorSessionCoordinatorError.invalidState(state.logLabel)
+        }
+        if let reused = try await reusableActivation(for: candidate) {
+            return reused
         }
         let id = UUID().uuidString.lowercased()
         let attempt = UUID().uuidString.lowercased()
@@ -213,6 +222,55 @@ actor SensorSessionCoordinator {
         return PreparedActivation(sessionID: id, attemptID: attempt, receiverID: receiverID, profile: candidate)
     }
 
+    /// Sesión reutilizable para `candidate` (D-22), ya devuelta a `prepared` si estaba `failed`.
+    /// Sin exportación de recuperación: la copia de `prepared` (misma sesión y Receiver ID) sigue
+    /// valiendo; la siguiente (`response_saved`) lleva el `attempt_id` nuevo.
+    private func reusableActivation(for candidate: SensorProfile) async throws -> PreparedActivation? {
+        guard let id = try await pairingStore.currentSessionID(),
+              var saved = try await pairingStore.loadState(sessionID: id) else { return nil }
+        let secrets = try await pairingStore.loadSecrets(sessionID: id)
+        guard secrets.serial == candidate.serialNumber,
+              saved.productType == candidate.productType,
+              saved.securityVersion == candidate.securityVersion,
+              let receiverID = secrets.receiverID, receiverID != 0 else { return nil }
+
+        switch saved.activation.state {
+        case .prepared:
+            adopt(sessionID: id, profile: candidate)
+            await log(.info, "activación preparada reutilizada: sesión \(public: id), intento \(public: saved.activation.attemptID), mismo Receiver ID")
+            return PreparedActivation(sessionID: id, attemptID: saved.activation.attemptID, receiverID: receiverID, profile: candidate)
+        case .failed:
+            guard saved.receiverIDRejected != true,
+                  secrets.activationResponse == nil, secrets.pin == nil, secrets.kAuth == nil,
+                  candidate.isFresh else { return nil }
+            let previousAttempt = saved.activation.attemptID
+            let attempt = UUID().uuidString.lowercased()
+            let now = clock.now
+            saved.activation = try saved.activation.rearmed(attemptID: attempt, now: now)
+            saved.stateByte = candidate.stateByte
+            saved.authFailurePhase = nil
+            saved.authFailureSummary = nil
+            try await pairingStore.saveState(saved)
+            adopt(sessionID: id, profile: candidate)
+            await updateSessionRecord {
+                $0.activationState = .prepared
+                $0.activationTimeEpochS = Int64(now.timeIntervalSince1970)
+                $0.activationTimeSource = .command
+            }
+            await log(.info, "activación preparada: sesión \(public: id) reutilizada tras fallo previo al 0xA0 (intento \(public: previousAttempt) → \(public: attempt)), mismo Receiver ID, sensor en state \(candidate.stateByte)")
+            return PreparedActivation(sessionID: id, attemptID: attempt, receiverID: receiverID, profile: candidate)
+        default:
+            return nil
+        }
+    }
+
+    private func adopt(sessionID id: String, profile candidate: SensorProfile) {
+        sessionID = id
+        profile = candidate
+        terminal = false
+        hasStreamed = false
+    }
+
     /// `0xA0` con un ticket emitido tras la confirmación escrita. Persiste `sent` antes de
     /// escribir NFC y `response_saved` al recibir los 19 B, antes de cualquier operación BLE.
     func activate(ticket: ActivationTicket) async throws {
@@ -231,9 +289,16 @@ actor SensorSessionCoordinator {
         do {
             response = try await nfc.activate(ticket: ticket)
         } catch {
-            let reason = NFCServiceError(error, patchStateByte: ticket.profile.stateByte).description
-            await failActivation(sessionID: id, reason: reason)
+            let nfcError = NFCServiceError(error, patchStateByte: ticket.profile.stateByte)
+            if case .activationRejected(_, .receiverIDRejected) = nfcError {
+                // D-22: este Receiver ID no se vuelve a usar.
+                await mutateSaved { $0.receiverIDRejected = true }
+            }
+            await failActivation(sessionID: id, reason: nfcError.description)
             return
+        }
+        if let length = response.patchInfoExtractedFromLength {
+            await log(.warning, "0xA1 de la activación normalizado: trama válida (CRC) dentro de una respuesta de \(length) B")
         }
 
         try await pairingStore.saveSecrets(

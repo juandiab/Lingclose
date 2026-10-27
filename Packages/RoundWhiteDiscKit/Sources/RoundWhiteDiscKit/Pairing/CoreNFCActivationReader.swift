@@ -60,142 +60,41 @@ public final class Libre3NFCActivationReader: NSObject, @unchecked Sendable {
         }
     }
 
+    /// The command sequence lives in `Libre3NFCActivationSequence` (testable on
+    /// macOS): `0xA1` with up to 3 reads in this tag session, then at most one
+    /// `0xA0`/`0xA8`.
     private func run(tag: NFCISO15693Tag, in session: NFCTagReaderSession) async {
         do {
             guard let mode else {
                 throw Libre3NFCError.noTag
             }
-
-            let patchRaw = try await customCommand(
-                tag: tag,
-                code: 0xa1,
-                parameters: NFCActivationCommand.readPatchInfoCustomRequestParameters
-            )
-            let patchInfo = try Libre3NFCPatchInfo(raw: patchRaw)
-
-            switch mode {
-            case .readPatchInfo:
-                complete(
-                    .success(Libre3NFCScanResult(patchInfo: patchInfo)),
-                    message: LocalizedString(
-                        "Sensor read.",
-                        comment: "NFC system sheet, success after reading patch info without changing the sensor"
-                    )
-                )
-
-            case .activateFreshSensor(let receiverID, let explicitTime):
-                guard patchInfo.recommendedCommandCode == .activate else {
-                    throw Libre3NFCError.unexpectedSensorState(patchInfo: patchInfo)
-                }
-                try await runActivationCommand(
-                    tag: tag,
-                    patchInfo: patchInfo,
-                    commandCode: .activate,
-                    receiverID: receiverID,
-                    explicitTime: explicitTime,
-                    message: LocalizedString(
-                        "Sensor activated.",
-                        comment: "NFC system sheet, success after activating a fresh sensor"
-                    )
-                )
-
-            case .switchReceiver(let receiverID, let explicitTime):
-                guard patchInfo.recommendedCommandCode == .switchReceiver else {
-                    throw Libre3NFCError.unexpectedSensorState(patchInfo: patchInfo)
-                }
-                try await runActivationCommand(
-                    tag: tag,
-                    patchInfo: patchInfo,
-                    commandCode: .switchReceiver,
-                    receiverID: receiverID,
-                    explicitTime: explicitTime,
-                    message: LocalizedString(
-                        "Receiver switched.",
-                        comment: "NFC system sheet, success after binding an already-active sensor to this phone"
-                    )
-                )
-
-            case .activateOrSwitchReceiver(let receiverID, let explicitTime):
-                let commandCode = patchInfo.recommendedCommandCode
-                try await runActivationCommand(
-                    tag: tag,
-                    patchInfo: patchInfo,
-                    commandCode: commandCode,
-                    receiverID: receiverID,
-                    explicitTime: explicitTime,
-                    message: commandCode == .activate
-                        ? LocalizedString(
-                            "Sensor activated.",
-                            comment: "NFC system sheet, success after activating a fresh sensor"
-                        )
-                        : LocalizedString(
-                            "Receiver switched.",
-                            comment: "NFC system sheet, success after binding an already-active sensor to this phone"
-                        )
-                )
-
-            case .forceActivationCommand(let commandCode, let receiverID, let explicitTime):
-                try await runActivationCommand(
-                    tag: tag,
-                    patchInfo: patchInfo,
-                    commandCode: commandCode,
-                    receiverID: receiverID,
-                    explicitTime: explicitTime,
-                    message: commandCode == .activate
-                        ? LocalizedString(
-                            "Sensor activated.",
-                            comment: "NFC system sheet, success after activating a fresh sensor"
-                        )
-                        : LocalizedString(
-                            "Receiver switched.",
-                            comment: "NFC system sheet, success after binding an already-active sensor to this phone"
-                        )
-                )
+            let result = try await Libre3NFCActivationSequence.run(mode: mode) { code, parameters in
+                try await customCommand(tag: tag, code: code, parameters: parameters)
             }
+            complete(.success(result), message: Self.successMessage(for: result.commandCode))
         } catch {
             complete(.failure(error))
         }
     }
 
-    private func runActivationCommand(
-        tag: NFCISO15693Tag,
-        patchInfo: Libre3NFCPatchInfo,
-        commandCode: NFCActivationCommandCode,
-        receiverID: UInt32,
-        explicitTime: UInt32?,
-        message: String
-    ) async throws {
-        let timeSeconds = explicitTime ?? Self.defaultActivationTimeSeconds()
-        let parameters = NFCActivationCommand.customRequestParameters(
-            timeSeconds: timeSeconds,
-            receiverID: receiverID
-        )
-        let activationRaw = try await customCommand(
-            tag: tag,
-            code: commandCode.rawValue,
-            parameters: parameters
-        )
-        let activation: Libre3NFCActivationResponse
-        do {
-            activation = try Libre3NFCActivationResponse(raw: activationRaw)
-        } catch Libre3NFCError.invalidActivationResponse(let raw) {
-            throw Libre3NFCError.invalidActivationResponseForPatch(
-                commandCode: commandCode,
-                patchInfo: patchInfo,
-                raw: raw
+    private static func successMessage(for commandCode: NFCActivationCommandCode?) -> String {
+        switch commandCode {
+        case nil:
+            return LocalizedString(
+                "Sensor read.",
+                comment: "NFC system sheet, success after reading patch info without changing the sensor"
+            )
+        case .activate:
+            return LocalizedString(
+                "Sensor activated.",
+                comment: "NFC system sheet, success after activating a fresh sensor"
+            )
+        case .switchReceiver:
+            return LocalizedString(
+                "Receiver switched.",
+                comment: "NFC system sheet, success after binding an already-active sensor to this phone"
             )
         }
-        complete(
-            .success(
-                Libre3NFCScanResult(
-                    patchInfo: patchInfo,
-                    commandCode: commandCode,
-                    commandParameters: parameters,
-                    activationResponse: activation
-                )
-            ),
-            message: message
-        )
     }
 
     private func customCommand(tag: NFCISO15693Tag, code: UInt8, parameters: Data) async throws -> Data {
@@ -208,11 +107,6 @@ public final class Libre3NFCActivationReader: NSObject, @unchecked Sendable {
                 continuation.resume(with: result)
             }
         }
-    }
-
-    private static func defaultActivationTimeSeconds() -> UInt32 {
-        let now = UInt64(Date().timeIntervalSince1970.rounded(.down))
-        return UInt32(max(0, now - 1))
     }
 }
 

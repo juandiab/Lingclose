@@ -284,3 +284,13 @@ Antes: 112. Después: **147, 0 fallos** (`swift build` y `swift test` con exit 0
 - `PatchControlCommand.swift:81-89`: las condiciones y el `from` de §6.1 están portados de Juggluco sin captura Lingo. Falta saber cómo delimita el sensor el final del rango.
 - `Libre3DataPlaneState.swift:252`: el ancla de reconexión usa el valor sin recortar. Si el sensor marca `uncapped` y no `capped`, el ancla no avanza.
 - `LibreSensorGATT.swift:52-53` (riesgo 5): hay que activar a mano las notificaciones de `historicData` y `clinicalData` para recibir backfill.
+
+## patchInfo de 64 B (27-oct, `docs/PROTOCOLO_LINGO.md` §1.7)
+
+| Archivo | Cambio |
+|---|---|
+| `Pairing/NFCActivationModels.swift` | `Libre3NFCPatchInfo(raw:)`: el camino directo no cambia. Si falla, extrae una trama `A5…A5 00 + 26 B` incrustada **solo si su CRC16 Abbott coincide**. Añade `hasValidCRC` y `wasExtractedFromLongerResponse` |
+| `Pairing/Libre3NFCActivationSequence.swift` (nuevo) | Secuencia de una sesión NFC sin depender de CoreNFC: `0xA1` hasta 3 veces y después, como máximo, un `0xA0`/`0xA8`, que no se reintenta |
+| `Pairing/CoreNFCActivationReader.swift` | Usa `Libre3NFCActivationSequence`. Mismos mensajes de la hoja NFC |
+
+Tests: `PatchInfoActivationSequenceTests` (11). En total, 158 y 0 fallos.

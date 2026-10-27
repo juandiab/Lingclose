@@ -30,7 +30,8 @@ struct CoordinatorHarness {
         pairing: InMemoryPairingStateStore? = nil,
         hook: RecordingRecoveryHook = RecordingRecoveryHook(),
         store: SQLiteStore? = nil,
-        hangOnActivate: Bool = false
+        hangOnActivate: Bool = false,
+        receiverIDGenerator: @escaping @Sendable () -> UInt32 = { 0x1234_5678 }
     ) async throws {
         self.sensor = sensor
         self.link = ScriptedSensorLink(sensor: sensor, restored: restored)
@@ -44,7 +45,7 @@ struct CoordinatorHarness {
         self.credentials = try StaticCredentials.synthetic(signingPublicKey: await sensor.signingPublicKey, keys: signingKeys)
         self.coordinator = SensorSessionCoordinator(
             link: link, nfc: nfc, pairingStore: self.pairing, credentials: credentials,
-            store: self.store, clock: clock, receiverIDGenerator: { 0x1234_5678 }
+            store: self.store, clock: clock, receiverIDGenerator: receiverIDGenerator
         )
     }
 

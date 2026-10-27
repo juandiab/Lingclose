@@ -6,7 +6,9 @@ enum NFCServiceError: Error, Equatable, CustomStringConvertible {
     case readerUnavailable
     case sessionBusy
     case noTag
-    case invalidPatchInfo(length: Int)
+    /// `head`: hasta 3 primeros bytes en hex; `a5Offset`: primer `A5` (cabecera esperada en 0 o 1).
+    /// Nunca incluye el serial (offset ≥ 18 en una trama válida).
+    case invalidPatchInfo(length: Int, head: String, a5Offset: Int?)
     case sensorNotFresh
     case ticketRejected
     case activationRejected(code: UInt8, reason: Reason)
@@ -36,7 +38,13 @@ enum NFCServiceError: Error, Equatable, CustomStringConvertible {
             case .readerUnavailable: self = .readerUnavailable
             case .sessionAlreadyActive: self = .sessionBusy
             case .noTag, .multipleTags, .nonISO15693Tag: self = .noTag
-            case .invalidPatchInfo(let raw): self = .invalidPatchInfo(length: raw.count)
+            case .invalidPatchInfo(let raw):
+                let bytes = [UInt8](raw)
+                self = .invalidPatchInfo(
+                    length: bytes.count,
+                    head: bytes.prefix(3).map { String(format: "%02x", $0) }.joined(separator: " "),
+                    a5Offset: bytes.firstIndex(of: 0xA5)
+                )
             case .invalidActivationResponse(let raw): self = .invalidActivationResponse(length: raw.count)
             case .invalidActivationResponseForPatch(_, _, let raw): self = .invalidActivationResponse(length: raw.count)
             case .unexpectedSensorState: self = .sensorNotFresh
@@ -52,7 +60,8 @@ enum NFCServiceError: Error, Equatable, CustomStringConvertible {
         case .readerUnavailable: "NFC no disponible"
         case .sessionBusy: "sesión NFC ocupada"
         case .noTag: "sin etiqueta ISO 15693"
-        case .invalidPatchInfo(let n): "patchInfo inválido (\(n) B)"
+        case .invalidPatchInfo(let n, let head, let a5):
+            "patchInfo inválido (\(n) B; inicio \(head.isEmpty ? "vacío" : head); A5 en \(a5.map(String.init) ?? "ninguno"))"
         case .sensorNotFresh: "el sensor no está sin activar (state != 1)"
         case .ticketRejected: "ticket de activación inválido"
         case .activationRejected(let code, let reason): "activación rechazada (código \(code), \(reason.rawValue))"

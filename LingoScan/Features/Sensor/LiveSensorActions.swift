@@ -54,9 +54,11 @@ final class LiveSensorActions: SensorActions {
         guard case .readyToActivate(let profile) = await coordinator.state else {
             throw SensorSessionCoordinatorError.invalidState(await coordinator.state.logLabel)
         }
+        // Reutilizar sesión y Receiver ID (`prepared` o `failed` antes del 0xA0) lo decide el
+        // coordinador (D-22); aquí solo se evita volver a preguntarle con la hoja aún abierta.
         let ready: PreparedActivation
-        if let reusable = try await reusablePrepared(for: profile) {
-            ready = reusable
+        if let prepared, prepared.profile == profile {
+            ready = prepared
         } else {
             ready = try await coordinator.prepareActivation(for: profile)
         }
@@ -85,20 +87,5 @@ final class LiveSensorActions: SensorActions {
             store: pairingStore
         )
         try await coordinator.activate(ticket: ticket)
-    }
-
-    /// Si la sesión más reciente ya está en `prepared` para este mismo sensor, se reutiliza su
-    /// Receiver ID en lugar de generar otro (evita Receiver IDs huérfanos al cancelar la hoja).
-    private func reusablePrepared(for profile: SensorProfile) async throws -> PreparedActivation? {
-        if let prepared, prepared.profile == profile { return prepared }
-        guard let id = try await pairingStore.currentSessionID(),
-              let saved = try await pairingStore.loadState(sessionID: id),
-              saved.activation.state == .prepared else { return nil }
-        let secrets = try await pairingStore.loadSecrets(sessionID: id)
-        guard secrets.serial == profile.serialNumber,
-              saved.productType == profile.productType,
-              saved.securityVersion == profile.securityVersion,
-              let receiverID = secrets.receiverID, receiverID != 0 else { return nil }
-        return PreparedActivation(sessionID: id, attemptID: saved.activation.attemptID, receiverID: receiverID, profile: profile)
     }
 }

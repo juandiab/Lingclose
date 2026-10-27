@@ -51,6 +51,8 @@
 	<string>LingoScan usa NFC para leer la información de tu sensor Lingo.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>LingoScan usa Bluetooth para recibir las lecturas de glucosa de tu sensor.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>LingoScan usa la cámara solo si tú lo pides, para fotografiar una comida o una etiqueta y proponerte sus nutrientes. La foto no se guarda.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>LingoScan lee tus entrenamientos de Apple Salud para mostrarlos junto a la curva de glucosa.</string>
 	<key>NSHealthUpdateUsageDescription</key>

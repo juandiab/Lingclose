@@ -7,15 +7,52 @@ struct DiaryEditorView: View {
     let viewModel: DiaryViewModel
     let editor: DiaryEditor
     @State private var draft: DiaryDraft
+    @State private var mode: Mode
+    @State private var analysis: MealAnalysisViewModel?
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.mealAssistant) private var services
+
+    /// Una comida con fila de nutrición se reabre con la pantalla de propuesta; el resto usa este formulario.
+    private enum Mode {
+        case loading
+        case plain
+        case reopened(MealAnalysisViewModel)
+    }
 
     init(viewModel: DiaryViewModel, editor: DiaryEditor) {
         self.viewModel = viewModel
         self.editor = editor
         _draft = State(initialValue: editor.draft)
+        _mode = State(initialValue: editor.editing?.kind == .meal ? .loading : .plain)
     }
 
     var body: some View {
+        Group {
+            switch mode {
+            case .loading:
+                ProgressView()
+            case .plain:
+                form
+            case .reopened(let model):
+                MealAnalysisView(model: model) {
+                    Task { await viewModel.reloadAfterExternalSave() }
+                }
+            }
+        }
+        .task { await loadMealNutrition() }
+    }
+
+    private func loadMealNutrition() async {
+        guard case .loading = mode, let event = editor.editing else { return }
+        let record = try? await services.nutrition.mealNutrition(eventID: event.eventID)
+        if let record {
+            mode = .reopened(MealAnalysisViewModel(reopening: event, record: record, services: services))
+        } else {
+            mode = .plain
+        }
+    }
+
+    private var form: some View {
         NavigationStack {
             Form {
                 Section {
@@ -31,6 +68,10 @@ struct DiaryEditorView: View {
                 Section {
                     switch draft.kind {
                     case .meal:
+                        Button(String(localized: "meal.analyzeWithAI", defaultValue: "Analizar con IA…"), systemImage: "sparkles") {
+                            analysis = MealAnalysisViewModel(
+                                services: services, editing: editor.editing, at: draft.at, initialDescription: draft.trimmedText)
+                        }
                         TextField(String(localized: "diary.editor.carbs", defaultValue: "Carbohidratos (g), opcional"), text: $draft.carbsText)
                             .keyboardType(.decimalPad)
                     case .exercise:
@@ -74,6 +115,11 @@ struct DiaryEditorView: View {
             }
         }
         .presentationDetents([.medium, .large])
+        .sheet(item: $analysis) { analysis in
+            MealAnalysisView(model: analysis) {
+                Task { await viewModel.reloadAfterExternalSave() }
+            }
+        }
     }
 
     private var kinds: [DiaryEventKind] {

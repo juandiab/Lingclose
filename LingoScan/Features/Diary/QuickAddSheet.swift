@@ -7,7 +7,9 @@ struct QuickAddSheet: View {
     let model: QuickAddModel
     let onSaved: () -> Void
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.mealAssistant) private var services
     @FocusState private var noteFocused: Bool
+    @State private var analysis: MealAnalysisViewModel?
 
     var body: some View {
         @Bindable var model = model
@@ -22,6 +24,14 @@ struct QuickAddSheet: View {
                     DatePicker(String(localized: "diary.editor.time", defaultValue: "Hora"), selection: $model.draft.at)
                     switch kind {
                     case .meal:
+                        Button {
+                            analysis = MealAnalysisViewModel(
+                                services: services, at: model.draft.at, initialDescription: model.draft.trimmedText)
+                        } label: {
+                            Label(String(localized: "meal.analyzeWithAI", defaultValue: "Analizar con IA…"), systemImage: "sparkles")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
                         TextField(String(localized: "diary.editor.carbs", defaultValue: "Carbohidratos (g), opcional"), text: $model.draft.carbsText)
                             .keyboardType(.decimalPad)
                             .textFieldStyle(.roundedBorder)
@@ -76,6 +86,12 @@ struct QuickAddSheet: View {
             .sensoryFeedback(.selection, trigger: model.kind)
         }
         .presentationDetents([.medium, .large])
+        .sheet(item: $analysis) { analysis in
+            MealAnalysisView(model: analysis) {
+                onSaved()
+                dismiss()
+            }
+        }
     }
 
     private func kindButton(_ kind: DiaryEventKind) -> some View {

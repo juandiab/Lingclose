@@ -7,6 +7,7 @@ struct RootTabView: View {
     @State private var ui: AppUIModels
     @State private var selection = AppTab.today
     private let identityImport: IdentityImportModel?
+    private let mealAssistant: MealAssistantServices
 
     /// Fuentes reales: `SQLiteStore` y `SensorSessionCoordinator`.
     init(environment: AppEnvironment) {
@@ -18,6 +19,7 @@ struct RootTabView: View {
         ))
         _ui = State(initialValue: environment.ui)
         identityImport = environment.identityImport
+        mealAssistant = .live(store: environment.store)
     }
 
     /// `PreviewData` (sintético y señalado como tal): `#Preview` y `-previewSensorState`.
@@ -27,6 +29,7 @@ struct RootTabView: View {
         _sensorViewModel = State(initialValue: SensorViewModel(statusSource: data, actions: PreviewSensorActions()))
         _ui = State(initialValue: .preview(events: data.events))
         identityImport = nil
+        mealAssistant = .preview
     }
 
     var body: some View {
@@ -48,6 +51,7 @@ struct RootTabView: View {
             }
         }
         .environment(\.tabSelector, TabSelector { selection = $0 })
+        .environment(\.mealAssistant, mealAssistant)
         .modifier(IdentityImportAlert(model: identityImport))
     }
 }

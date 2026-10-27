@@ -9,6 +9,7 @@ struct SettingsView: View {
     let alarms: AlarmSettingsModel?
 
     @Environment(\.openURL) private var openURL
+    @Environment(\.mealAssistant) private var mealAssistant
     @AppStorage(AppearanceMode.storageKey) private var appearance = AppearanceMode.system
 
     var body: some View {
@@ -16,6 +17,7 @@ struct SettingsView: View {
             Form {
                 unitSection
                 alarmsSection
+                mealAssistantSection
                 ReferenceRangeSection()
                 if let identity {
                     IdentitySection(model: identity)
@@ -53,6 +55,18 @@ struct SettingsView: View {
             }
         } footer: {
             Text(String(localized: "settings.alarms.footer", defaultValue: "Informativas; LingoScan no es un dispositivo médico."))
+        }
+    }
+
+    private var mealAssistantSection: some View {
+        Section {
+            NavigationLink {
+                LLMSettingsView(services: mealAssistant)
+            } label: {
+                Label(String(localized: "settings.mealAssistant", defaultValue: "Asistente de comidas"), systemImage: "sparkles")
+            }
+        } footer: {
+            Text(String(localized: "settings.mealAssistant.footer", defaultValue: "Opcional: propone calorías y macros de una foto o descripción. Tú revisas y guardas."))
         }
     }
 

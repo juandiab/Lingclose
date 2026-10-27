@@ -125,6 +125,12 @@ final class DiaryViewModel {
         return true
     }
 
+    /// El análisis de comidas guardó el evento por su cuenta: cierra el editor y recarga.
+    func reloadAfterExternalSave() async {
+        editor = nil
+        await load()
+    }
+
     /// Tombstone: misma identidad de evento, `deleted = true`, `edit_id` nuevo con la edición anterior como padre.
     func delete(_ event: DiaryEvent) async {
         guard canModify(event), !isSaving else { return }

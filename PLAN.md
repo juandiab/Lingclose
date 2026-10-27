@@ -78,7 +78,9 @@ Criterios de salida: round-trip exportar→importar sin pérdida ni duplicados (
 
 Respuesta a comidas, noche, CV y comparación semanal, calibrados con lecturas reales; pulido de movimiento y Liquid Glass; rendimiento con 14 días de datos. No bloquea la Fase 3 ni la 4.
 
-### Fase 3 — Primer sensor (de sacrificio)
+### Fase 3 — Primer sensor (de sacrificio) — CERRADA el 27-oct-2026
+
+Sensor activado y autenticado a las 17:55 (a la tercera escritura NFC; las dos primeras fallaron antes de cambiar el estado del sensor). El sensor Lingo acepta el certificado de app de Juggluco. Pasos 1 a 7 hechos salvo las 24 h de observación, que pasan a Fase 4 (reconexión tras reinicio).
 
 Protocolo, en este orden y con Fable registrando todo en `../NOTAS.md`:
 
@@ -92,7 +94,9 @@ Protocolo, en este orden y con Fable registrando todo en `../NOTAS.md`:
 
 Si el sensor corta el enlace tras `SendCertificateLoadDone`, o RoundWhiteDiscKit lanza `sensorCertificateVerificationFailed` o `certificateRejected`: parar. Fase 3b.
 
-### Fase 3b — Si Lingo no autoriza
+### Fase 3b — Si Lingo no autoriza — NO NECESARIA
+
+El sensor autorizó; se conserva solo como referencia. Queda como pulido entender el `patchInfo` de 64 B de los dos primeros intentos NFC.
 
 1. Guardar el log completo del handshake (redactado) en `Logs/` (no versionado) y un resumen en `../NOTAS.md`.
 2. Comparar byte a byte con el flujo de Juggluco (`docs/PROTOCOLO_LINGO.md` §5.3): orden de comandos de seguridad, tamaños (R1 23 B, challenge 40 B, respuesta 67 B), cabecera del certificado.
@@ -100,7 +104,9 @@ Si el sensor corta el enlace tras `SendCertificateLoadDone`, o RoundWhiteDiscKit
 4. Redactar un issue para `airedev326/RoundWhiteDiscKit` con el log anonimizado. Juampa decide si lo publica.
 5. Plan B: Android con NFC y Juggluco 11.5.4 exportando a Nightscout en el servidor de Juampa.
 
-### Fase 4 — Operación y ampliaciones
+### Fase 4 — Operación y ampliaciones — ABIERTA
+
+Primero: reconexión BLE tras reinicio de app y del teléfono, y backfill de huecos. Después Nightscout y Apple Watch.
 
 - Sesión sostenida de 14 días: huecos medidos, backfill tras desconexiones, cambio de sensor con nuevo Receiver ID.
 - Nightscout en el servidor de Juampa (Docker, MongoDB) como copia remota y fuente de reportes AGP; LingoScan sube `entries` por la API REST con `API_SECRET`. Opcional.

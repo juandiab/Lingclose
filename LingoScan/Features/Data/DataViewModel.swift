@@ -20,19 +20,31 @@ final class DataViewModel {
     private(set) var lastFill: HealthDrainSummary?
     private(set) var recentErrors: [EventLogEntry] = []
     private(set) var exportSummary: ArchiveExportSummary?
+    /// `true` durante `exportCooldown` tras exportar: evita toques repetidos que crean paquetes de más.
+    private(set) var isExportCoolingDown = false
     private(set) var importLines: [ArchiveImportLine] = []
     var isConfirmingFillGaps = false
 
     @ObservationIgnored let archive: any ArchiveManaging
     @ObservationIgnored private let healthController: any HealthControlling
     @ObservationIgnored private let eventLog: any EventLogReading
+    @ObservationIgnored private let exportCooldown: Duration
+    @ObservationIgnored private var cooldownTask: Task<Void, Never>?
 
     /// Cuántas copias recientes se listan.
     static let visiblePackages = 5
     /// Cuántos errores recientes se resumen.
     static let visibleErrors = 8
+    /// Cuántos paquetes propios conserva la retención (más uno por mes), el mismo valor que aplica `ArchiveRetention`.
+    static let retainedPackages = ArchiveRetention.keepLast
+    /// Bloqueo de "Exportar ahora" tras una exportación.
+    static let defaultExportCooldown = Duration.seconds(10)
 
-    init(archive: any ArchiveManaging, health: any HealthControlling, eventLog: any EventLogReading) {
+    init(
+        archive: any ArchiveManaging, health: any HealthControlling, eventLog: any EventLogReading,
+        exportCooldown: Duration = DataViewModel.defaultExportCooldown
+    ) {
+        self.exportCooldown = exportCooldown
         self.archive = archive
         self.healthController = health
         self.eventLog = eventLog
@@ -52,6 +64,11 @@ final class DataViewModel {
     }
 
     var destination: ArchiveDestination { archive.destination }
+    var destinationSummary: ArchiveDestinationSummary { ArchiveDestinationSummary(archive.destination) }
+    /// "Exportar ahora" solo con destino, sin operación en curso y fuera del bloqueo posterior a exportar.
+    var canExport: Bool { destination.url != nil && !isArchiveWorking && !isExportCoolingDown }
+    /// "Usar la carpeta de la app" no tiene sentido si ya es el destino.
+    var canUseAppFolder: Bool { !destination.isFallback }
     var isArchiveWorking: Bool { archive.isWorking }
     var archiveError: String? { archive.lastError }
     var visiblePackageList: [ArchivePackageStatus] { Array(archive.packages.prefix(Self.visiblePackages)) }
@@ -91,7 +108,10 @@ final class DataViewModel {
     // MARK: Archivo
 
     func exportNow() async {
-        exportSummary = await archive.exportNow()
+        guard canExport else { return }
+        let summary = await archive.exportNow()
+        exportSummary = summary
+        if summary != nil { startCooldown() }
         await refreshErrors()
     }
 
@@ -107,5 +127,16 @@ final class DataViewModel {
         importLines = await archive.importPackages(from: url)
         await archive.refresh()
         await refreshErrors()
+    }
+
+    private func startCooldown() {
+        cooldownTask?.cancel()
+        isExportCoolingDown = true
+        let duration = exportCooldown
+        cooldownTask = Task { [weak self] in
+            try? await Task.sleep(for: duration)
+            guard !Task.isCancelled else { return }
+            self?.isExportCoolingDown = false
+        }
     }
 }

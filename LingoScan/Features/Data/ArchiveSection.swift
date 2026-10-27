@@ -11,11 +11,10 @@ struct ArchiveSection: View {
         Section {
             destinationRow
             Button(String(localized: "data.archive.choose", defaultValue: "Elegir carpeta…"), systemImage: "folder.badge.plus", action: onChooseFolder)
-            if case .userFolder = viewModel.destination {
-                Button(String(localized: "data.archive.useICloud", defaultValue: "Volver al iCloud de LingoScan"), systemImage: "icloud") {
-                    Task { await viewModel.forgetFolder() }
-                }
+            Button(String(localized: "data.archive.useApp", defaultValue: "Usar la carpeta de la app"), systemImage: "icloud") {
+                Task { await viewModel.forgetFolder() }
             }
+            .disabled(!viewModel.canUseAppFolder)
             Button {
                 Task { await viewModel.exportNow() }
             } label: {
@@ -26,8 +25,13 @@ struct ArchiveSection: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.glassProminent)
-            .disabled(viewModel.destination.url == nil || viewModel.isArchiveWorking)
+            .disabled(!viewModel.canExport)
             .sensoryFeedback(.success, trigger: viewModel.exportSummary) { _, new in new?.verified == true }
+            if viewModel.isExportCoolingDown {
+                Text(String(localized: "data.archive.export.wait", defaultValue: "Copia hecha. El botón vuelve en unos segundos para evitar duplicados."))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
             if let summary = viewModel.exportSummary {
                 exportRow(summary)
             }
@@ -44,7 +48,9 @@ struct ArchiveSection: View {
         } header: {
             Text(String(localized: "data.archive.header", defaultValue: "Archivo .lingoscan"))
         } footer: {
-            Text(String(localized: "data.archive.footer", defaultValue: "Copia portable de tus datos. \"Disponible en iCloud\" solo aparece cuando el sistema confirma la subida."))
+            Text(String(localized: "data.archive.footer", defaultValue: "Copia portable de tus datos. \"Disponible en iCloud\" solo aparece cuando el sistema confirma la subida.")
+                + "\n"
+                + String(localized: "data.archive.retention", defaultValue: "Se conservan los últimos \(DataViewModel.retainedPackages) paquetes y uno por mes; los anteriores se borran."))
         }
         if !viewModel.visiblePackageList.isEmpty {
             Section(String(localized: "data.archive.recent", defaultValue: "Últimas copias")) {
@@ -55,26 +61,18 @@ struct ArchiveSection: View {
         }
     }
 
-    @ViewBuilder
     private var destinationRow: some View {
-        switch viewModel.destination {
-        case .userFolder(let url):
-            LabeledContent(String(localized: "data.archive.folder", defaultValue: "Carpeta")) {
-                Text(verbatim: url.lastPathComponent)
-            }
-        case .appICloudContainer:
-            VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
-                LabeledContent(String(localized: "data.archive.folder", defaultValue: "Carpeta")) {
-                    Text(String(localized: "data.archive.fallback", defaultValue: "iCloud de LingoScan"))
-                }
-                Text(String(localized: "data.archive.fallback.note", defaultValue: "Es el destino por omisión: aún no elegiste una carpeta."))
+        let summary = viewModel.destinationSummary
+        return VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
+            Label(summary.title, systemImage: summary.systemImage)
+                .foregroundStyle(summary == .none ? Tokens.Palette.stale : .primary)
+            if case .unavailable(let reason) = viewModel.destination {
+                Text(reason)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-        case .unavailable(let reason):
-            Label(reason, systemImage: "exclamationmark.triangle")
-                .foregroundStyle(Tokens.Palette.stale)
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func exportRow(_ summary: ArchiveExportSummary) -> some View {
@@ -85,9 +83,20 @@ struct ArchiveSection: View {
                 Label(String(localized: "data.archive.export.unverified", defaultValue: "Copia creada, sin verificar"), systemImage: "exclamationmark.triangle")
                     .foregroundStyle(Tokens.Palette.stale)
             }
+            Text(verbatim: summary.packageName)
+                .font(.footnote)
+                .textSelection(.enabled)
             Text(String(localized: "data.archive.export.counts", defaultValue: "\(summary.readings) lecturas, \(summary.events) eventos del diario"))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+            Text(String(localized: "data.archive.export.at", defaultValue: "Hecha a las \(summary.exportedAt.formatted(date: .omitted, time: .standard))"))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            if summary.removedByRetention > 0 {
+                Text(String(localized: "data.archive.export.removed", defaultValue: "Se borraron \(summary.removedByRetention) paquetes antiguos por la retención"))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
         }
         .accessibilityElement(children: .combine)
     }

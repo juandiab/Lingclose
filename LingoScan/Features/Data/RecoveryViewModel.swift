@@ -17,13 +17,38 @@ final class RecoveryViewModel {
     /// Guardar la frase en el Llavero del iPhone (solo este dispositivo) para no pedirla en cada arranque.
     var rememberPassphrase = false
     var includeMaterial = false
+    /// Archivo listo para "Compartir última copia" (o por qué no hay).
+    private(set) var shareFile: RecoveryShareFile = .none
+    /// Confirmación visible de la última exportación manual de esta pantalla.
+    private(set) var exportConfirmation: ExportConfirmation?
+
+    struct ExportConfirmation: Equatable {
+        let fileName: String
+        let at: Date
+    }
 
     let service: RecoveryService
     let connector: (any RecoveryActiveSensorConnecting)?
+    @ObservationIgnored private let bookmarks: any FolderBookmarkStoring
 
-    init(context: RecoveryContext) {
+    init(context: RecoveryContext, bookmarks: any FolderBookmarkStoring = UserDefaultsFolderBookmarkStore()) {
         service = context.service
         connector = context.connector
+        self.bookmarks = bookmarks
+    }
+
+    var destinationSummary: ArchiveDestinationSummary {
+        ArchiveDestinationSummary(kind: status.exportFolderKind, folderName: status.exportFolderName)
+    }
+
+    /// Vuelve a comprobar en disco la última copia (y la copia a un temporal para compartirla).
+    func refreshShareFile() async {
+        let record = status.lastExport
+        let kind = status.exportFolderKind
+        let store = bookmarks
+        shareFile = await Task.detached {
+            RecoveryShareFile.prepare(record: record, folderKind: kind, bookmarks: store)
+        }.value
     }
 
     /// Sigue los cambios del servicio (exportaciones de transición incluidas) mientras la vista vive.
@@ -71,6 +96,9 @@ final class RecoveryViewModel {
         await run {
             let record = try await self.service.exportNow(includeMaterial: self.includeMaterial)
             self.includeMaterial = false
+            self.exportConfirmation = ExportConfirmation(fileName: record.fileName, at: record.at)
+            self.status = await self.service.status()
+            await self.refreshShareFile()
             return String(localized: "recovery.export.done", defaultValue: "Exportado \(record.fileName)")
         }
     }

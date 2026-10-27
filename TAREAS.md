@@ -29,13 +29,14 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | cerrada |
 | T-09 | 2a | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | cerrada |
 | T-10 | 2a | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | cerrada |
-| T-19 | 2a | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | cerrada |
+| T-19 | 2a | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | cerrada (`e407006`; correcciones `191b1ed`, `b2f3461`; probada con el sensor real el 27-oct: copias `prepared`, `response_saved` y `authenticated`, abiertas en el Mac) |
 | T-12a | 2a | Sonnet | Diario, Datos, Ajustes y gráfica básica (sin reportes avanzados) | T-09, T-10, T-11 | cerrada |
 | T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | cerrada |
 | T-15 | 2a | Fable + Sonnet | Pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) con paquetes de ambas apps y el verificador externo; app de prueba solo si hace falta | T-10, T-19 | pendiente |
-| T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2a cerrada (T-09, T-10, T-12a, T-13, T-15, **T-19**) | pendiente |
+| T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2a cerrada (T-09, T-10, T-12a, T-13, T-15, **T-19**) | hecha 27-oct 17:55 (`5ae4296`): sensor activado y autenticado a la tercera escritura NFC |
 | T-11b | 2a | Sonnet | Hoy según la referencia de la caja Lingo: navegación por día, 6/12/24 h, picos sombreados con índice, marcadores de comida, arrastre con lectura, "+" para registrar | T-12a | cerrada |
-| T-21 | 2b | Sonnet + Fable | Asistente de comidas con LLM (foto, nombre, tabla nutricional; clave por proveedor en Keychain; modelos económicos) y entrenamientos importados de Salud/Apple Watch | T-11b | implementada (`669de29`…`T-21 §5`); pendiente prueba real con clave de Juampa en el iPhone |
+| T-21 | 2b | Sonnet + Fable | Asistente de comidas con LLM (foto, nombre, tabla nutricional; clave por proveedor en Keychain; modelos económicos) y entrenamientos importados de Salud/Apple Watch | T-11b | hecha en código (`669de29`, `3f24f58`, `34e898a`, `c04e16f`, `604a4ea`, `42eaaf9`, `c873361`, `ab7ad32`, `0ec0e58`); pendiente prueba real de cámara y proveedor con la clave de Juampa en el iPhone |
+| T-12c | 2b | Sonnet | Pulido de Hoy, Datos y Ajustes: apariencia, rango de referencia, Registro de hoy → Diario; Datos y Recuperación con destino claro, confirmación de exportar y compartir siempre visible | T-12a | hecha (`80dc798`, `46f8ded`, `db9a3ec`; pulido de Datos/Recuperación del 27-oct sin commit aún) |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |
@@ -221,6 +222,11 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 ## T-16 — Protocolo del sensor de sacrificio
 
 **Modelo:** Fable + Juampa. Pasos en `PLAN.md` Fase 3. Requiere confirmación escrita en el chat antes del paso 5. **Precondiciones duras (ajuste 3 de Astra):** T-19 cerrada y probada (R-01, R-04, R-05 verdes; exportación de recuperación en `prepared` funcionando), T-10 con exportación verificada por `verify_archive.py`, y Fase 2a cerrada. Ninguna activación real antes de eso.
+
+## T-12c — Pulido de Hoy, Datos y Ajustes (Fase 2b)
+
+**Hecho (`80dc798`):** apariencia Sistema/Claro/Oscuro, rango de referencia editable unificado, "Registro de hoy" → Diario, "+" sin tapar la leyenda, 357 claves es/en.
+**Pulido de Datos y Recuperación (27-oct, tras ver el uso real):** (a) cabecera con el destino actual ("Carpeta elegida: X", "Carpeta de la app en iCloud Drive (Archivos → LingoScan)" o "Sin destino"), la misma frase en Recuperación; "Elegir carpeta…" y "Usar la carpeta de la app" siempre visibles. (b) Recuperación muestra siempre "Última copia: fecha, seq N, estado" o "Aún no hay copia" y "Compartir última copia" cuando el archivo existe (se copia a un temporal bajo el alcance de seguridad de la carpeta elegida); si falta, avisa de que hay que exportar de nuevo. (c) Tras "Exportar ahora": confirmación con nombre del paquete, lecturas, hora y paquetes borrados por retención; botón bloqueado 10 s. (d) Aviso fijo de retención: se conservan los últimos 7 paquetes y uno por mes. Origen: Juampa reorganizó carpetas en iCloud Drive, la app olvidó el bookmark y los archivos fueron al contenedor propio sin que la UI lo dijera; pulsó "Exportar ahora" 12 veces sin saber si había funcionado. Pendiente de commit y de prueba en el iPhone.
 
 ## T-17 — Nightscout uploader (Fase 4, opcional)
 

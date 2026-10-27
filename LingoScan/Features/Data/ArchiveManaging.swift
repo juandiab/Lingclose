@@ -8,6 +8,10 @@ struct ArchiveExportSummary: Equatable, Sendable {
     let events: Int
     let verified: Bool
     let failure: String?
+    /// Cuándo terminó la exportación (para la confirmación visible).
+    var exportedAt = Date()
+    /// Paquetes antiguos que la retención borró en esta exportación.
+    var removedByRetention = 0
 }
 
 /// Una línea del resumen de importación (`ImportSummary` o rechazo).
@@ -76,7 +80,8 @@ final class LiveArchiveManager: ArchiveManaging {
         guard let result = await service.exportNow() else { return nil }
         return ArchiveExportSummary(
             packageName: result.url.lastPathComponent, readings: result.manifest.counts.readings,
-            events: result.manifest.counts.events, verified: result.verified, failure: result.verificationFailure)
+            events: result.manifest.counts.events, verified: result.verified, failure: result.verificationFailure,
+            removedByRetention: result.removedByRetention.count)
     }
 
     func importPackages(from url: URL) async -> [ArchiveImportLine] {

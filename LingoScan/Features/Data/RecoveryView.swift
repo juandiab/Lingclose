@@ -54,6 +54,7 @@ struct RecoveryView: View {
             }
         }
         .task { await model.observe() }
+        .task(id: model.status.lastExport) { await model.refreshShareFile() }
     }
 
     private var passphraseSection: some View {
@@ -95,17 +96,19 @@ struct RecoveryView: View {
                 Label(String(localized: "recovery.pending", defaultValue: "Exportación pendiente: introduce la frase"), systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
             }
-            if let last = model.status.lastExport {
-                LabeledContent(String(localized: "recovery.last", defaultValue: "Última copia")) {
-                    Text(last.at, format: .dateTime.day().month().hour().minute())
-                }
-                ForEach(last.sessions) { session in
-                    LabeledContent(String(session.sessionID.prefix(8)), value: "seq \(session.sequence) · \(session.state.rawValue)")
+            lastExportRow
+            shareRow
+            if let confirmation = model.exportConfirmation {
+                VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
+                    Label(String(localized: "recovery.export.confirmed", defaultValue: "Copia creada"), systemImage: "checkmark.seal")
+                    Text(verbatim: confirmation.fileName)
                         .font(.footnote)
+                        .textSelection(.enabled)
+                    Text(String(localized: "recovery.export.at", defaultValue: "Hecha a las \(confirmation.at.formatted(date: .omitted, time: .standard))"))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
-                ShareLink(item: last.fileURL) {
-                    Label(String(localized: "recovery.share", defaultValue: "Compartir última copia"), systemImage: "square.and.arrow.up")
-                }
+                .accessibilityElement(children: .combine)
             }
             Toggle(String(localized: "recovery.includeMaterial", defaultValue: "Incluir material de identidad"), isOn: $model.includeMaterial)
             Button(String(localized: "recovery.exportNow", defaultValue: "Exportar ahora")) {
@@ -126,21 +129,59 @@ struct RecoveryView: View {
         }
     }
 
-    @ViewBuilder
     private var folderRow: some View {
-        switch model.status.exportFolderKind {
-        case .chosen, .fixed:
-            LabeledContent(String(localized: "recovery.folder.label", defaultValue: "Carpeta"), value: model.status.exportFolderName)
-        case .appICloudContainer:
-            Label(String(localized: "recovery.folder.container", defaultValue: "Se guarda en el iCloud Drive de la app: aún no hay carpeta elegida en Datos."), systemImage: "folder.badge.questionmark")
+        let summary = model.destinationSummary
+        return VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
+            Label(summary.title, systemImage: summary.systemImage)
+            switch model.status.exportFolderKind {
+            case .documents:
+                Text(String(localized: "recovery.folder.fallback", defaultValue: "Se guarda en Documentos de la app: aún no hay carpeta elegida. Compártelo a otro sitio tras exportar."))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            case .unavailable:
+                Text(String(localized: "recovery.folder.unavailable", defaultValue: "La carpeta elegida ya no es accesible: se guarda en Documentos de la app. Elige la carpeta de nuevo en Datos."))
+                    .font(.footnote)
+                    .foregroundStyle(Tokens.Palette.stale)
+            case .appICloudContainer:
+                Text(String(localized: "recovery.folder.container.note", defaultValue: "Puedes cambiarla en Datos → Elegir carpeta…"))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            case .chosen, .fixed:
+                EmptyView()
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private var lastExportRow: some View {
+        if let last = model.status.lastExport {
+            let newest = last.sessions.max { $0.sequence < $1.sequence }
+            let date = last.at.formatted(date: .abbreviated, time: .shortened)
+            if let newest {
+                Text(String(localized: "recovery.last.detail", defaultValue: "Última copia: \(date), seq \(newest.sequence), \(newest.state.rawValue)"))
+            } else {
+                Text(String(localized: "recovery.last.dateOnly", defaultValue: "Última copia: \(date)"))
+            }
+        } else {
+            Text(String(localized: "recovery.last.none", defaultValue: "Aún no hay copia"))
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var shareRow: some View {
+        switch model.shareFile {
+        case .none:
+            EmptyView()
+        case .missing:
+            Label(String(localized: "recovery.share.missing", defaultValue: "La última copia ya no está en la carpeta; exporta de nuevo"), systemImage: "exclamationmark.triangle")
                 .font(.footnote)
-        case .documents:
-            Label(String(localized: "recovery.folder.fallback", defaultValue: "Se guarda en Documentos de la app: aún no hay carpeta elegida. Compártelo a otro sitio tras exportar."), systemImage: "folder.badge.questionmark")
-                .font(.footnote)
-        case .unavailable:
-            Label(String(localized: "recovery.folder.unavailable", defaultValue: "La carpeta elegida ya no es accesible: se guarda en Documentos de la app. Elige la carpeta de nuevo en Datos."), systemImage: "folder.badge.minus")
-                .font(.footnote)
-                .foregroundStyle(.orange)
+                .foregroundStyle(Tokens.Palette.stale)
+        case .ready(let url):
+            ShareLink(item: url) {
+                Label(String(localized: "recovery.share", defaultValue: "Compartir última copia"), systemImage: "square.and.arrow.up")
+            }
         }
     }
 

@@ -34,6 +34,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | en verificación (falta cableado en Ajustes y en) |
 | T-15 | 2a | Fable + Sonnet | Pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) con paquetes de ambas apps y el verificador externo; app de prueba solo si hace falta | T-10, T-19 | pendiente |
 | T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2a cerrada (T-09, T-10, T-12a, T-13, T-15, **T-19**) | pendiente |
+| T-11b | 2a | Sonnet | Hoy según la referencia de la caja Lingo: navegación por día, 6/12/24 h, picos sombreados con índice, marcadores de comida, arrastre con lectura, "+" para registrar | T-12a | pendiente |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |
@@ -153,6 +154,14 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 **Objetivo (ajuste 4 de Astra):** lo mínimo para validar el sensor: Diario (comidas, ejercicio, notas con linaje de ediciones `edit_id`/`parent_edit_id`), Datos (estado de Health con huecos pendientes, exportar/importar, estado de iCloud, recuperación), Ajustes (unidad, alarmas, permisos, diagnóstico), y en Hoy la curva 3/6/24 h con huecos y marcas más tiempo en rango, media y SD del período visible. Sin pulido visual más allá del checklist de accesibilidad.
 **Aceptación:** `BasicStats` con 4 fixtures (huecos, calentamiento, vacío, 24 h completas); capturas claro/oscuro; VoiceOver en Diario y Datos.
 **Verificación Fable:** tests; capturas; commit `T-12a`.
+
+## T-11b — Hoy según la referencia de la caja Lingo (Fase 2a, tras T-12a)
+
+**Modelo:** Sonnet. **Skills:** `swiftui-pro`, `swiftui-liquid-glass`, `ios-design-agent-skill`, `apple-design` (arrastre interrumpible, respuesta inmediata).
+**Archivos:** `LingoScan/Features/Today/**`, `LingoScan/Features/Diary/QuickAdd*.swift` (nuevo), `Packages/LingoCore/Sources/LingoCore/Reports/SpikeIndex.swift` (nuevo) + test, `LingoScanTests/Today*`, `docs/T-11b.md`, capturas.
+**Objetivo:** el modelo de interacción de `DISENO_UI.md` "Referencia de interacción": navegación por día con `‹ Hoy ›` y selector de fecha; chips 6 h / 12 h / 24 h; líneas de referencia 70 y 140 mg/dL (editables en Ajustes, marcadas no médicas); sombreado del área sobre 140 en cada pico e índice de pico bajo cada uno (`SpikeIndex`: área sobre 140 en mg/dL·min ÷ 10, redondeado); marcadores de comida y ejercicio sobre el eje de tiempo con icono y hora; arrastre sobre la curva con línea vertical y lectura "N mg/dL a las HH:MM" (gesto interrumpible, sin bloquear el scroll); botón "+" flotante de vidrio que abre un registro rápido en dos toques (comida con gramos opcionales, ejercicio, nota) que escribe en el Diario con linaje; fila "Registro de hoy" con conteo y acceso al Diario. Huecos siguen visibles y sin interpolar; datos sintéticos siguen rotulados.
+**Aceptación:** `SpikeIndex` con 4 fixtures (sin picos, un pico, dos picos, pico cortado por hueco); arrastre devuelve la lectura más cercana al instante (test del view model); capturas claro/oscuro con la curva de `PreviewData`; checklist de `swiftui-liquid-glass`; sin `foregroundColor` ni API obsoleta; VoiceOver lee el valor arrastrado.
+**Verificación Fable:** tests; capturas comparadas con `docs/referencias/lingo-caja-pantalla-today.jpg`; commit `T-11b`.
 
 ## T-12b — Reportes avanzados y pulido (Fase 2b, después del primer sensor)
 

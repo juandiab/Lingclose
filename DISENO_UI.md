@@ -2,6 +2,19 @@
 
 Dirección: **calma, legibilidad, datos primero.** No es una app médica ni lo parece: nada de rojo de alarma permanente, ni semáforos. El valor actual, su antigüedad y su calidad siempre van juntos. iOS 26 con Liquid Glass nativo en el cromo (barras, acciones flotantes, chips) y superficies sólidas para texto y gráficas.
 
+## Referencia de interacción (2026-10-27)
+
+Juampa pidió usar como referencia la pantalla "Today" de la app oficial Lingo tal como aparece en la caja del producto (`docs/referencias/lingo-caja-pantalla-today.jpg`). Se toma el **modelo de interacción**, no la marca ni los iconos de Abbott:
+
+- Cabecera con navegación por día (`‹ Hoy ▾ ›`) y chips de período 6 h / 12 h / 24 h.
+- Curva con líneas de referencia a 70 y 140 mg/dL y **sombreado del área por encima de 140** en cada pico; bajo cada pico, un número de "cuenta de pico" (en Lingo es un índice propietario; en LingoScan será el área sobre 140 en mg/dL·min dividida por 10, redondeada, rotulado "índice de pico, no médico").
+- Marcadores de comida y actividad sobre el eje de tiempo, con hora; tocar uno muestra su detalle.
+- Arrastre sobre la curva con línea vertical y lectura "142 mg/dL a las 12:02".
+- Botón "+" central para registrar comida, ejercicio o nota en dos toques; fila "Registro" con el conteo del día y acceso a editar.
+- Pestañas: Hoy, Diario, Reportes, Datos, Ajustes (se mantienen las nuestras; el "+" central es un botón flotante de vidrio en Hoy y Diario).
+
+Tarea: **T-11b** (después de T-12a).
+
 ## Pantallas de la v1
 
 | Pantalla | Contenido | Comportamiento |

@@ -2,22 +2,17 @@ import Charts
 import SwiftUI
 
 /// Curva de glucosa con Swift Charts: un `LineMark` por tramo (los huecos quedan abiertos, sin interpolar),
-/// banda de referencia, huecos sombreados y marcas de comidas y ejercicio.
+/// líneas de referencia, área sombreada sobre la línea alta en cada pico y huecos sombreados.
+/// Marcas, índices de pico y cursor se dibujan en `ChartInteractionOverlay`.
 struct GlucoseChart: View {
     let viewModel: TodayViewModel
-    @Binding var selectedDate: Date?
+    let selection: ChartSelection
 
     var body: some View {
         let domain = viewModel.chartValueDomain
+        let high = viewModel.referenceHigh
+        let low = viewModel.referenceLow
         Chart {
-            RectangleMark(
-                xStart: .value("Inicio", viewModel.windowStart),
-                xEnd: .value("Fin", viewModel.windowEnd),
-                yStart: .value("Mínimo", Tokens.ReferenceRange.lower),
-                yEnd: .value("Máximo", Tokens.ReferenceRange.upper)
-            )
-            .foregroundStyle(Tokens.Palette.inRange.opacity(0.14))
-
             ForEach(viewModel.gaps) { gap in
                 RectangleMark(
                     xStart: .value("Inicio del hueco", gap.start),
@@ -28,19 +23,34 @@ struct GlucoseChart: View {
                 .foregroundStyle(Tokens.Palette.gap.opacity(0.22))
             }
 
-            ForEach(viewModel.marks) { mark in
-                RuleMark(x: .value("Marca", mark.date))
-                    .foregroundStyle(.secondary.opacity(0.5))
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
-                    .annotation(position: .top, spacing: 2, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) {
-                        Image(systemName: mark.kind.systemImage)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .accessibilityLabel(mark.kind.title)
-                    }
-            }
+            RuleMark(y: .value("Referencia alta", high))
+                .foregroundStyle(.secondary)
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                .annotation(position: .top, alignment: .trailing, spacing: 2) {
+                    Text(String(localized: "today.reference.value", defaultValue: "\(high) mg/dL"))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            RuleMark(y: .value("Referencia baja", low))
+                .foregroundStyle(.secondary)
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                .annotation(position: .top, alignment: .trailing, spacing: 2) {
+                    Text(String(localized: "today.reference.value", defaultValue: "\(low) mg/dL"))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
 
             ForEach(viewModel.segments) { segment in
+                // Área sobre la línea alta: cada punto se recorta a `max(valor, referencia alta)`.
+                ForEach(segment.points) { point in
+                    AreaMark(
+                        x: .value("Hora", point.date),
+                        yStart: .value("Referencia alta", high),
+                        yEnd: .value("Exceso", max(point.value, high)),
+                        series: .value("Pico", segment.id)
+                    )
+                    .foregroundStyle(Tokens.Palette.outOfRange.opacity(0.3))
+                }
                 ForEach(segment.points) { point in
                     LineMark(
                         x: .value("Hora", point.date),
@@ -56,33 +66,28 @@ struct GlucoseChart: View {
                         .symbolSize(24)
                 }
             }
-
-            if let selected = selectedDate.flatMap(viewModel.nearestPoint(to:)) {
-                RuleMark(x: .value("Selección", selected.date))
-                    .foregroundStyle(.secondary)
-                PointMark(x: .value("Hora", selected.date), y: .value("mg/dL", selected.value))
-                    .foregroundStyle(Color.accentColor)
-                    .symbolSize(70)
-            }
         }
         .chartXScale(domain: viewModel.windowStart...viewModel.windowEnd)
         .chartYScale(domain: domain)
+        .chartYAxis(.hidden)
         .chartXAxis {
-            AxisMarks(values: .stride(by: .hour, count: viewModel.period.axisStrideHours)) {
+            AxisMarks(values: .stride(by: .hour, count: viewModel.isToday ? viewModel.period.axisStrideHours : 4)) {
                 AxisGridLine()
                 AxisValueLabel(format: .dateTime.hour())
             }
         }
-        .chartXSelection(value: $selectedDate)
+        .chartOverlay { proxy in
+            ChartInteractionOverlay(proxy: proxy, viewModel: viewModel, selection: selection)
+        }
         .accessibilityChartDescriptor(
             GlucoseChartDescriptor(
                 points: viewModel.points,
                 start: viewModel.windowStart,
                 end: viewModel.windowEnd,
                 valueDomain: domain,
-                periodTitle: viewModel.period.spokenTitle
+                periodTitle: viewModel.isToday ? viewModel.period.spokenTitle : viewModel.shownDay.formatted(date: .complete, time: .omitted)
             )
         )
-        .containerRelativeFrame(.vertical) { height, _ in height * 0.32 }
+        .containerRelativeFrame(.vertical) { height, _ in height * 0.36 }
     }
 }

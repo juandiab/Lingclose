@@ -1,17 +1,20 @@
 import SwiftUI
 
-/// Leyenda de la curva: banda de referencia (no médica) y huecos.
+/// Leyenda de la curva: líneas de referencia (no médicas), índice de pico y huecos.
 struct ChartLegend: View {
+    let low: Int
+    let high: Int
+
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
             HStack(spacing: Tokens.Spacing.xs) {
                 RoundedRectangle(cornerRadius: 3)
-                    .fill(Tokens.Palette.inRange.opacity(0.25))
+                    .fill(Tokens.Palette.outOfRange.opacity(0.4))
                     .frame(width: 20, height: 12)
                     .accessibilityHidden(true)
                 Text(String(
-                    localized: "today.legend.range",
-                    defaultValue: "Rango de referencia 70–180 mg/dL · no médico"
+                    localized: "today.legend.spike",
+                    defaultValue: "Área sobre \(high) mg/dL; el número bajo cada pico es el índice de pico. Líneas de referencia \(low) y \(high) mg/dL · no médico"
                 ))
             }
             HStack(spacing: Tokens.Spacing.xs) {

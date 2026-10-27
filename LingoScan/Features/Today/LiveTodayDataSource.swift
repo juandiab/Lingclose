@@ -11,6 +11,8 @@ struct LiveTodayDataSource: TodayDataSource {
     /// Ventanas crecientes para buscar la última lectura elegible sin leer toda la base.
     static let latestLookbacks: [TimeInterval] = [6 * 3_600, 24 * 3_600, 15 * 86_400]
 
+    var diaryStore: (any DiaryStore)? { SQLiteDiaryStore(store: store) }
+
     func readings(in range: ClosedRange<UTCInstant>) async throws -> [GlucoseReading] {
         try await store.readings(in: range)
     }

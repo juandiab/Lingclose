@@ -51,9 +51,9 @@ struct TodayViewModelTests {
 
     // MARK: Huecos
 
-    @Test func threeHourWindowHasOneVisibleGapOfTwentySixMinutes() async throws {
+    @Test func sixHourWindowHasOneVisibleGapOfTwentySixMinutes() async throws {
         let (model, _) = makeModel()
-        model.period = .threeHours
+        model.period = .sixHours
         await model.refresh()
         #expect(model.segments.count == 2)
         let gap = try #require(model.gaps.first)
@@ -114,17 +114,17 @@ struct TodayViewModelTests {
             #expect(model.windowStart == Self.now.addingTimeInterval(-period.duration))
             #expect(model.points.allSatisfy { $0.date >= model.windowStart && $0.date <= model.windowEnd })
         }
-        let three = counts[.threeHours] ?? 0
         let six = counts[.sixHours] ?? 0
+        let twelve = counts[.twelveHours] ?? 0
         let day = counts[.twentyFourHours] ?? 0
-        #expect(three < six && six < day)
-        // 179 minutos con lectura (lc 4140…4318) menos los 25 de la desconexión.
-        #expect(three == 179 - PreviewData.disconnectionMinutes)
+        #expect(six < twelve && twelve < day)
+        // 359 minutos con lectura (lc 4140…4318 y anteriores) menos los 25 de la desconexión.
+        #expect(six == 359 - PreviewData.disconnectionMinutes)
     }
 
     @Test func periodsExposeHoursAndAxisStride() {
-        #expect(TodayPeriod.allCases.map(\.hours) == [3, 6, 24])
-        #expect(TodayPeriod.threeHours.duration == 10_800)
+        #expect(TodayPeriod.allCases.map(\.hours) == [6, 12, 24])
+        #expect(TodayPeriod.sixHours.duration == 21_600)
         #expect(TodayPeriod.twentyFourHours.axisStrideHours == 4)
     }
 

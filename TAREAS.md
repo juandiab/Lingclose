@@ -34,7 +34,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | cerrada |
 | T-15 | 2a | Fable + Sonnet | Pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) con paquetes de ambas apps y el verificador externo; app de prueba solo si hace falta | T-10, T-19 | pendiente |
 | T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2a cerrada (T-09, T-10, T-12a, T-13, T-15, **T-19**) | pendiente |
-| T-11b | 2a | Sonnet | Hoy según la referencia de la caja Lingo: navegación por día, 6/12/24 h, picos sombreados con índice, marcadores de comida, arrastre con lectura, "+" para registrar | T-12a | pendiente |
+| T-11b | 2a | Sonnet | Hoy según la referencia de la caja Lingo: navegación por día, 6/12/24 h, picos sombreados con índice, marcadores de comida, arrastre con lectura, "+" para registrar | T-12a | cerrada |
 | T-21 | 2b | Sonnet + Fable | Asistente de comidas con LLM (foto, nombre, tabla nutricional; clave por proveedor en Keychain; modelos económicos) y entrenamientos importados de Salud/Apple Watch | T-11b | pendiente |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |

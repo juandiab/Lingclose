@@ -12,4 +12,10 @@ protocol TodayDataSource: Sendable {
     func diaryEvents(in range: ClosedRange<UTCInstant>) async throws -> [DiaryEvent]
     /// Avisos de que hay datos nuevos. Termina cuando se cancela la tarea que lo consume.
     func changes() -> AsyncStream<Void>
+    /// Diario donde escribe el registro rápido. `nil` en previsualización: Hoy usa entonces un diario en memoria.
+    var diaryStore: (any DiaryStore)? { get }
+}
+
+extension TodayDataSource {
+    var diaryStore: (any DiaryStore)? { nil }
 }

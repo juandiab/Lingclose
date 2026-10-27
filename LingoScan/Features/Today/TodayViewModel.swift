@@ -14,8 +14,21 @@ final class TodayViewModel {
     /// Período de la curva. Al cambiarlo, la vista vuelve a llamar a `refresh()` con `.task(id:)`.
     var period: TodayPeriod = .sixHours
 
+    /// Días respecto de hoy: 0 es hoy (ventana móvil de `period`), -1 ayer… Un día anterior muestra el día completo.
+    private(set) var dayOffset = 0
+
+    /// Líneas de referencia (mg/dL). El umbral alto es también el de los picos sombreados.
+    var referenceLow = ReferenceLines.defaultLow
+    var referenceHigh = ReferenceLines.defaultHigh {
+        didSet { if referenceHigh != oldValue { recomputeSpikes() } }
+    }
+
     private(set) var latest: GlucoseReading?
     private(set) var segments: [GlucoseSegment] = []
+    private(set) var points: [GlucosePoint] = []
+    private(set) var spikes: [TodaySpike] = []
+    /// Eventos del día mostrado (comidas, ejercicio y notas), para la fila "Registro".
+    private(set) var dayEntryCount = 0
     private(set) var gaps: [GlucoseGap] = []
     private(set) var marks: [DiaryMark] = []
     /// Tiempo en rango, media y SD del período visible (informativo, no médico).
@@ -26,10 +39,14 @@ final class TodayViewModel {
     private(set) var hasLoaded = false
     /// Instante con el que se calculó la ventana visible.
     private(set) var windowEnd: Date
+    private(set) var windowStart: Date
 
     private let dataSource: any TodayDataSource
     private let sensorSource: any SensorStatusSource
     private let clock: @Sendable () -> Date
+    @ObservationIgnored let calendar: Calendar
+    /// Diario en memoria cuando la fuente no trae uno propio (previsualización): el registro rápido se ve en la curva.
+    @ObservationIgnored private let fallbackStore = InMemoryDiaryStore()
 
     /// Sin lectura en más de 5 minutos el dato se considera atrasado (`ARQUITECTURA.md` §3).
     static let staleAfter: TimeInterval = 300
@@ -37,19 +54,60 @@ final class TodayViewModel {
     init(
         dataSource: any TodayDataSource,
         sensorSource: any SensorStatusSource,
+        calendar: Calendar = .current,
         clock: @escaping @Sendable () -> Date = { .now }
     ) {
         self.dataSource = dataSource
         self.sensorSource = sensorSource
         self.clock = clock
-        self.windowEnd = clock()
+        self.calendar = calendar
+        let now = clock()
+        self.windowEnd = now
+        self.windowStart = now.addingTimeInterval(-TodayPeriod.sixHours.duration)
     }
+
+    /// Dónde escribe el registro rápido y qué lista el Diario del día.
+    var diaryStore: any DiaryStore { dataSource.diaryStore ?? fallbackStore }
+
+    var now: Date { clock() }
 
     // MARK: Derivados
 
-    var windowStart: Date { windowEnd.addingTimeInterval(-period.duration) }
+    var isToday: Bool { dayOffset == 0 }
 
-    var points: [GlucosePoint] { segments.flatMap(\.points) }
+    var canGoForward: Bool { dayOffset < 0 }
+
+    /// Clave de la ventana visible: cambia con el período o el día y dispara la recarga.
+    struct WindowKey: Hashable { let period: TodayPeriod; let dayOffset: Int }
+
+    var windowKey: WindowKey { WindowKey(period: period, dayOffset: dayOffset) }
+
+    /// Primer instante del día mostrado.
+    var shownDay: Date {
+        let today = calendar.startOfDay(for: clock())
+        return calendar.date(byAdding: .day, value: dayOffset, to: today) ?? today
+    }
+
+    func goBack() { dayOffset -= 1 }
+
+    func goForward() { if canGoForward { dayOffset += 1 } }
+
+    func goToToday() { dayOffset = 0 }
+
+    /// Salta a un día del selector de fecha; los días futuros se acotan a hoy.
+    func select(day: Date) {
+        let today = calendar.startOfDay(for: clock())
+        let target = calendar.startOfDay(for: day)
+        let days = calendar.dateComponents([.day], from: today, to: target).day ?? 0
+        dayOffset = min(days, 0)
+    }
+
+    /// Ventana de la curva: móvil de `period` para hoy; el día completo para los demás.
+    func window(now: Date) -> (start: Date, end: Date) {
+        guard dayOffset != 0 else { return (now.addingTimeInterval(-period.duration), now) }
+        let start = shownDay
+        return (start, calendar.date(byAdding: .day, value: 1, to: start) ?? start.addingTimeInterval(86_400))
+    }
 
     var latestValue: Int? { latest?.value }
 
@@ -84,17 +142,41 @@ final class TodayViewModel {
         )
     }
 
-    /// Rango vertical de la curva: incluye siempre la banda de referencia con algo de margen.
+    /// Rango vertical de la curva: incluye las líneas de referencia y deja bajo la línea baja el espacio
+    /// de los índices de pico y los marcadores.
     var chartValueDomain: ClosedRange<Int> {
         let values = points.map(\.value)
-        let low = min(values.min() ?? Tokens.ReferenceRange.lower, 54)
-        let high = max(values.max() ?? Tokens.ReferenceRange.upper, 220)
-        return ((low - 10) / 10 * 10)...((high + 10 + 9) / 10 * 10)
+        let low = min(values.min() ?? referenceLow, referenceLow)
+        let high = max(values.max() ?? referenceHigh, referenceHigh, 220)
+        return max(0, (low - 75) / 10 * 10)...((high + 10 + 9) / 10 * 10)
     }
 
-    /// Punto más cercano a una fecha, para la lectura al tocar la curva.
+    /// Tolerancia de la lectura al arrastrar: con una lectura por minuto, el punto más lejano de una
+    /// racha continua está a 30 s; más allá de 45 s el dedo está sobre un hueco.
+    static let selectionTolerance: TimeInterval = 45
+
+    /// Lectura elegible más cercana en tiempo a `date`; `nil` si cae en un hueco o fuera de los datos.
     func nearestPoint(to date: Date) -> GlucosePoint? {
-        points.min { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) }
+        guard !points.isEmpty else { return nil }
+        // `points` está ordenado por fecha: búsqueda binaria del primer punto no anterior a `date`.
+        var low = 0, high = points.count
+        while low < high {
+            let mid = (low + high) / 2
+            if points[mid].date < date { low = mid + 1 } else { high = mid }
+        }
+        let candidates = [low - 1, low].filter { points.indices.contains($0) }.map { points[$0] }
+        let best = candidates.min { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) }
+        guard let best, abs(best.date.timeIntervalSince(date)) <= Self.selectionTolerance else { return nil }
+        return best
+    }
+
+    /// "142 mg/dL a las 12:02" o "Sin lectura a las 12:02" para el instante señalado.
+    func readoutText(at date: Date) -> String {
+        let time = date.formatted(date: .omitted, time: .shortened)
+        if let point = nearestPoint(to: date) {
+            return String(localized: "today.readout.value", defaultValue: "\(point.value) mg/dL a las \(point.date.formatted(date: .omitted, time: .shortened))")
+        }
+        return String(localized: "today.readout.none", defaultValue: "Sin lectura a las \(time)")
     }
 
     // MARK: Carga
@@ -124,31 +206,56 @@ final class TodayViewModel {
         sensor = await sensorSource.currentStatus()
     }
 
-    /// Recalcula la ventana del período y la última lectura.
+    /// Recalcula la ventana, la última lectura, las marcas y los picos.
     func refresh() async {
         let end = clock()
-        windowEnd = end
+        let (start, windowEndDate) = window(now: end)
+        windowStart = start
+        windowEnd = windowEndDate
         defer { hasLoaded = true }
-        let range = UTCInstant(end.addingTimeInterval(-period.duration))...UTCInstant(end)
+        let range = UTCInstant(start)...UTCInstant(windowEndDate)
+        let day = shownDay
+        let nextDay = calendar.date(byAdding: .day, value: 1, to: day) ?? day.addingTimeInterval(86_400)
+        let dayRange = UTCInstant(day)...UTCInstant(nextDay.addingTimeInterval(-1))
         do {
             async let latestReading = dataSource.latestEligibleReading()
             async let readings = dataSource.readings(in: range)
-            async let events = dataSource.diaryEvents(in: range)
-            let (newLatest, newReadings, newEvents) = try await (latestReading, readings, events)
+            async let windowEvents = mergedEvents(in: range)
+            async let dayEvents = mergedEvents(in: dayRange)
+            let (newLatest, newReadings, newEvents, newDayEvents) = try await (latestReading, readings, windowEvents, dayEvents)
             latest = newLatest
             let newSegments = GlucoseSegmenter.segments(from: newReadings.compactMap(GlucosePoint.init))
             segments = newSegments
+            points = newSegments.flatMap(\.points)
             gaps = GlucoseSegmenter.gaps(in: newSegments)
             stats = BasicStats(
-                samples: newSegments.flatMap(\.points).map {
+                samples: points.map {
                     BasicStats.Sample(measuredAt: UTCInstant($0.date), valueMgdl: $0.value)
                 },
                 range: Tokens.ReferenceRange.bounds,
                 window: range)
             marks = newEvents.compactMap(DiaryMark.init).sorted { $0.date < $1.date }
+            dayEntryCount = newDayEvents.filter { !$0.deleted }.count
+            recomputeSpikes()
             failure = nil
         } catch {
             failure = .readingsUnavailable
         }
+    }
+
+    /// Eventos de la fuente más los del diario en memoria de respaldo (sin duplicar por `eventID`).
+    private func mergedEvents(in range: ClosedRange<UTCInstant>) async throws -> [DiaryEvent] {
+        var result = try await dataSource.diaryEvents(in: range)
+        if dataSource.diaryStore == nil {
+            let local = try await fallbackStore.events(in: range)
+            let known = Set(result.map(\.eventID))
+            result += local.filter { !known.contains($0.eventID) }
+        }
+        return result
+    }
+
+    private func recomputeSpikes() {
+        let samples = points.map { BasicStats.Sample(measuredAt: UTCInstant($0.date), valueMgdl: $0.value) }
+        spikes = SpikeIndex.spikes(in: samples, threshold: referenceHigh).map(TodaySpike.init)
     }
 }

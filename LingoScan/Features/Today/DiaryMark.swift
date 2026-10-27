@@ -1,7 +1,7 @@
 import Foundation
 import LingoCore
 
-/// Marca de comida o ejercicio sobre la curva.
+/// Marca de comida o ejercicio sobre la curva, con el detalle que muestra su popover.
 struct DiaryMark: Sendable, Hashable, Identifiable {
     enum Kind: Sendable, Hashable {
         case meal
@@ -25,6 +25,10 @@ struct DiaryMark: Sendable, Hashable, Identifiable {
     let id: String
     let kind: Kind
     let date: Date
+    /// Gramos o duración ya formateados.
+    let detail: String?
+    let text: String?
+    let synthetic: Bool
 
     /// Solo comidas y ejercicio, y no las borradas; las notas no se marcan en la curva.
     init?(_ event: DiaryEvent) {
@@ -36,5 +40,8 @@ struct DiaryMark: Sendable, Hashable, Identifiable {
         }
         id = event.eventID
         date = event.at.date
+        detail = event.detailText
+        text = event.text
+        synthetic = event.synthetic
     }
 }

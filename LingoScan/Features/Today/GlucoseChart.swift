@@ -2,7 +2,10 @@ import Charts
 import SwiftUI
 
 /// Curva de glucosa con Swift Charts: un `LineMark` por tramo (los huecos quedan abiertos, sin interpolar),
-/// líneas de referencia, área sombreada sobre la línea alta en cada pico y huecos sombreados.
+/// líneas de referencia, área sombreada sobre la línea alta (rojo) y bajo la baja (azul), y huecos sombreados.
+/// La línea lleva un degradado por valor: rojo por encima de la referencia alta, neutro en el rango y azul
+/// por debajo de la baja (el degradado se aplica sobre el área del trazado, así que las paradas se calculan
+/// con el dominio vertical).
 /// Marcas, índices de pico y cursor se dibujan en `ChartInteractionOverlay`.
 struct GlucoseChart: View {
     let viewModel: TodayViewModel
@@ -12,6 +15,7 @@ struct GlucoseChart: View {
         let domain = viewModel.chartValueDomain
         let high = viewModel.referenceHigh
         let low = viewModel.referenceLow
+        let lineGradient = Self.valueGradient(domain: domain, low: low, high: high)
         Chart {
             ForEach(viewModel.gaps) { gap in
                 RectangleMark(
@@ -49,7 +53,17 @@ struct GlucoseChart: View {
                         yEnd: .value("Exceso", max(point.value, high)),
                         series: .value("Pico", segment.id)
                     )
-                    .foregroundStyle(Tokens.Palette.outOfRange.opacity(0.3))
+                    .foregroundStyle(Tokens.Palette.high.opacity(0.18))
+                }
+                // Área bajo la línea baja: simétrica a la de los picos, en frío.
+                ForEach(segment.points) { point in
+                    AreaMark(
+                        x: .value("Hora", point.date),
+                        yStart: .value("Defecto", min(point.value, low)),
+                        yEnd: .value("Referencia baja", low),
+                        series: .value("Bajo", segment.id)
+                    )
+                    .foregroundStyle(Tokens.Palette.low.opacity(0.18))
                 }
                 ForEach(segment.points) { point in
                     LineMark(
@@ -57,12 +71,12 @@ struct GlucoseChart: View {
                         y: .value("mg/dL", point.value),
                         series: .value("Tramo", segment.id)
                     )
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(lineGradient)
                     .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
                 }
                 if segment.points.count == 1, let only = segment.points.first {
                     PointMark(x: .value("Hora", only.date), y: .value("mg/dL", only.value))
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Self.color(for: only.value, low: low, high: high))
                         .symbolSize(24)
                 }
             }
@@ -91,5 +105,32 @@ struct GlucoseChart: View {
             )
         )
         .containerRelativeFrame(.vertical) { height, _ in height * 0.36 }
+    }
+
+    /// Color de un valor aislado: azul bajo la referencia baja, rojo sobre la alta, neutro en el rango.
+    static func color(for value: Int, low: Int, high: Int) -> Color {
+        if value > high { return Tokens.Palette.high }
+        if value < low { return Tokens.Palette.low }
+        return .primary
+    }
+
+    /// Degradado vertical sobre el área del trazado con una transición de ±3 mg/dL en cada referencia.
+    static func valueGradient(domain: ClosedRange<Int>, low: Int, high: Int) -> LinearGradient {
+        LinearGradient(stops: gradientStops(domain: domain, low: low, high: high), startPoint: .bottom, endPoint: .top)
+    }
+
+    /// Paradas (fracción 0 = mínimo del dominio, 1 = máximo). Se recortan al dominio y quedan ordenadas.
+    static func gradientStops(domain: ClosedRange<Int>, low: Int, high: Int, band: Double = 3) -> [Gradient.Stop] {
+        let span = Double(max(1, domain.upperBound - domain.lowerBound))
+        func fraction(_ value: Double) -> Double { min(1, max(0, (value - Double(domain.lowerBound)) / span)) }
+        let neutral = Color.primary
+        return [
+            .init(color: Tokens.Palette.low, location: 0),
+            .init(color: Tokens.Palette.low, location: fraction(Double(low) - band)),
+            .init(color: neutral, location: fraction(Double(low) + band)),
+            .init(color: neutral, location: fraction(Double(high) - band)),
+            .init(color: Tokens.Palette.high, location: fraction(Double(high) + band)),
+            .init(color: Tokens.Palette.high, location: 1),
+        ]
     }
 }

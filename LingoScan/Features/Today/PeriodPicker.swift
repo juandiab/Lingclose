@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Selector 6 h / 12 h / 24 h con chips de vidrio agrupados en un único contenedor.
+/// Selector 3 h / 6 h / 12 h / 24 h con chips de vidrio agrupados en un único contenedor.
 /// En un día anterior la curva muestra el día completo y los chips quedan deshabilitados.
 struct PeriodPicker: View {
     @Binding var period: TodayPeriod

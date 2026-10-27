@@ -9,12 +9,22 @@ struct ChartLegend: View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
             HStack(spacing: Tokens.Spacing.xs) {
                 RoundedRectangle(cornerRadius: 3)
-                    .fill(Tokens.Palette.outOfRange.opacity(0.4))
+                    .fill(Tokens.Palette.high.opacity(0.3))
                     .frame(width: 20, height: 12)
                     .accessibilityHidden(true)
                 Text(String(
                     localized: "today.legend.spike",
-                    defaultValue: "Área sobre \(high) mg/dL; el número bajo cada pico es el índice de pico. Líneas de referencia \(low) y \(high) mg/dL · no médico"
+                    defaultValue: "Rojo sobre \(high) mg/dL; el número bajo cada pico es el índice de pico. Líneas de referencia \(low) y \(high) mg/dL · no médico"
+                ))
+            }
+            HStack(spacing: Tokens.Spacing.xs) {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Tokens.Palette.low.opacity(0.3))
+                    .frame(width: 20, height: 12)
+                    .accessibilityHidden(true)
+                Text(String(
+                    localized: "today.legend.low",
+                    defaultValue: "Azul bajo \(low) mg/dL"
                 ))
             }
             HStack(spacing: Tokens.Spacing.xs) {

@@ -123,8 +123,10 @@ struct TodayViewModelTests {
     }
 
     @Test func periodsExposeHoursAndAxisStride() {
-        #expect(TodayPeriod.allCases.map(\.hours) == [6, 12, 24])
+        #expect(TodayPeriod.allCases.map(\.hours) == [3, 6, 12, 24])
         #expect(TodayPeriod.sixHours.duration == 21_600)
+        #expect(TodayPeriod.threeHours.duration == 10_800 && TodayPeriod.threeHours.axisStrideHours == 1)
+        #expect(TodayPeriod.allCases.map(\.hours) == [3, 6, 12, 24])
         #expect(TodayPeriod.twentyFourHours.axisStrideHours == 4)
     }
 

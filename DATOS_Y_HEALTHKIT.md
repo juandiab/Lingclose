@@ -1,6 +1,6 @@
 # Datos, archivo portable y HealthKit
 
-> **Normativo desde 2026-10-27:** el formato del archivo portable y del archivo de recuperación lo define el contrato compartido con Astra en `../LingoScan_Shared/CONTRATO_V1.md` y `../LingoScan_Shared/RECUPERACION_V1.md` (estado `1.0.0-draft.1`). Donde este documento y el contrato difieran, manda el contrato; este documento conserva el esquema SQLite interno y las decisiones propias de LingoScan.
+> **Normativo desde 2026-10-27:** el formato del archivo portable y del archivo de recuperación lo define el contrato compartido con Astra en `../LingoScan_Shared/CONTRATO_V1.md` y `../LingoScan_Shared/RECUPERACION_V1.md` (estado `1.0.0-draft.2`). Donde este documento y el contrato difieran, manda el contrato; este documento conserva el esquema SQLite interno y las decisiones propias de LingoScan.
 
 Objetivo: que ningún dato se pierda al reinstalar o reemplazar la app, y que cualquier otra herramienta pueda leerlo. Tres copias con funciones distintas:
 

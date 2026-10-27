@@ -29,7 +29,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | cerrada |
 | T-09 | 2 | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | pendiente |
 | T-10 | 2 | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | pendiente |
-| T-19 | 2 | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | pendiente |
+| T-19 | 2a | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | en verificación |
 | T-12a | 2a | Sonnet | Diario, Datos, Ajustes y gráfica básica (sin reportes avanzados) | T-09, T-10, T-11 | pendiente |
 | T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | en verificación (falta cableado en Ajustes y en) |
 | T-15 | 2a | Fable + Sonnet | Pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) con paquetes de ambas apps y el verificador externo; app de prueba solo si hace falta | T-10, T-19 | pendiente |

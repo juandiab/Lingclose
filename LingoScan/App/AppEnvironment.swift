@@ -22,7 +22,11 @@ final class AppEnvironment {
     init(databaseURL: URL) throws {
         let store = try SQLiteStore(path: databaseURL.path(percentEncoded: false))
         let credentials = CredentialStore()
-        let pairingStore = PairingStateStore(recoveryHook: EventLogRecoveryExportHook(store: store))
+        // Hook real de T-19: exporta el archivo de recuperación en `prepared`, `response_saved` y
+        // `authenticated`; sin frase en memoria encola y lo anuncia. El hook de solo log queda de respaldo.
+        let pairingStore = PairingStateStore(
+            recoveryHook: LiveRecoveryExportHook(fallback: EventLogRecoveryExportHook(store: store))
+        )
         let link = RoundWhiteDiscSensorLink()
         let nfc = NFCService()
         let coordinator = SensorSessionCoordinator(
@@ -38,6 +42,7 @@ final class AppEnvironment {
         self.todayData = LiveTodayDataSource(store: store, coordinator: coordinator)
         self.sensorActions = LiveSensorActions(coordinator: coordinator, credentials: credentials, pairingStore: pairingStore)
         self.identityImport = IdentityImportModel(credentials: credentials)
+        installRecovery()
     }
 
     /// Base en `Application Support/LingoScan/lingoscan.sqlite`. Se crea la carpeta y se deja

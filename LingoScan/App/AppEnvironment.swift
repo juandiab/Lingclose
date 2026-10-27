@@ -43,6 +43,8 @@ final class AppEnvironment {
         self.sensorActions = LiveSensorActions(coordinator: coordinator, credentials: credentials, pairingStore: pairingStore)
         self.identityImport = IdentityImportModel(credentials: credentials)
         installRecovery()
+        // T-10: servicio de archivo portable, tarea diaria (BGAppRefreshTask) y limpieza de `.partial`.
+        configureArchive(databaseURL: databaseURL)
     }
 
     /// Base en `Application Support/LingoScan/lingoscan.sqlite`. Se crea la carpeta y se deja

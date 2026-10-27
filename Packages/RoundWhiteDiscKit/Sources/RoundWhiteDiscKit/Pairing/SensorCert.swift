@@ -86,6 +86,11 @@ public struct SensorCert: Equatable, Sendable {
         return publicKey.isValidSignature(ecdsaSignature, for: signedPayload)
     }
 
+    /// Index of the first key in `signingKeys` that verifies this certificate.
+    /// Family-agnostic: any 65-byte uncompressed P-256 point is accepted
+    /// (Libre 3 bundled keys, or Lingo keys supplied at runtime through
+    /// `PatchSigningKeys.keys(for:identities:)`). An empty list returns `nil`;
+    /// `PairingFlow` refuses to be built with one. A malformed key throws.
     public func verifiedSigningKeyIndex(in signingKeys: [Data] = Libre3PatchSigningKey.known) throws -> Int? {
         for (index, signingKey) in signingKeys.enumerated() {
             if try verifyECDSA(with: signingKey) {

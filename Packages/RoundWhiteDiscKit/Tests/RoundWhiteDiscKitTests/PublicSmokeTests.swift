@@ -87,7 +87,7 @@ final class PublicSmokeTests: XCTestCase {
                 phase6Ciphertext + phase6Tag + phase6Nonce,
             ]
         )
-        let flow = PairingFlow(transport: transport)
+        let flow = try PairingFlow(transport: transport)
 
         let result = try await flow.runCachedReconnectHandshake(
             tail4: tail4,

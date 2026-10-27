@@ -18,7 +18,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | ID | Fase | Modelo | Título | Depende de | Estado |
 |---|---|---|---|---|---|
 | T-01 | 1 | Opus | Fork de RoundWhiteDiscKit: clon fijado y línea base | — | cerrada |
-| T-02 | 1 | Opus | Fork: familia Lingo, identidad por `productType`, clave de firma, errores explícitos | T-01 | pendiente |
+| T-02 | 1 | Opus | Fork: familia Lingo, identidad por `productType`, clave de firma, errores explícitos | T-01 | cerrada |
 | T-03 | 1 | Opus | Fork: plano de datos Lingo (51 B, 14 B, historial, fast data) | T-02 | pendiente |
 | T-04 | 1 | Sonnet | Vectores AES-CCM independientes y tests negativos | T-01 | cerrada |
 | T-05 | 1 | Sonnet | Cargador de credenciales JSON → Keychain | T-02, T-06 | pendiente |

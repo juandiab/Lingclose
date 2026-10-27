@@ -14,10 +14,11 @@ final class LocalizationTests: XCTestCase {
     /// without updating the catalogs fails `testEveryLocaleHasExactlyTheKeys`.
     private static let keys = [
         "Hold the TOP of your iPhone very close to the Sensor",
-        "Libre 3 NFC scan complete.",
-        "Libre 3 sensor read.",
-        "Libre 3 sensor activated.",
-        "Libre 3 receiver switched.",
+        // T-02: NFC sheet texts made family-neutral (Libre 3 and Lingo).
+        "NFC scan complete.",
+        "Sensor read.",
+        "Sensor activated.",
+        "Receiver switched.",
         "More than one tag detected.",
         "Bluetooth unavailable",
         "Bluetooth powered off",
@@ -163,8 +164,8 @@ final class LocalizationTests: XCTestCase {
             "Bluetooth ist ausgeschaltet"
         )
         XCTAssertEqual(
-            german.localizedString(forKey: "Libre 3 sensor activated.", value: nil, table: nil),
-            "Libre 3 Sensor aktiviert."
+            german.localizedString(forKey: "Sensor activated.", value: nil, table: nil),
+            "Sensor aktiviert."
         )
     }
 

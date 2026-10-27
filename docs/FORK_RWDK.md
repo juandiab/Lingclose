@@ -189,3 +189,56 @@ Archivos solo en un lado:
 
 - Conviene portar las correcciones de xDrip: logs sin secretos, verificación de certificado sin fallo abierto (ya prevista en T-02), timeouts de escritura, parser estricto de Receiver ID y guard de `lifeCount`.
 - No conviene copiar el ensamblador de glucosa de xDrip: su rigidez 15+20/35 empeora el caso Lingo (T-03).
+
+## T-02
+
+Cambios 1, 2, 3, 4 (aquí: `Libre3SensorState`), 14 y 15 de §3. Solo `Packages/RoundWhiteDiscKit/` y este documento. Log: `Logs/T-02-swift-test.log`.
+
+### Qué cambió
+
+| Archivo (`Sources/RoundWhiteDiscKit/`) | Cambio |
+|---|---|
+| `Pairing/NFCActivationModels.swift` | `public enum SensorFamily: String, Sendable, Codable { libre3, lingo, unknown }`. `.lingo` solo con `productType == 9 && securityVersion == 3`; `.libre3` con `productType == 4`; el resto `.unknown`. `Libre3NFCPatchInfo.family`. `Libre3NFCActivationResponse.sensorState(...)` copia `productType`/`securityVersion`/`family` del `patchInfo` |
+| `Pairing/AppIdentity.swift` | `AppIdentity` gana `productTypes: [UInt8]?`, `securityVersions: [UInt16]?`, `patchSigningPublicKey: Data?` (65 B, `0x04`, validada con `P256.Signing.PublicKey(x963Representation:)`). JSON: `productTypes`, `securityVersions`, `patchSigningPublicKeyHex`, todos opcionales (el formato 1 previo sigue cargando). `AppIdentities.identity(for:)` y `identity(for:in:)`: sin `productTypes` cuenta solo para `.libre3`. `PatchSigningKeys.keys(for:identities:)`: `.libre3` = `Libre3PatchSigningKey.known` + declaradas por identidades Libre 3; `.lingo` = solo declaradas por identidades Lingo; `.unknown` = `[]`. Errores nuevos: `invalidPatchSigningPublicKey`, `invalidProductTypes`, `invalidSecurityVersions` |
+| `Pairing/SensorCert.swift` | Solo documentación: `verifiedSigningKeyIndex(in:)` ya acepta cualquier clave P-256 de 65 B. No se añade ninguna clave real: las de Lingo llegan por JSON en tiempo de ejecución |
+| `Pairing/PairingFlow.swift` | Ambos `init` públicos son `throws` y lanzan `noTrustedSigningKeys` con lista vacía. `internal init(..., allowEmptySigningKeysForTesting:)` conserva la omisión de verificación solo para tests. `PairingFlowError.authenticationInterrupted(phase: AuthPhase, evidence: AuthEvidence)`; `AuthPhase` = `certificateLoad`, `certificateAcceptance`, `sensorCertificate`, `ephemeral`, `challenge`, `phase6`; `AuthEvidence` = `lastCommandSent`, `lastBytesReceived`, `elapsed`, `underlying` |
+| `Pairing/Libre3SensorStateLoader.swift` | `Libre3SensorState` gana `productType`, `securityVersion`, `identityLabel`, `family` opcionales. JSON tolerante: sin los campos carga; con ellos se preservan; un `family` desconocido se decodifica como `nil`. `applyingSensorCycle(from:)` registra `productType`/`securityVersion`/`family`; nuevo `applyingIdentityLabel(_:)` |
+| `Pairing/CoreNFCActivationReader.swift`, `Resources/Localizations/*.lproj` | Textos NFC neutros: `NFC scan complete.`, `Sensor read.`, `Sensor activated.`, `Receiver switched.` en los 10 idiomas |
+
+**Romper la API (intencional):** `PairingFlow.init` ahora es `throws`; los llamadores necesitan `try`. Se ajustó `PublicSmokeTests.swift` (una línea).
+
+**Claves de localización:** el catálogo usa el texto inglés como clave y `testEnglishCatalogMapsEachKeyToItself` exige `en[clave] == clave`. Por eso no se puede neutralizar el texto conservando la clave literal "Libre 3 …": se renombraron las 4 claves (mismo número de entradas, mismos comentarios) y se actualizó la lista de `LocalizationTests` y la búsqueda en alemán.
+
+### Clasificación de interrupciones
+
+`authenticationInterrupted` se lanza cuando, en cualquier fase, el error es `SensorSessionTransportError.notifyStreamEnded`, `SensorSessionTransportError.notifyTimeout` o `PairingFlowError.unexpectedCommandResponse`. La fase vigente y la evidencia se registran en el actor. Se aplica en `runCommandGatedFirstPairPreamble`, `runCommandGatedAuthorizationHandshake` (y su alias de first-pair), `runCachedReconnectPreamble` y `runCachedReconnectHandshake`. No se envuelven: `writeTimeout` (sigue siendo fallo de enlace), `sensorCertificateVerificationFailed`, `phase6VerificationFailed` ni los errores de tamaño. Un fallo tras `0x03` sin `0x04` se reporta como `phase: .certificateAcceptance` con `lastCommandSent == 0x03`.
+
+### Código de rechazo de certificado: no hay evidencia
+
+No se añadió `PairingFlowError.certificateRejected`. Revisado:
+
+- `protocol.md:247` solo define la respuesta positiva `0x04 CertificateAccepted` a `0x03`. `protocol.md:258-259` dice que un sensor que no acepta el certificado "drops the link right after `SendCertificateLoadDone`": no hay byte de rechazo.
+- El código (`PairingFlow`, `SensorSessionTransport`) no conoce ninguna respuesta negativa de `secCommandResponse`; `waitFor` solo compara prefijos.
+- `docs/PROTOCOLO_LINGO.md` §5.3 (Juggluco) tampoco documenta un código de rechazo BLE. El único rechazo explícito conocido es NFC: respuesta de 4 B `00 A5 01 B1` a `A0`/`A8` (account ID), que no tiene que ver con el certificado.
+
+Consecuencia: **una desconexión, un timeout o un byte inesperado nunca se clasifican como rechazo de credenciales.** Se reportan como `authenticationInterrupted` con la evidencia en bruto. Distinguir rechazo de fallo de enlace exige evidencia externa: repetición en otra conexión, `patchStatus` y razón de desconexión. Eso se decide en T-08 / T-16, no aquí.
+
+### Guards de tamaño revisados (sin cambios)
+
+| Guard | Archivo:línea | Riesgo para Lingo |
+|---|---|---|
+| patchInfo `frame.count >= 29` | `Pairing/NFCActivationModels.swift:54` | Bajo: Juggluco exige el mismo mínimo de 29 B para Lingo (`Libre3.java:42-44`). Sin captura real de Lingo |
+| respuesta de activación `== 19` | `Pairing/NFCActivationModels.swift:129` | Bajo para éxito (`struct nfc2` igual). Una respuesta de error de 4 B (`00 A5 01 xx`) falla como `invalidActivationResponse` con los bytes crudos; no se interpreta el código. Sin captura real |
+| cert. sensor 140 B / cert. app 162 B | `PairingFlow.swift:350`, `SensorCert.swift:64`, `PhoneCert.swift:22` | Bajo: Juggluco usa 140/162 B para Lingo (`LingoCrypto`) |
+| efímera 65 B (rellena a 72 B al enviar) | `PairingFlow.swift:364`, `:378` | Medio: Juggluco envía 65 B; el relleno a 72 B es de RWDK/Libre 3. No confirmado para Lingo |
+| R1 23 B, Phase 5 40 B, Phase 6 67 B | `PairingFlow.swift:409-411`, `:487-489`; `ChallengeMessage.swift:17-21`; `Phase6Response.swift:31-35` | Bajo: coincide con §5.3 (CCM M=4, nonce 7 B) |
+
+### Tests
+
+Antes: 78 (75 de la línea base + 3 de `CCMVectorTests`). Después: **112, 0 fallos** (`swift build` y `swift test` con exit 0). Nuevos (34):
+
+- `LingoFamilyTests` (12): 9/3 → `.lingo`; 9/{0,1,2,4,0x300} → `.unknown`; 4/1 → `.libre3`; otros `productType` → `.unknown`; captura Libre 3 existente → `.libre3`; frame de 28 B rechazado; error NFC de 4 B rechazado; `Codable`; loader con JSON antiguo, JSON nuevo (preservación y reserialización), `family` desconocido → `nil`; `applyingSensorCycle` registra la familia.
+- `LingoIdentityTests` (11): JSON con `productTypes`/`securityVersions`/`patchSigningPublicKeyHex` sintéticos (`P256.Signing.PrivateKey()` en el test) → selección por familia, también vía `install`; identidad sin `productTypes` nunca sirve a Lingo; clave fuera de la curva, longitud o prefijo inválidos → error; `productType` 300 → error; `keys(for: .lingo)` sin `level0`/`level1` ni claves de Libre 3; `.libre3` = conocidas + declaradas; `.unknown` = `[]`; un certificado de sensor firmado con la clave Lingo sintética verifica solo con las claves Lingo.
+- `PairingFlowInterruptionTests` (11): lista vacía → `noTrustedSigningKeys` (ambos `init`); el init de testing la acepta; fin de flujo tras `0x03` → `.certificateAcceptance`, `lastCommandSent == 0x03`; timeout tras `0x03` → igual; byte `0x05` tras `0x03` → interrupción, no rechazo, con `lastBytesReceived == [0x05]`; fin tras efímera → `.ephemeral`/`0x0e`; certificado firmado con otra clave → `sensorCertificateVerificationFailed` sin enviar `0x0d`; reconexión corta → `.challenge`/`0x11` y `.phase6`/`0x08`; el clasificador no envuelve `writeTimeout` ni fallos de verificación.
+
+No se cubre (sin vector): respuesta negativa explícita guionada → `certificateRejected`, porque el caso no existe (ver arriba).

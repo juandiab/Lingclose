@@ -3,10 +3,10 @@
 
 /* --- NFC system sheet --- */
 "Hold the TOP of your iPhone very close to the Sensor" = "Поднесите ВЕРХНЮЮ часть iPhone вплотную к сенсору";
-"Libre 3 NFC scan complete." = "NFC-сканирование Libre 3 завершено.";
-"Libre 3 sensor read." = "Сенсор Libre 3 считан.";
-"Libre 3 sensor activated." = "Сенсор Libre 3 активирован.";
-"Libre 3 receiver switched." = "Приёмник Libre 3 изменён.";
+"NFC scan complete." = "NFC-сканирование завершено.";
+"Sensor read." = "Сенсор считан.";
+"Sensor activated." = "Сенсор активирован.";
+"Receiver switched." = "Приёмник изменён.";
 "More than one tag detected." = "Обнаружено несколько меток.";
 
 /* --- Bluetooth errors --- */

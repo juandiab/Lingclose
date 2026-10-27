@@ -1,5 +1,35 @@
 import Foundation
 
+/// Sensor family derived from the NFC patch info (`0xA1`). Only exact,
+/// documented combinations map to a known family; anything else is `.unknown`
+/// and must not be activated or paired.
+///
+/// - `.lingo`: `productType == 9 && securityVersion == 3` (Juggluco 11.5.4,
+///   `nfc.cpp:100-105`, `NFC.java:41-49`; see `docs/PROTOCOLO_LINGO.md` §1.3).
+/// - `.libre3`: `productType == 4` (captured Libre 3 patch info).
+public enum SensorFamily: String, Sendable, Codable, CaseIterable {
+    case libre3
+    case lingo
+    case unknown
+
+    /// The NFC `productType` byte that identifies this family, if any.
+    public var productType: UInt8? {
+        switch self {
+        case .libre3: return 4
+        case .lingo: return 9
+        case .unknown: return nil
+        }
+    }
+
+    public init(productType: UInt8, securityVersion: UInt16) {
+        switch (productType, securityVersion) {
+        case (9, 3): self = .lingo
+        case (4, _): self = .libre3
+        default: self = .unknown
+        }
+    }
+}
+
 public struct Libre3NFCPatchInfo: Sendable, Equatable {
     public let inputRaw: Data
     public let raw: Data
@@ -14,6 +44,11 @@ public struct Libre3NFCPatchInfo: Sendable, Equatable {
     public let firmwareVersion: String
     public let serialNumber: String
 
+    /// Size guard (T-02 review, unchanged): the frame after normalisation must
+    /// hold at least 29 bytes (`00 A5 00` + 26-byte `firstnfc` struct incl.
+    /// CRC). Juggluco uses the same minimum for Lingo (`Libre3.java:42-44`),
+    /// so this guard is not expected to reject a Lingo A1 response. Not yet
+    /// confirmed with a real Lingo capture.
     public init(raw: Data) throws {
         let frame = Self.normalizeResponse(raw)
         guard frame.count >= 29, frame[0] == 0x00, frame[1] == 0xa5 else {
@@ -35,6 +70,11 @@ public struct Libre3NFCPatchInfo: Sendable, Equatable {
 
     public var recommendedCommandCode: NFCActivationCommandCode {
         stateByte == 0x01 ? .activate : .switchReceiver
+    }
+
+    /// Family derived from `productType` and `securityVersion`.
+    public var family: SensorFamily {
+        SensorFamily(productType: productType, securityVersion: securityVersion)
     }
 }
 
@@ -78,6 +118,12 @@ public struct Libre3NFCActivationResponse: Sendable, Equatable {
     public let activationTimeRaw: Data
     public let trailingCRC: Data
 
+    /// Size guard (T-02 review, unchanged): a successful activation/switch
+    /// response is exactly 19 bytes (`struct nfc2` in Juggluco, identical for
+    /// Lingo, `nfc.cpp:141-154`). A 4-byte `00 A5 01 <err>` error response
+    /// (e.g. `0xB1` account-ID rejection) fails this guard and surfaces as
+    /// `invalidActivationResponse` with the raw bytes. Not yet confirmed with
+    /// a real Lingo capture.
     public init(raw: Data) throws {
         let frame = Self.normalizeResponse(raw)
         guard frame.count == 19, frame[0] == 0x00, frame[1] == 0xa5, frame[2] == 0x00 else {
@@ -109,7 +155,10 @@ public struct Libre3NFCActivationResponse: Sendable, Equatable {
             receiverID: receiverID,
             source: source,
             warmupDurationMinutes: patchInfo.map { Int($0.warmupMinutes) },
-            wearDurationMinutes: patchInfo.map { Int($0.wearDurationMinutes) }
+            wearDurationMinutes: patchInfo.map { Int($0.wearDurationMinutes) },
+            productType: patchInfo?.productType,
+            securityVersion: patchInfo?.securityVersion,
+            family: patchInfo?.family
         )
     }
 }

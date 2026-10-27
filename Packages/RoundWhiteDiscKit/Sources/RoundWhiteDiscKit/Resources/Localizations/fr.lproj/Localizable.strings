@@ -3,10 +3,10 @@
 
 /* --- NFC system sheet --- */
 "Hold the TOP of your iPhone very close to the Sensor" = "Approchez le HAUT de votre iPhone tout près du capteur";
-"Libre 3 NFC scan complete." = "Scan NFC Libre 3 terminé.";
-"Libre 3 sensor read." = "Capteur Libre 3 lu.";
-"Libre 3 sensor activated." = "Capteur Libre 3 activé.";
-"Libre 3 receiver switched." = "Récepteur Libre 3 changé.";
+"NFC scan complete." = "Scan NFC terminé.";
+"Sensor read." = "Capteur lu.";
+"Sensor activated." = "Capteur activé.";
+"Receiver switched." = "Récepteur changé.";
 "More than one tag detected." = "Plusieurs tags détectés.";
 
 /* --- Bluetooth errors --- */

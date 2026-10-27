@@ -98,7 +98,14 @@ public struct CachedReconnectHandshakeResult: Sendable {
 /// - **Configuration / programmer / data-shape** (a retry loop won't help):
 ///   `commandTransportRequired`, `phoneCertRequired`, `randomFailed`,
 ///   `sensorR1WrongSize` / `blePINWrongSize` / `tail4WrongSize`,
-///   `unexpectedCommandResponse`.
+///   `unexpectedCommandResponse`, `noTrustedSigningKeys`.
+/// - **Interrupted authentication** (`authenticationInterrupted`): the sensor
+///   stopped answering, the notify stream ended, or it answered with an
+///   unexpected command byte. This is evidence, NOT a classification: it is
+///   never reported as a credential rejection. The protocol defines no explicit
+///   negative response for a refused app certificate (protocol.md: a sensor
+///   that does not accept it "drops the link"), so there is no
+///   `certificateRejected` case. See `docs/FORK_RWDK.md` § T-02.
 public enum PairingFlowError: Error {
     case commandTransportRequired
     case phoneCertRequired
@@ -115,6 +122,51 @@ public enum PairingFlowError: Error {
     case writeTimeout(label: String, seconds: TimeInterval)
     /// Credential-shaped: the sensor certificate failed verification.
     case sensorCertificateVerificationFailed
+    /// Configuration: `PairingFlow` was built with no trusted patch-signing
+    /// keys. Upstream RWDK silently skipped sensor-certificate verification in
+    /// that case; this fork refuses before any transport use.
+    case noTrustedSigningKeys
+    /// The handshake stopped in `phase`: the transport reported end of stream
+    /// or a notify/command timeout, or the sensor answered with an unexpected
+    /// command byte. `evidence` carries what was last sent and received.
+    case authenticationInterrupted(phase: AuthPhase, evidence: AuthEvidence)
+}
+
+/// Handshake phase in which an authentication was interrupted.
+public enum AuthPhase: String, Sendable, Equatable {
+    /// `0x01`, `0x02`, phone certificate write, `0x03`.
+    case certificateLoad
+    /// Waiting for `0x04 CertificateAccepted` after `0x03`.
+    case certificateAcceptance
+    /// `0x09`/`0x0a`, sensor certificate notify, `0x0d`.
+    case sensorCertificate
+    /// Phone ephemeral write, `0x0e`/`0x0f`, sensor ephemeral notify.
+    case ephemeral
+    /// `0x11`/`0x08`, R1 challenge notify.
+    case challenge
+    /// Phase 5 write, `0x08`/`0x08`, Phase 6 notify.
+    case phase6
+}
+
+/// What the flow observed when an authentication was interrupted. Contains no
+/// key material: only command bytes and the last raw command/notify payload
+/// received (sensor-originated, e.g. a one-byte command response).
+public struct AuthEvidence: Sendable, Equatable {
+    /// Last single-byte security command written (or attempted).
+    public let lastCommandSent: UInt8?
+    /// Last payload received from the sensor (command response or notify).
+    public let lastBytesReceived: Data?
+    /// Seconds since the authentication attempt started.
+    public let elapsed: TimeInterval
+    /// `String(describing:)` of the transport/flow error that ended it.
+    public let underlying: String
+
+    public init(lastCommandSent: UInt8?, lastBytesReceived: Data?, elapsed: TimeInterval, underlying: String) {
+        self.lastCommandSent = lastCommandSent
+        self.lastBytesReceived = lastBytesReceived
+        self.elapsed = elapsed
+        self.underlying = underlying
+    }
 }
 
 @usableFromInline
@@ -145,14 +197,27 @@ public actor PairingFlow {
     let sensorCertSigningKeys: [Data]
     private let eventLogger: (@Sendable (String) -> Void)?
 
+    // Evidence for `authenticationInterrupted`. Reset at the start of each
+    // public authentication entry point.
+    private var authPhase: AuthPhase = .certificateLoad
+    private var lastCommandSent: UInt8?
+    private var lastBytesReceived: Data?
+    private var authStartedAt = Date()
+
     /// Create a flow for cached/direct reconnects that do not send a phone
     /// certificate or ephemeral public key. Calling full cert/ephemeral
     /// authorization methods on this instance throws `phoneCertRequired`.
+    ///
+    /// Throws `PairingFlowError.noTrustedSigningKeys` if
+    /// `sensorCertSigningKeys` is empty.
     public init(
         transport: PairingTransport,
         sensorCertSigningKeys: [Data] = Libre3PatchSigningKey.known,
         eventLogger: (@Sendable (String) -> Void)? = nil
-    ) {
+    ) throws {
+        guard !sensorCertSigningKeys.isEmpty else {
+            throw PairingFlowError.noTrustedSigningKeys
+        }
         self.transport = transport
         self.phoneCert = nil
         self.phoneEph = EphemeralKeyPair()
@@ -160,13 +225,40 @@ public actor PairingFlow {
         self.eventLogger = eventLogger
     }
 
+    /// Full-handshake flow. Throws `PairingFlowError.noTrustedSigningKeys` if
+    /// `sensorCertSigningKeys` is empty: for Lingo pass
+    /// `PatchSigningKeys.keys(for: .lingo, identities:)`.
     public init(
         transport: PairingTransport,
         phoneCert: PhoneCert,
         phoneEph: EphemeralKeyPair = EphemeralKeyPair(),
         sensorCertSigningKeys: [Data] = Libre3PatchSigningKey.known,
         eventLogger: (@Sendable (String) -> Void)? = nil
-    ) {
+    ) throws {
+        try self.init(
+            transport: transport,
+            phoneCert: phoneCert,
+            phoneEph: phoneEph,
+            sensorCertSigningKeys: sensorCertSigningKeys,
+            eventLogger: eventLogger,
+            allowEmptySigningKeysForTesting: false
+        )
+    }
+
+    /// Test-only: with `allowEmptySigningKeysForTesting == true` an empty key
+    /// list is accepted and sensor-certificate verification is skipped
+    /// (upstream behaviour). Never reachable from the public API.
+    internal init(
+        transport: PairingTransport,
+        phoneCert: PhoneCert?,
+        phoneEph: EphemeralKeyPair = EphemeralKeyPair(),
+        sensorCertSigningKeys: [Data],
+        eventLogger: (@Sendable (String) -> Void)? = nil,
+        allowEmptySigningKeysForTesting: Bool
+    ) throws {
+        guard allowEmptySigningKeysForTesting || !sensorCertSigningKeys.isEmpty else {
+            throw PairingFlowError.noTrustedSigningKeys
+        }
         self.transport = transport
         self.phoneCert = phoneCert
         self.phoneEph = phoneEph
@@ -186,6 +278,17 @@ public actor PairingFlow {
     public func runCommandGatedFirstPairPreamble(
         commandTimeout: TimeInterval = 2
     ) async throws -> FirstPairPreambleResult {
+        beginAuthentication(at: .certificateLoad)
+        do {
+            return try await commandGatedPreamble(commandTimeout: commandTimeout)
+        } catch {
+            throw interruption(from: error)
+        }
+    }
+
+    private func commandGatedPreamble(
+        commandTimeout: TimeInterval
+    ) async throws -> FirstPairPreambleResult {
         guard let phoneCert else {
             throw PairingFlowError.phoneCertRequired
         }
@@ -196,6 +299,7 @@ public actor PairingFlow {
         func waitFor(_ expectedPrefix: Data, label: String) async throws {
             log("wait \(label) expectedPrefix=\(Self.hex(expectedPrefix))")
             let actual = try await commandTransport.awaitCommandResponse(timeout: commandTimeout)
+            lastBytesReceived = actual
             log("got \(label) response=\(Self.hex(actual))")
             guard actual.starts(with: expectedPrefix) else {
                 throw PairingFlowError.unexpectedCommandResponse(
@@ -210,10 +314,12 @@ public actor PairingFlow {
 
         log("preamble start")
         log("send StartAuthentication 0x01")
+        lastCommandSent = 0x01
         try await withWriteTimeout(writeTimeout, label: "StartAuthentication") {
             try await commandTransport.writeCommand(0x01)
         }
         log("send LoadCertificate 0x02")
+        lastCommandSent = 0x02
         try await withWriteTimeout(writeTimeout, label: "LoadCertificate") {
             try await commandTransport.writeCommand(0x02)
         }
@@ -224,12 +330,17 @@ public actor PairingFlow {
         }
 
         log("send SendCertificateLoadDone 0x03")
+        lastCommandSent = 0x03
         try await withWriteTimeout(writeTimeout, label: "SendCertificateLoadDone") {
             try await commandTransport.writeCommand(0x03)
         }
+        authPhase = .certificateAcceptance
         try await waitFor(Data([0x04]), label: "CertificateAccepted")
 
+        authPhase = .sensorCertificate
+
         log("send GetCertificate 0x09")
+        lastCommandSent = 0x09
         try await withWriteTimeout(writeTimeout, label: "GetCertificate") {
             try await commandTransport.writeCommand(0x09)
         }
@@ -237,16 +348,19 @@ public actor PairingFlow {
 
         log("await sensor cert")
         let sensorCertRaw = try await transport.awaitNotify(on: .certHandshake, exactly: SensorCert.totalSize)
+        lastBytesReceived = sensorCertRaw
         let sensorCert = try SensorCert(raw: sensorCertRaw)
         let sensorCertSigningKeyIndex = try verifySensorCertificate(sensorCert)
         log("parsed sensor cert len=\(sensorCertRaw.count)")
         log("sensor static pub=\(Self.hex(sensorCert.staticPub)) certKeyIndex=\(sensorCertSigningKeyIndex.map(String.init) ?? "skipped")")
 
         log("send ValidateCertificate 0x0d")
+        lastCommandSent = 0x0d
         try await withWriteTimeout(writeTimeout, label: "ValidateCertificate") {
             try await commandTransport.writeCommand(0x0d)
         }
 
+        authPhase = .ephemeral
         let phase3Wire = padTo(phoneEph.publicKey65, length: 72)
         log("send phone ephemeral len=\(phase3Wire.count)")
         try await withWriteTimeout(writeTimeout, label: "phoneEphemeralWrite") {
@@ -254,6 +368,7 @@ public actor PairingFlow {
         }
 
         log("send SendEphemeralDone 0x0e")
+        lastCommandSent = 0x0e
         try await withWriteTimeout(writeTimeout, label: "SendEphemeralDone") {
             try await commandTransport.writeCommand(0x0e)
         }
@@ -261,6 +376,7 @@ public actor PairingFlow {
 
         log("await sensor ephemeral")
         let sensorEphRaw = try await transport.awaitNotify(on: .certHandshake, exactly: 65)
+        lastBytesReceived = sensorEphRaw
         let sensorEphPub = try EphemeralExchange.parsePeerPubkey(sensorEphRaw)
         log("sensor ephemeral pub=\(Self.hex(sensorEphRaw))")
         let sensorStaticPub = try EphemeralExchange.parsePeerPubkey(sensorCert.staticPub)
@@ -283,12 +399,15 @@ public actor PairingFlow {
         )
         log("computed ECDH static=\(sharedEphStatic.count)B eph=\(sharedEphEph.count)B")
 
+        authPhase = .challenge
         log("send StartAuthorization 0x11")
+        lastCommandSent = 0x11
         try await commandTransport.writeCommand(0x11) // StartAuthorization
         try await waitFor(Data([0x08]), label: "ChallengeLoadDone")
 
         log("await R1 challenge")
         let r1Wire = try await transport.awaitNotify(on: .challenge, exactly: 23)
+        lastBytesReceived = r1Wire
         guard r1Wire.count == 23 else {
             throw PairingFlowError.sensorR1WrongSize(r1Wire.count)
         }
@@ -326,6 +445,17 @@ public actor PairingFlow {
     public func runCachedReconnectPreamble(
         commandTimeout: TimeInterval = 2
     ) async throws -> CachedReconnectPreambleResult {
+        beginAuthentication(at: .challenge)
+        do {
+            return try await cachedReconnectPreamble(commandTimeout: commandTimeout)
+        } catch {
+            throw interruption(from: error)
+        }
+    }
+
+    private func cachedReconnectPreamble(
+        commandTimeout: TimeInterval
+    ) async throws -> CachedReconnectPreambleResult {
         guard let commandTransport = transport as? CommandPairingTransport else {
             throw PairingFlowError.commandTransportRequired
         }
@@ -333,6 +463,7 @@ public actor PairingFlow {
         func waitFor(_ expectedPrefix: Data, label: String) async throws {
             log("wait \(label) expectedPrefix=\(Self.hex(expectedPrefix))")
             let actual = try await commandTransport.awaitCommandResponse(timeout: commandTimeout)
+            lastBytesReceived = actual
             log("got \(label) response=\(Self.hex(actual))")
             guard actual.starts(with: expectedPrefix) else {
                 throw PairingFlowError.unexpectedCommandResponse(
@@ -344,7 +475,9 @@ public actor PairingFlow {
         }
 
         log("cached reconnect preamble start")
+        authPhase = .challenge
         log("send StartAuthorization 0x11")
+        lastCommandSent = 0x11
         try await withWriteTimeout(2, label: "StartAuthorization") {
             try await commandTransport.writeCommand(0x11)
         }
@@ -352,6 +485,7 @@ public actor PairingFlow {
 
         log("await cached reconnect R1 challenge")
         let r1Wire = try await transport.awaitNotify(on: .challenge, exactly: 23)
+        lastBytesReceived = r1Wire
         guard r1Wire.count == 23 else {
             throw PairingFlowError.sensorR1WrongSize(r1Wire.count)
         }
@@ -383,8 +517,29 @@ public actor PairingFlow {
             throw PairingFlowError.tail4WrongSize(tail4.count)
         }
 
+        beginAuthentication(at: .challenge)
+        do {
+            return try await cachedReconnectHandshake(
+                tail4: tail4,
+                phase5RawKeyProvider: phase5RawKeyProvider,
+                r2Provider: r2Provider,
+                phase5Cipher: phase5Cipher,
+                commandTimeout: commandTimeout
+            )
+        } catch {
+            throw interruption(from: error)
+        }
+    }
+
+    private func cachedReconnectHandshake(
+        tail4: Data,
+        phase5RawKeyProvider: (CachedReconnectPreambleResult) throws -> Data,
+        r2Provider: () throws -> Data,
+        phase5Cipher: (Data) throws -> AESBlockEncrypt,
+        commandTimeout: TimeInterval
+    ) async throws -> CachedReconnectHandshakeResult {
         log("cached reconnect handshake start tail4=\(Self.hex(tail4))")
-        let preamble = try await runCachedReconnectPreamble(commandTimeout: commandTimeout)
+        let preamble = try await cachedReconnectPreamble(commandTimeout: commandTimeout)
         let phase5R2 = try r2Provider()
         log("generated R2 len=\(phase5R2.count) data=\(Self.hex(phase5R2))")
         guard phase5R2.count == 16 else {
@@ -398,6 +553,7 @@ public actor PairingFlow {
         }
         let phase5Block = try phase5Cipher(phase5RawKey)
         let phase5Plaintext = preamble.sensorR1 + phase5R2 + tail4
+        authPhase = .phase6
         let phase5 = try Phase5Challenge.encrypt(
             plaintext: phase5Plaintext,
             aes: phase5Block,
@@ -411,6 +567,7 @@ public actor PairingFlow {
 
         log("await cached reconnect Phase 6")
         let phase6Raw = try await transport.awaitNotify(on: .challenge, exactly: Phase6Response.wireSize)
+        lastBytesReceived = phase6Raw
         let phase6 = try Phase6Response.decode(phase6Raw)
         let sessionMaterial = try phase6.decrypt(aes: phase5Block)
         guard sessionMaterial.phoneR2 == phase5R2 else {
@@ -470,8 +627,29 @@ public actor PairingFlow {
             throw PairingFlowError.tail4WrongSize(tail4.count)
         }
 
+        beginAuthentication(at: .certificateLoad)
+        do {
+            return try await commandGatedAuthorizationHandshake(
+                tail4: tail4,
+                phase5RawKeyProvider: phase5RawKeyProvider,
+                r2Provider: r2Provider,
+                phase5Cipher: phase5Cipher,
+                commandTimeout: commandTimeout
+            )
+        } catch {
+            throw interruption(from: error)
+        }
+    }
+
+    private func commandGatedAuthorizationHandshake(
+        tail4: Data,
+        phase5RawKeyProvider: (CommandGatedAuthorizationPreambleResult) throws -> Data,
+        r2Provider: () throws -> Data,
+        phase5Cipher: (Data) throws -> AESBlockEncrypt,
+        commandTimeout: TimeInterval
+    ) async throws -> CommandGatedAuthorizationHandshakeResult {
         log("authorization handshake start tail4=\(Self.hex(tail4))")
-        let preamble = try await runCommandGatedFirstPairPreamble(commandTimeout: commandTimeout)
+        let preamble = try await commandGatedPreamble(commandTimeout: commandTimeout)
         let phase5R2 = try r2Provider()
         log("generated R2 len=\(phase5R2.count) data=\(Self.hex(phase5R2))")
         guard phase5R2.count == 16 else {
@@ -485,6 +663,7 @@ public actor PairingFlow {
         }
         let phase5Block = try phase5Cipher(phase5RawKey)
         let phase5Plaintext = preamble.sensorR1 + phase5R2 + tail4
+        authPhase = .phase6
         let phase5 = try Phase5Challenge.encrypt(
             plaintext: phase5Plaintext,
             aes: phase5Block,
@@ -498,6 +677,7 @@ public actor PairingFlow {
 
         log("await Phase 6")
         let phase6Raw = try await transport.awaitNotify(on: .challenge, exactly: Phase6Response.wireSize)
+        lastBytesReceived = phase6Raw
         let phase6 = try Phase6Response.decode(phase6Raw)
         let sessionMaterial = try phase6.decrypt(aes: phase5Block)
         guard sessionMaterial.phoneR2 == phase5R2 else {
@@ -542,6 +722,44 @@ public actor PairingFlow {
         eventLogger?("PairingFlow: \(message)")
     }
 
+    private func beginAuthentication(at phase: AuthPhase) {
+        authPhase = phase
+        lastCommandSent = nil
+        lastBytesReceived = nil
+        authStartedAt = Date()
+    }
+
+    /// Wrap transport-level interruptions (end of notify stream, notify or
+    /// command-response timeout, unexpected command response) into
+    /// `authenticationInterrupted` with the current phase and evidence. Every
+    /// other error passes through unchanged, including an already-wrapped one.
+    private func interruption(from error: Error) -> Error {
+        guard Self.isInterruption(error) else { return error }
+        let evidence = AuthEvidence(
+            lastCommandSent: lastCommandSent,
+            lastBytesReceived: lastBytesReceived,
+            elapsed: Date().timeIntervalSince(authStartedAt),
+            underlying: String(describing: error)
+        )
+        log("authentication interrupted phase=\(authPhase.rawValue) lastCommand=\(lastCommandSent.map { String(format: "0x%02x", $0) } ?? "none") underlying=\(evidence.underlying)")
+        return PairingFlowError.authenticationInterrupted(phase: authPhase, evidence: evidence)
+    }
+
+    nonisolated static func isInterruption(_ error: Error) -> Bool {
+        if case PairingFlowError.unexpectedCommandResponse = error {
+            return true
+        }
+        #if canImport(CoreBluetooth) && (canImport(UIKit) || canImport(AppKit))
+        switch error {
+        case SensorSessionTransportError.notifyStreamEnded, SensorSessionTransportError.notifyTimeout:
+            return true
+        default:
+            break
+        }
+        #endif
+        return false
+    }
+
     /// Races `work` against a wall-clock timeout. Used to bound BLE
     /// `writeCommand` / `write` calls — those await CoreBluetooth's
     /// didWriteValueFor callback, which never fires on a half-dead link.
@@ -573,7 +791,8 @@ public actor PairingFlow {
 
     private func verifySensorCertificate(_ sensorCert: SensorCert) throws -> Int? {
         guard !sensorCertSigningKeys.isEmpty else {
-            log("sensor cert verification skipped")
+            // Only reachable through the internal testing initializer.
+            log("sensor cert verification skipped (testing initializer)")
             return nil
         }
         guard let index = try sensorCert.verifiedSigningKeyIndex(in: sensorCertSigningKeys) else {
@@ -631,8 +850,10 @@ public actor PairingFlow {
             return
         }
         log("send SendChallengeLoadDone 0x08")
+        lastCommandSent = 0x08
         try await commandTransport.writeCommand(0x08)
         let actual = try await commandTransport.awaitCommandResponse(timeout: commandTimeout)
+        lastBytesReceived = actual
         log("got PatchChallengeLoadDone response=\(Self.hex(actual))")
         guard actual.starts(with: Data([0x08])) else {
             throw PairingFlowError.unexpectedCommandResponse(

@@ -13,6 +13,10 @@ enum LLMCatalog {
     static let anthropicSource = "skill claude-api (tabla de precios de Anthropic)"
     static let xaiSource = "https://docs.x.ai/docs/models"
     static let openRouterSource = "catálogo de OpenRouter (/api/v1/models)"
+    static let openAIPricingSource = "https://developers.openai.com/api/docs/pricing"
+    static let openAIModelPageSource = "https://developers.openai.com/api/docs/models/<id> (\"Input modalities: text, image\")"
+    static let geminiPricingSource = "https://ai.google.dev/gemini-api/docs/pricing"
+    static let geminiImageSource = "https://ai.google.dev/gemini-api/docs/image-understanding (\"All Gemini model versions are multimodal\")"
     static let defaultAnthropicModel = "claude-haiku-5-5"
 
     private static func anthropic(_ input: Double, _ output: Double) -> Entry {
@@ -27,7 +31,49 @@ enum LLMCatalog {
               pricing: ModelPricing(inputUSDPerMTok: input, outputUSDPerMTok: output, source: xaiSource, asOf: asOf))
     }
 
+    /// Precio de la página de precios de OpenAI (tarifa estándar, contexto corto). Imágenes confirmadas solo
+    /// en los modelos cuya página dice "Input modalities: text, image" (comprobado el 2026-10-27).
+    private static func openai(_ input: Double, _ output: Double, image: ImageSupport = .unconfirmed) -> Entry {
+        Entry(imageSupport: image,
+              pricing: ModelPricing(inputUSDPerMTok: input, outputUSDPerMTok: output, source: openAIPricingSource, asOf: asOf))
+    }
+
+    /// Precio de la página de precios de Gemini (nivel de pago, texto/imagen). Imágenes: la guía oficial de
+    /// comprensión de imágenes afirma que todas las versiones de Gemini son multimodales (2026-10-27).
+    private static func gemini(_ input: Double, _ output: Double) -> Entry {
+        Entry(imageSupport: .confirmed,
+              pricing: ModelPricing(inputUSDPerMTok: input, outputUSDPerMTok: output, source: geminiPricingSource, asOf: asOf))
+    }
+
     static let table: [LLMProviderID: [String: Entry]] = [
+        .openai: [
+            // Página del modelo: "Input modalities: text, image".
+            "gpt-6-luna": openai(0.10, 0.50, image: .confirmed),
+            "gpt-5-mini": openai(0.25, 2.00, image: .confirmed),
+            "gpt-4.1-mini": openai(0.40, 1.60, image: .confirmed),
+            // Solo precio publicado; imágenes sin confirmar en su página.
+            "gpt-5-nano": openai(0.05, 0.40),
+            "gpt-4.1-nano": openai(0.10, 0.40),
+            "gpt-4o-mini": openai(0.15, 0.60),
+            "gpt-5.6-luna": openai(0.20, 1.20),
+            "gpt-5.4-nano": openai(0.20, 1.25),
+            "gpt-5.4-mini": openai(0.75, 4.50),
+            "gpt-5": openai(1.25, 10),
+            "gpt-5.1": openai(1.25, 10),
+            "gpt-4.1": openai(2, 8),
+            "gpt-4o": openai(2.50, 10),
+        ],
+        .gemini: [
+            "gemini-2.5-flash-lite": gemini(0.10, 0.40),
+            "gemini-2.5-flash": gemini(0.30, 2.50),
+            "gemini-3.5-flash-lite": gemini(0.30, 2.50),
+            "gemini-3-flash-preview": gemini(0.50, 3.00),
+            // Precio vigente hasta el 2026-12-31 (sube a 1,50 / 7,50 desde 2027-01-01).
+            "gemini-3.8-flash": gemini(0.75, 3.75),
+            "gemini-3.6-flash": gemini(0.75, 3.75),
+            "gemini-2.5-pro": gemini(1.25, 10),
+            "gemini-3.1-pro-preview": gemini(2, 12),
+        ],
         .anthropic: [
             "claude-fable-5-1": anthropic(10, 50),
             "claude-fable-5": anthropic(10, 50),

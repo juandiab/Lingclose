@@ -35,7 +35,14 @@ struct LLMProviderCatalogTests {
     @Test func openAICatalogKeepsOnlyChatModelsWithoutInventedData() async throws {
         let (models, transport) = try await models(.openai)
         #expect(models.map(\.id) == ["gpt-4.1", "gpt-5-mini"])
-        #expect(models.allSatisfy { $0.pricing == nil && $0.imageSupport == .unconfirmed && $0.recommendation == .unknown })
+        // gpt-5-mini: página del modelo "Input modalities: text, image" y precio publicado → recomendado (único con imágenes confirmadas).
+        let mini = try #require(models.first { $0.id == "gpt-5-mini" })
+        #expect(mini.imageSupport == .confirmed && mini.pricing?.inputUSDPerMTok == 0.25 && mini.pricing?.outputUSDPerMTok == 2.00)
+        #expect(mini.pricing?.source == LLMCatalog.openAIPricingSource)
+        if case .recommended = mini.recommendation {} else { Issue.record("gpt-5-mini debería ser el recomendado") }
+        // gpt-4.1: precio publicado, imágenes sin confirmar en su página → no se recomienda ni se inventa.
+        let full = try #require(models.first { $0.id == "gpt-4.1" })
+        #expect(full.imageSupport == .unconfirmed && full.pricing?.inputUSDPerMTok == 2 && full.recommendation == .unknown)
         #expect(models.first { $0.id == "gpt-5-mini" }?.supportsReasoningControl == true)
         let request = try #require(transport.requests.first)
         #expect(request.url?.absoluteString == "https://api.openai.com/v1/models")
@@ -90,8 +97,11 @@ struct LLMProviderCatalogTests {
         #expect(models[0].displayName == "Gemini 3.6 Flash")
         #expect(models[0].maxOutputTokens == 65_536)
         #expect(models[0].supportsReasoningControl)
-        #expect(models[0].imageSupport == .unconfirmed)
-        #expect(models[0].pricing == nil)
+        // Guía oficial de comprensión de imágenes: todas las versiones de Gemini son multimodales; precio de la página de precios.
+        #expect(models[0].imageSupport == .confirmed)
+        #expect(models[0].pricing?.inputUSDPerMTok == 0.75 && models[0].pricing?.outputUSDPerMTok == 3.75)
+        #expect(models[0].pricing?.source == LLMCatalog.geminiPricingSource)
+        if case .recommended = models[0].recommendation {} else { Issue.record("único modelo con imágenes y precio: recomendado") }
         let request = try #require(transport.requests.first)
         #expect(request.url?.absoluteString == "https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000")
         #expect(request.value(forHTTPHeaderField: "x-goog-api-key") == LLMFixtures.testKey)

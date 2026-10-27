@@ -17,4 +17,9 @@
 | D-13 | 2026-10-27 | Idioma de la UI: español, con `Localizable.xcstrings` preparado para inglés | Fable | Juampa es hispanohablante; coste cero de preparar la segunda lengua |
 | D-14 | 2026-10-27 | git local en `LingoScan_Claude/` para verificar cada tarea por commit | Fable | Reversible; sin remoto hasta que Juampa lo pida |
 
-Pendientes de Juampa: confirmar D-04, D-12; indicar la carpeta de iCloud Drive para los archivos; identificar la segunda caja de sensores.
+| D-15 | 2026-10-27 | El formato portable y el de recuperación los define el contrato compartido `../LingoScan_Shared/` (`CONTRATO_V1.md`, `RECUPERACION_V1.md`), propuesto por Claude y pendiente de revisión de Astra. LingoScan lo implementa en T-10 y T-19 con `contract_version 1.0.0-draft.N` hasta que sea estable | Juampa (encargo), Claude (propuesta) | Poder combinar historial de las dos apps y transferir un sensor activo |
+| D-16 | 2026-10-27 | Una sola app escribe muestras nuevas en Health a la vez (la recolectora BLE); transferencia explícita del rol con pausa, exportación, importación y verificación; sin reexportar historial importado | Juampa | `SyncIdentifier` no deduplica entre apps |
+| D-17 | 2026-10-27 | `producer_tag` de LingoScan: `lingoscan`. Astra usa `com.otalvaro.lingoscan.astra` / `astra` | Juampa y Astra | Coexistencia de dos apps con el mismo Team |
+| D-18 | 2026-10-27 | Fable (orquestador) puede escribir código delicado y de alto valor y revisa toda entrega de Opus y Sonnet | Juampa | Calidad en criptografía, protocolo y contrato |
+
+Pendientes de Juampa: confirmar D-04, D-12; indicar la carpeta de iCloud Drive para los archivos (Q-06 del contrato); identificar la segunda caja de sensores; decidir `include_material` (Q-05).

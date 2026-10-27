@@ -15,10 +15,11 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 | T-11 | 1 | Sonnet | Shell de la app, Hoy y Sensor con Liquid Glass | T-06, T-07 | pendiente |
 | T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | pendiente |
 | T-09 | 2 | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | pendiente |
-| T-10 | 2 | Sonnet | ArchiveService: `.lingoscan` export/import, carpeta del usuario, cadencia | T-07 | pendiente |
+| T-10 | 2 | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | pendiente |
+| T-19 | 2 | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | pendiente |
 | T-12 | 2 | Sonnet | Diario, Reportes (ReportsEngine + Swift Charts), Datos, Ajustes | T-09, T-10, T-11 | pendiente |
 | T-13 | 2 | Sonnet | Alarmas alta, baja y sin datos | T-07 | pendiente |
-| T-15 | 2 | Sonnet | App de prueba de reemplazo (otro bundle ID) | T-10 | pendiente |
+| T-15 | 2 | Sonnet | App de prueba de reemplazo (otro bundle ID) y pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) | T-10, T-19 | pendiente |
 | T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2 cerrada | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |
@@ -118,9 +119,9 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 
 **Modelo:** Sonnet. **Skills:** `swiftui-pro`, `swiftpm-macos`.
 **Archivos:** `Packages/LingoCore/Sources/LingoCore/Archive/**`, `LingoScan/Services/ArchiveService.swift`, `LingoScan/Services/FolderBookmark.swift`, `LingoScan/App/BackgroundTasks.swift`, tests en ambos targets, `docs/FORMATO_LINGOSCAN.md` (nuevo, es el `schema/README.md` del archivo).
-**Objetivo:** exportación e importación según `DATOS_Y_HEALTHKIT.md`: escritura atómica, hashes, retención, bookmark de carpeta, fallback al contenedor iCloud, `BGAppRefreshTask` diario, importación validada y atómica con tombstones.
-**Aceptación:** los diez casos de la tabla "Pruebas de aceptación" de `DATOS_Y_HEALTHKIT.md` salvo el de otro bundle ID (T-15), con fixtures; `readings.csv` abre en Numbers.
-**Verificación Fable:** tests; exportar desde el simulador y abrir la carpeta en Finder; commit `T-10`.
+**Objetivo:** exportación e importación **exactamente** según `../LingoScan_Shared/CONTRATO_V1.md` (carpeta `.partial` → renombrado, manifest con hashes al final, `producer_tag` `lingoscan`, esquemas de `../LingoScan_Shared/schemas/`), bookmark de carpeta, fallback al contenedor iCloud, estados de iCloud con las claves `NSURLUbiquitousItem*`, `BGAppRefreshTask` diario, importación validada y transaccional con las reglas de unión de §8 y `conflicts.ndjson`.
+**Aceptación:** el paquete de `../LingoScan_Shared/examples/` se importa sin cambios en tres pasadas; los cinco de `examples/invalid/` se rechazan con el motivo exacto; un paquete exportado por LingoScan pasa `python3 -I ../LingoScan_Shared/tools/verify_archive.py`; los casos P-03, P-05, P-06, P-07, P-08, P-09 de `PRUEBAS_INTEROPERABILIDAD.md` con fixtures; `readings.csv` abre en Numbers.
+**Verificación Fable:** tests; `verify_archive.py` sobre un paquete real del simulador; commit `T-10`.
 
 ## T-11 — Shell de la app, Hoy y Sensor con Liquid Glass
 
@@ -159,6 +160,14 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 **Objetivo:** app mínima que importa un `.lingoscan` con `LingoCore` y muestra conteos y la última semana en una lista. Demuestra el contrato sin la base original.
 **Aceptación:** importa el archivo exportado por LingoScan en simulador y muestra los mismos conteos que el manifest.
 **Verificación Fable:** ejecutar en simulador; commit `T-15`.
+
+## T-19 — Archivo de recuperación cifrado y transferencia de rol
+
+**Modelo:** Fable escribe `RecoveryCrypto` (PBKDF2 + ChaChaPoly, envoltura, AAD) y sus tests contra `../LingoScan_Shared/examples/recovery/vectors.json`; Opus integra `RecoveryExporter`/`RecoveryImporter` con `CredentialStore`, `PairingStateStore` y `SensorSessionCoordinator`. **Skills:** `swiftui-pro` (`swift.md`), `swiftpm-macos`.
+**Archivos:** `Packages/LingoCore/Sources/LingoCore/Recovery/**` (cripto y modelo de carga útil, sin Keychain), `LingoScan/Services/RecoveryService.swift`, `LingoScan/Features/Data/RecoveryViews.swift`, `LingoScan/Features/Sensor/ConnectActiveSensorView.swift`, tests en ambos targets.
+**Objetivo:** `RECUPERACION_V1.md` completo: exportación en `prepared`, `response_saved` y `authenticated` durante la activación y a petición; importación con frase; "Conectar sensor activo" para sesiones importadas; modo "en pausa" (sin reconexión, sin restauración CB, sin Health) para transferir el rol; nunca `0xA0`/`0xA8` desde el flujo de importación.
+**Aceptación:** R-01 (los 7 vectores), R-04, R-05 y el registro durable de activación con transportes guionados (muerte simulada entre `sent` y `response_saved` deja el intento marcado y no reactiva). Apertura de un archivo con 600 000 iteraciones medida en el iPhone (< 1 s).
+**Verificación Fable:** tests; revisión de que ningún camino de importación alcanza `.activateFreshSensor`; commit `T-19`.
 
 ## T-16 — Protocolo del sensor de sacrificio
 

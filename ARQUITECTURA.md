@@ -115,7 +115,7 @@ Reglas:
 | Receiver ID | Keychain + anotado por Juampa fuera del teléfono | `AfterFirstUnlock` | Sí |
 | kAuth de la sesión activa | Keychain | `AfterFirstUnlockThisDeviceOnly` | No |
 | PIN BLE, MAC, serial, identificador del periférico, último lifeCount | SQLite `sensor_sessions` | — | — |
-| Export cifrado de recuperación | Archivo `recovery-<fecha>.lingoscan-keys` en la carpeta del usuario | PBKDF2-HMAC-SHA256 (CommonCrypto) + ChaChaPoly (CryptoKit), formato documentado | Lo mueve el usuario |
+| Export cifrado de recuperación | `LingoScan-lingoscan-<UTC>-<id>.lingoscan-recovery.json` en la carpeta del usuario, formato de `../LingoScan_Shared/RECUPERACION_V1.md` | PBKDF2-HMAC-SHA256 600 000 it. (CommonCrypto) + ChaCha20-Poly1305 (CryptoKit), AAD con `archive_id` y fecha | Lo mueve el usuario; lo abre también LingoScan_Astra |
 
 Restaurar historial no garantiza recuperar el sensor activo: la ruta corta de reconexión necesita kAuth y PIN; si el handshake corto falla, se intenta el completo (reenvía certificado, no repite NFC). Esto se prueba en la Fase 3 con el sensor de sacrificio.
 

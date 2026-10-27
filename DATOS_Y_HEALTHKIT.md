@@ -1,5 +1,7 @@
 # Datos, archivo portable y HealthKit
 
+> **Normativo desde 2026-10-27:** el formato del archivo portable y del archivo de recuperación lo define el contrato compartido con Astra en `../LingoScan_Shared/CONTRATO_V1.md` y `../LingoScan_Shared/RECUPERACION_V1.md` (estado `1.0.0-draft.1`). Donde este documento y el contrato difieran, manda el contrato; este documento conserva el esquema SQLite interno y las decisiones propias de LingoScan.
+
 Objetivo: que ningún dato se pierda al reinstalar o reemplazar la app, y que cualquier otra herramienta pueda leerlo. Tres copias con funciones distintas:
 
 | Copia | Para qué | Sobrevive a |
@@ -99,11 +101,13 @@ CREATE TABLE event_log (
 );
 ```
 
-`measured_at_utc` se calcula como `activated_at + 60·life_count` corregido con la regla de Juggluco (si `now - esperado > 15 s`, manda el esperado). `record_id` no depende del reloj del teléfono.
+`measured_at_utc` se calcula como `activation_time_epoch_s + 60·life_count` corregido con la regla de Juggluco (si `now - esperado > 15 s`, manda el esperado). `record_id` no depende del reloj del teléfono y sigue el contrato: `<session_id>:<analyte>:<life_count>`.
+
+Columnas que el contrato exige además de las de arriba (T-07 las implementa; el SQL de arriba es la base): en `sensor_sessions`: `activation_time_epoch_s`, `activation_time_source`, `activated_by_app_id`, `activation_source`, `activation_state` (`prepared`…`failed`), `revision`, `imported_from_app_id`, `imported_from_archive_id`; en `readings`: `channel`, `historic_life_count`, `actionable`, `reserved_hex`, `deleted`, `policy_id`, `policy_version`, `decoder_id`, `imported_from_app_id`, `imported_from_archive_id`; `origin` admite también `embedded_history`; `exclusion_reason` admite `decoder_error` y `other`. Una tabla `conflicts` con el mismo contenido que `conflicts.ndjson`.
 
 ## Archivo portable `.lingoscan`
 
-Es una **carpeta** (paquete de documento) `LingoScan-<yyyyMMdd-HHmmss>Z-<archiveID>.lingoscan/` para no depender de una librería ZIP:
+Formato normativo: `../LingoScan_Shared/CONTRATO_V1.md`. Es una **carpeta** `LingoScan-lingoscan-<YYYYMMDDTHHMMSSZ>-<archive_id_8>.lingoscan/` (el `producer_tag` de esta app es `lingoscan`), escrita primero como `.partial` y renombrada al final. Lo que cambia respecto a la tabla de abajo, que se mantiene como resumen: el ledger se llama `health_export_ledger.ndjson`; las lecturas llevan los objetos `raw` y `eligibility` del contrato; existe `conflicts.ndjson`; no hay `schema/` obligatorio (los esquemas canónicos están en `../LingoScan_Shared/schemas/`); el manifest declara `producer`, `snapshot.complete`, `policy` y `health.writer_app_id`.
 
 | Archivo | Contenido |
 |---|---|
@@ -111,7 +115,7 @@ Es una **carpeta** (paquete de documento) `LingoScan-<yyyyMMdd-HHmmss>Z-<archive
 | `sessions.json` | Filas de `sensor_sessions` sin `ble_address` ni `peripheral_uuid` |
 | `readings.ndjson` | Una fila por línea con todos los campos de `readings` salvo `raw_hex` |
 | `events.ndjson` | Eventos incluidos los tombstones |
-| `health_ledger.ndjson` | `record_id`, `revision`, `exported_at_utc` (lo que ya está en Health) |
+| `health_export_ledger.ndjson` | `subject_id`, `subject_kind`, `writer_app_id`, `sync_identifier`, `sync_version`, `exported_at_utc`, `result` (evidencia de intentos, no prueba de presencia) |
 | `readings.csv` | `measured_at_local,measured_at_utc,value_mgdl,trend,origin,eligible,exclusion_reason` para humanos y hojas de cálculo |
 | `schema/README.md` y `schema/readings.schema.json` | Para que otra implementación lo lea sin este código |
 
@@ -142,7 +146,9 @@ Los identificadores de sincronización hacen idempotentes los reintentos: Health
 
 ## Keychain y recuperación
 
-Ver `ARQUITECTURA.md` §6. El export de recuperación cifra `{receiverID, sessions[{session_id, serial, pin, kAuth, ble_address}]}` con una clave derivada de una frase que Juampa guarda aparte; el formato (sal, iteraciones, nonce, versión) va en el propio archivo. Sin la frase no hay recuperación; sin el archivo tampoco. Probar con datos ficticios en la Fase 2 y con el sensor real en la Fase 3.
+Ver `ARQUITECTURA.md` §6 y, como formato normativo, `../LingoScan_Shared/RECUPERACION_V1.md`: archivo JSON `*.lingoscan-recovery.json` con envoltura PBKDF2-HMAC-SHA256 (600 000 iteraciones, sal 16 B) + ChaCha20-Poly1305 (nonce 12 B, AAD con `archive_id` y fecha), y carga útil con Receiver ID, serial completo, respuesta NFC cruda, PIN, MAC, kAuth y estado de activación. LingoScan lo exporta en tres momentos (`prepared`, `response_saved`, `authenticated`) durante la activación y a petición. Sin la frase no hay recuperación; sin el archivo tampoco. Probar con vectores y datos ficticios en la Fase 2 (R-01 a R-05 del contrato) y con el sensor real en la Fase 3 (F-01 a F-04).
+
+Transferencia del rol de recolectora a LingoScan_Astra, o al revés: procedimiento de §6 del mismo documento. Mientras LingoScan está "en pausa" no reconecta, no restaura CoreBluetooth y no escribe en Health.
 
 ## Pruebas de aceptación (Fase 2)
 

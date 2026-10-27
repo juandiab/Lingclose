@@ -214,6 +214,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 **Objetivo:** `RECUPERACION_V1.md` completo: exportación en `prepared`, `response_saved` y `authenticated` durante la activación y a petición; importación con frase; "Conectar sensor activo" para sesiones importadas; modo "en pausa" (sin reconexión, sin restauración CB, sin Health) para transferir el rol; nunca `0xA0`/`0xA8` desde el flujo de importación.
 **Aceptación:** R-01 (los 7 vectores), R-04, R-05 y el registro durable de activación con transportes guionados (muerte simulada entre `sent` y `response_saved` deja el intento marcado y no reactiva). Apertura de un archivo con 600 000 iteraciones medida en el iPhone (< 1 s).
 **Verificación Fable:** tests; revisión de que ningún camino de importación alcanza `.activateFreshSensor`; commit `T-19`.
+**Corrección 27-oct (Fable, `191b1ed`):** la pantalla de Recuperación ignoraba la carpeta elegida en Datos (escribía en `Documents/`). Ahora resuelve el bookmark de T-10 en cada exportación, con acceso de alcance de seguridad; frase recordable en el Llavero (D-21); `start()` al arrancar vacía las exportaciones pendientes. Tests: `RecoveryFolderAndPassphraseTests`. Detalle en `docs/FASE3_PREPARACION.md`.
 
 ## T-16 — Protocolo del sensor de sacrificio
 

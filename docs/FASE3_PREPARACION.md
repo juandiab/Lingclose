@@ -6,18 +6,27 @@ Objetivo pedido por Juampa (2026-10-27): llegar al paso inmediatamente anterior 
 
 | # | Paso | Quién | Cómo se verifica | Estado |
 |---|---|---|---|---|
-| 1 | App instalada con la versión que incluye Fase 2a (Health, archivo `.lingoscan`, recuperación, alarmas, Datos/Ajustes) | Fable | `devicectl` instala; la app arranca; Ajustes muestra versión y commit | pendiente |
-| 2 | Identidad importada en el iPhone: AirDrop de `Credentials/lingo-identity.json` → LingoScan → Ajustes muestra `lingo-v3`, familia Lingo, claves de firma: sí | Juampa + Fable | Captura de Ajustes; `Documents/Inbox` sin restos | pendiente |
-| 3 | Frase de recuperación elegida por Juampa (≥ 12 caracteres o 6 palabras), guardada fuera del teléfono | Juampa | Confirmación verbal; no se anota en ningún documento | pendiente |
-| 4 | Carpeta de iCloud Drive elegida en Datos (Q-06 del contrato) | Juampa | Datos muestra la carpeta y estado `icloud_uploaded` tras una exportación | pendiente |
-| 5 | Exportación manual del paquete `.lingoscan` y verificación externa: `python3 -I ../LingoScan_Shared/tools/verify_archive.py <paquete>` → exit 0 | Fable | Salida del verificador | pendiente |
+| 1 | App instalada con la versión que incluye Fase 2a (Health, archivo `.lingoscan`, recuperación, alarmas, Datos/Ajustes) | Fable | `devicectl` instala; la app arranca; Ajustes muestra versión y commit | hecha (build `191b1ed` con la corrección de Recuperación instalada el 27-oct) |
+| 2 | Identidad importada en el iPhone: AirDrop de `Credentials/lingo-identity.json` → LingoScan → Ajustes muestra `lingo-v3`, familia Lingo, claves de firma: sí | Juampa + Fable | Captura de Ajustes; `Documents/Inbox` sin restos | hecha (Juampa: "funciona") |
+| 3 | Frase de recuperación elegida por Juampa (≥ 12 caracteres o 6 palabras), guardada fuera del teléfono | Juampa | Confirmación verbal; no se anota en ningún documento | hecha (Juampa la tiene fuera del teléfono) |
+| 4 | Carpeta de iCloud Drive elegida en Datos (Q-06 del contrato) | Juampa | Datos muestra la carpeta y estado `icloud_uploaded` tras una exportación | hecha (`iCloud Drive/LingoScan`; Juampa: "funciona") |
+| 5 | Exportación manual del paquete `.lingoscan` y verificación externa: `python3 -I ../LingoScan_Shared/tools/verify_archive.py <paquete>` → exit 0 | Fable | Salida del verificador | hecha: dos paquetes exportados a las 16:07 (`…210717Z-8782c63c`, `…210724Z-83ea88aa`), ambos `VALIDO` con `verify_archive.py` (exit 0) |
 | 6 | Importación de ese paquete de vuelta en la app (idempotente: 0 nuevas, 0 conflictos) | Fable | Resumen de importación | pendiente |
-| 7 | Exportación manual del archivo de recuperación con la frase; apertura en el Mac con `tools/recovery_vectors_check.py`-style (abrir con la frase) → carga válida contra `recovery_payload.schema.json` | Fable | Salida; la frase no se pega en ningún log | pendiente |
+| 7 | Exportación manual del archivo de recuperación con la frase; apertura en el Mac con `tools/recovery_vectors_check.py`-style (abrir con la frase) → carga válida contra `recovery_payload.schema.json` | Fable | Salida; la frase no se pega en ningún log | **bloqueada el 27-oct y corregida**: Recuperación ignoraba la carpeta elegida y escribía en `Documents/`; ahora resuelve el mismo bookmark que el `.lingoscan` (ver abajo). Pendiente de repetir con la build nueva |
 | 8 | Reinstalación de prueba NO se hace con la app real: la restauración desde otro bundle ID queda para R-03 con LingoScan_Astra | — | — | fuera de alcance aquí |
 | 9 | Lectura NFC de solo lectura repetida con el sensor que se va a usar (ya hecha una vez el 27-oct: Lingo 9/3, estado 1) | Juampa | Pantalla Sensor "Listo para activar" | hecha (1 vez) |
-| 10 | Receiver ID generado y persistido en estado `prepared`: en Sensor tocar "Activar sensor" abre la confirmación tras generar y guardar el Receiver ID y exportar el archivo de recuperación con `sequence 1`; **cancelar** la confirmación deja el intento en `prepared` sin enviar nada. Juampa anota el Receiver ID completo que muestra la pantalla | Juampa + Fable | Archivo `*.lingoscan-recovery.json` nuevo en la carpeta; Sensor sigue en "Listo para activar"; `event_log` sin comandos NFC de escritura | pendiente |
+| 10 | Receiver ID generado y persistido en estado `prepared`: en Sensor tocar "Activar sensor" abre la confirmación tras generar y guardar el Receiver ID y exportar el archivo de recuperación con `sequence 1`; **cancelar** la confirmación deja el intento en `prepared` sin enviar nada. Juampa anota el Receiver ID completo que muestra la pantalla | Juampa + Fable | Archivo `*.lingoscan-recovery.json` nuevo en la carpeta; Sensor sigue en "Listo para activar"; `event_log` sin comandos NFC de escritura | hecha en parte: Receiver ID generado y confirmación cancelada (captura 16:08; Juampa lo anotó fuera). La copia de `prepared` quedó **pendiente** porque no había frase en memoria; sale sola al dar la frase |
 | 11 | Escaneo BLE pasivo de 60 s para confirmar que no hay otros sensores Libre/Lingo anunciando cerca (LingoScan_Astra en pausa o cerrada) | Fable | Log del coordinador | pendiente |
 | 12 | Backup final: segunda exportación `.lingoscan` + recuperación (`sequence 2` si hubo cambios) y copia del archivo de recuperación al Mac | Juampa | Archivos presentes en dos sitios | pendiente |
+
+### Corrección del 27-oct (paso 7)
+
+Las capturas de Juampa (16:08 y 16:09) mostraron en Recuperación "Se guarda en Documentos de la app: aún no hay carpeta elegida" pese a tener la carpeta elegida en Datos, y el aviso "la frase debe tener al menos 12 caracteres". Causa: `RecoveryService` recibía `Documents/` como carpeta fija y nunca leía el bookmark de T-10. Cambios (commit `191b1ed`):
+
+- `RecoveryService` resuelve en cada exportación el mismo bookmark con alcance de seguridad que el archivo `.lingoscan` (carpeta elegida > contenedor iCloud propio > `Documents/`; un bookmark que ya no resuelve se marca `unavailable` y la UI pide elegir de nuevo). La escritura va dentro de `startAccessingSecurityScopedResource`.
+- Frase: interruptor opcional "Recordar en el Llavero" (`AfterFirstUnlockThisDeviceOnly`, sin iCloud; D-21). "Olvidar frase" borra la copia. El botón "Usar frase" solo se activa con 12 caracteres o más tras recortar bordes, y pulsar Intro con el campo vacío ya no dispara el aviso.
+- Al arrancar, `installRecovery()` llama a `start()`: con frase recordada, las exportaciones pendientes salen sin abrir la pantalla.
+- Tests nuevos: `RecoveryFolderAndPassphraseTests` (3). App: 155 tests.
 
 Cuando los 12 estén en verde, la activación es: Sensor → "Activar sensor" → revisar resumen → interruptor "entiendo que es irreversible" → botón. Antes de ese toque, Juampa lo confirma por escrito en el chat (regla de `CLAUDE.md`).
 

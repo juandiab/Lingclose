@@ -17,6 +17,8 @@ final class FakeLLMProvider: LLMProvider, @unchecked Sendable {
     var catalog: [LLMModel]
     var listError: LLMError?
     var delay: Duration?
+    /// Espera antes de devolver el catálogo (para observar el paso `comprobando`).
+    var listDelay: Duration?
 
     private let state = OSAllocatedUnfairLock(initialState: (analyze: [AnalyzeCall](), list: [String]()))
 
@@ -34,6 +36,7 @@ final class FakeLLMProvider: LLMProvider, @unchecked Sendable {
 
     func listModels(apiKey: String) async throws -> [LLMModel] {
         state.withLock { $0.list.append(apiKey) }
+        if let listDelay { try await Task.sleep(for: listDelay) }
         if let listError { throw listError }
         return catalog
     }

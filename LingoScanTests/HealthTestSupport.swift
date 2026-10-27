@@ -7,6 +7,8 @@ actor InMemoryHealthSink: HealthSink {
     /// Sujetos (por `sync_identifier`) cuya escritura falla mientras esté en el conjunto.
     var failingIdentifiers: Set<String> = []
     var writeError: HealthSinkError?
+    /// Tipos sin permiso de escritura (como `HealthKitSink` con grasa denegada): sus muestras salen `failed`.
+    var deniedKinds: Set<HealthSubjectKind> = []
     var queryError: HealthSinkError?
     /// Muestras ya presentes en Health aunque el ledger no lo sepa (escritura perdida tras `unknown`).
     private(set) var samples: [String: HealthSampleSpec] = [:]
@@ -16,6 +18,7 @@ actor InMemoryHealthSink: HealthSink {
 
     func setStatus(_ value: HealthAuthorizationStatus) { status = value }
     func setFailing(_ ids: Set<String>) { failingIdentifiers = ids }
+    func setDenied(_ kinds: Set<HealthSubjectKind>) { deniedKinds = kinds }
     func setWriteError(_ error: HealthSinkError?) { writeError = error }
     func setQueryError(_ error: HealthSinkError?) { queryError = error }
     func preload(_ spec: HealthSampleSpec) { samples[spec.syncIdentifier] = spec }
@@ -31,6 +34,9 @@ actor InMemoryHealthSink: HealthSink {
         if let writeError { throw writeError }
         return specs.map { spec in
             attemptedIdentifiers.append(spec.syncIdentifier)
+            if deniedKinds.contains(spec.kind) {
+                return HealthWriteResult(syncIdentifier: spec.syncIdentifier, outcome: .failed, detail: "sin permiso de \(spec.kind.rawValue)")
+            }
             if failingIdentifiers.contains(spec.syncIdentifier) {
                 return HealthWriteResult(syncIdentifier: spec.syncIdentifier, outcome: .failed, detail: "simulado")
             }

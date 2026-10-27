@@ -23,7 +23,7 @@ struct WorkoutImportSection: View {
                 }
                 LabeledContent(String(localized: "workouts.settings.total", defaultValue: "Importados"), value: trigger.status.totalImported, format: .number)
                 Button {
-                    Task { result = Self.summary(await trigger.importNow()) }
+                    importNow(trigger)
                 } label: {
                     HStack {
                         Label(String(localized: "workouts.settings.importNow", defaultValue: "Importar ahora"), systemImage: "arrow.down.circle")
@@ -46,6 +46,10 @@ struct WorkoutImportSection: View {
             }
             .task { await trigger.refreshStatus() }
         }
+    }
+
+    private func importNow(_ trigger: WorkoutImportTrigger) {
+        Task { result = Self.summary(await trigger.importNow()) }
     }
 
     /// Texto breve del resultado de una importación (también lo usa el registro rápido).

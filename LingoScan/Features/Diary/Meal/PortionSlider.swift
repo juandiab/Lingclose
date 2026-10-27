@@ -20,9 +20,9 @@ struct PortionSlider: View {
             ) {
                 Text(String(localized: "meal.portions.label", defaultValue: "Porciones"))
             } minimumValueLabel: {
-                Text(verbatim: "1")
+                Text(NutrientLimits.portionMultiplier.lowerBound, format: .number)
             } maximumValueLabel: {
-                Text(verbatim: "5")
+                Text(NutrientLimits.portionMultiplier.upperBound, format: .number)
             }
             .accessibilityValue(multiplierText)
         }

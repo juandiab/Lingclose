@@ -40,11 +40,11 @@ struct MealAnalysisView: View {
                 if model.phase == .proposal {
                     ToolbarItem(placement: .confirmationAction) {
                         Button(String(localized: "common.save", defaultValue: "Guardar"), action: save)
-                        .disabled(!model.canSave)
+                            .disabled(!model.canSave)
                     }
                 }
             }
-            .onAppear { Task { await model.prepare() } }
+            .task { await model.prepare() }
             .sensoryFeedback(.success, trigger: model.didSave)
             .animation(.smooth, value: model.phase)
         }

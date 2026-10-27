@@ -28,9 +28,20 @@ struct ActivationConfirmationView: View {
                     } label: {
                         Text(verbatim: "securityVersion")
                     }
-                    LabeledContent {
-                        Text(summary.receiverIDPartial)
+                    LabeledContent(String(localized: "activation.serial", defaultValue: "Serial")) {
+                        Text(summary.serialRedacted)
                             .monospaced()
+                    }
+                    LabeledContent(String(localized: "activation.warmup", defaultValue: "Calentamiento")) {
+                        RemainingDurationText(duration: .seconds(summary.warmupMinutes * 60))
+                    }
+                    LabeledContent(String(localized: "activation.wear", defaultValue: "Duración")) {
+                        RemainingDurationText(duration: .seconds(summary.wearMinutes * 60))
+                    }
+                    LabeledContent {
+                        Text(summary.receiverIDText)
+                            .monospaced()
+                            .textSelection(.enabled)
                     } label: {
                         Text(verbatim: "Receiver ID")
                     }
@@ -41,7 +52,7 @@ struct ActivationConfirmationView: View {
                 } header: {
                     Text(String(localized: "activation.summary.header", defaultValue: "Se enviará al sensor"))
                 } footer: {
-                    Text(String(localized: "activation.summary.footer", defaultValue: "Activar es irreversible: un sensor se activa una sola vez y no se puede deshacer."))
+                    Text(String(localized: "activation.summary.footer", defaultValue: "Anota el Receiver ID completo: ya está guardado en este iPhone. Activar es irreversible: un sensor se activa una sola vez y no se puede deshacer."))
                 }
 
                 Section {
@@ -86,7 +97,10 @@ struct ActivationConfirmationView: View {
             family: .lingo,
             productType: 9,
             securityVersion: 3,
-            receiverIDPartial: "••••A3F2",
+            serialRedacted: "SYN…01",
+            warmupMinutes: 60,
+            wearMinutes: 20_160,
+            receiverID: 0x1234_5678,
             preparedAt: .now
         ),
         onConfirm: { _ in }

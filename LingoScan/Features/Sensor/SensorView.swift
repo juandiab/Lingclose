@@ -20,6 +20,15 @@ struct SensorView: View {
                 Task { await viewModel.confirmActivation(confirmation) }
             }
         }
+        .alert(
+            viewModel.failure?.title ?? "",
+            isPresented: $viewModel.isShowingFailure,
+            presenting: viewModel.failure
+        ) { _ in
+            Button(String(localized: "common.ok", defaultValue: "Aceptar"), role: .cancel) {}
+        } message: { failure in
+            Text(failure.message)
+        }
         .sensoryFeedback(.success, trigger: viewModel.lastConfirmation)
     }
 }
@@ -41,9 +50,7 @@ extension SensorView {
 }
 
 #Preview("Listo para activar") {
-    let model = SensorViewModel(statusSource: PreviewData(sensorState: .readyToActivate))
-    model.activateAction = { _ in }
-    model.readSensorAction = {}
+    let model = SensorViewModel(statusSource: PreviewData(sensorState: .readyToActivate), actions: PreviewSensorActions())
     return NavigationStack {
         SensorView(viewModel: model)
     }

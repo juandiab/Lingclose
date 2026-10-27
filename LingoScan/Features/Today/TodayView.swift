@@ -10,18 +10,22 @@ struct TodayView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Tokens.Spacing.md) {
                     SensorStatusChip(state: viewModel.sensor.state)
-                    TimelineView(.periodic(from: .now, by: 30)) { context in
-                        CurrentValueView(viewModel: viewModel, now: context.date)
+                    if viewModel.hasNoData {
+                        TodayEmptyView(sensor: viewModel.sensor)
+                    } else {
+                        TimelineView(.periodic(from: .now, by: 30)) { context in
+                            CurrentValueView(viewModel: viewModel, now: context.date)
+                        }
+                        if viewModel.failure != nil {
+                            Label(
+                                String(localized: "today.failure", defaultValue: "No se pudieron leer los datos guardados."),
+                                systemImage: "exclamationmark.triangle"
+                            )
+                            .foregroundStyle(Tokens.Palette.error)
+                        }
+                        PeriodPicker(period: $viewModel.period)
+                        GlucoseChartCard(viewModel: viewModel)
                     }
-                    if viewModel.failure != nil {
-                        Label(
-                            String(localized: "today.failure", defaultValue: "No se pudieron leer los datos guardados."),
-                            systemImage: "exclamationmark.triangle"
-                        )
-                        .foregroundStyle(Tokens.Palette.error)
-                    }
-                    PeriodPicker(period: $viewModel.period)
-                    GlucoseChartCard(viewModel: viewModel)
                     if viewModel.isSynthetic {
                         Label(
                             String(localized: "today.synthetic", defaultValue: "Datos de ejemplo (sintéticos). No son de un sensor real."),

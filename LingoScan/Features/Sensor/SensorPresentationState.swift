@@ -15,6 +15,8 @@ enum SensorPresentationState: String, Sendable, Hashable, CaseIterable {
     case reconnecting
     case paired
     case ended
+    /// Rol de recolectora transferido: sin reconexión ni Health hasta reanudar.
+    case paused
 
     /// Etiqueta corta para chips y filas.
     var title: String {
@@ -32,6 +34,7 @@ enum SensorPresentationState: String, Sendable, Hashable, CaseIterable {
         case .reconnecting: String(localized: "sensor.state.reconnecting", defaultValue: "Reconectando")
         case .paired: String(localized: "sensor.state.paired", defaultValue: "Emparejado")
         case .ended: String(localized: "sensor.state.ended", defaultValue: "Sesión terminada")
+        case .paused: String(localized: "sensor.state.paused", defaultValue: "En pausa")
         }
     }
 
@@ -51,6 +54,7 @@ enum SensorPresentationState: String, Sendable, Hashable, CaseIterable {
         case .reconnecting: String(localized: "sensor.spoken.reconnecting", defaultValue: "reconectando el sensor")
         case .paired: String(localized: "sensor.spoken.paired", defaultValue: "sensor emparejado")
         case .ended: String(localized: "sensor.spoken.ended", defaultValue: "sesión del sensor terminada")
+        case .paused: String(localized: "sensor.spoken.paused", defaultValue: "sensor en pausa")
         }
     }
 
@@ -69,6 +73,7 @@ enum SensorPresentationState: String, Sendable, Hashable, CaseIterable {
         case .reconnecting: "antenna.radiowaves.left.and.right"
         case .paired: "link"
         case .ended: "clock.badge.xmark"
+        case .paused: "pause.circle"
         }
     }
 
@@ -78,7 +83,7 @@ enum SensorPresentationState: String, Sendable, Hashable, CaseIterable {
         case .streaming, .paired, .readyToActivate: .good
         case .stale, .reconnecting, .warmingUp, .activating, .pairing: .attention
         case .incompatible, .authenticationFailed: .error
-        case .noSensor, .identified, .ended: .neutral
+        case .noSensor, .identified, .ended, .paused: .neutral
         }
     }
 

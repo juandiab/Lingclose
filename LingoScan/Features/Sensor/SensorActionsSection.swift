@@ -25,21 +25,35 @@ struct SensorActionsSection: View {
         }
 
         Section {
-            Button(
-                String(localized: "sensor.action.activate", defaultValue: "Activar sensor"),
-                systemImage: "bolt.horizontal.circle",
-                action: viewModel.beginActivation
-            )
+            Button(action: beginActivation) {
+                if viewModel.isPreparing {
+                    ProgressView()
+                } else {
+                    Label(
+                        String(localized: "sensor.action.activate", defaultValue: "Activar sensor"),
+                        systemImage: "bolt.horizontal.circle"
+                    )
+                }
+            }
             .buttonStyle(.glass)
             .controlSize(.large)
             .frame(maxWidth: .infinity)
             .disabled(!viewModel.canActivate)
         } footer: {
-            Text(String(localized: "sensor.action.activate.footer", defaultValue: "Abre una pantalla aparte con el resumen de lo que se enviará. Un sensor se activa una sola vez."))
+            VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {
+                if let blocker = viewModel.activationBlocker {
+                    Text(blocker.explanation)
+                }
+                Text(String(localized: "sensor.action.activate.footer", defaultValue: "Abre una pantalla aparte con el resumen de lo que se enviará. Un sensor se activa una sola vez."))
+            }
         }
     }
 
     private func readSensor() {
         Task { await viewModel.readSensor() }
+    }
+
+    private func beginActivation() {
+        Task { await viewModel.beginActivation() }
     }
 }

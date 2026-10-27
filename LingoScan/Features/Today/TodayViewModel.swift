@@ -53,6 +53,9 @@ final class TodayViewModel {
 
     var trend: TrendDirection? { TrendDirection(rawTrend: latest?.raw.trend) }
 
+    /// Sin ninguna lectura que mostrar (ni última elegible ni puntos en el período).
+    var hasNoData: Bool { hasLoaded && failure == nil && latest == nil && segments.isEmpty }
+
     var isSynthetic: Bool { latest?.synthetic ?? sensor.profile?.synthetic ?? false }
 
     /// Minutos enteros desde la última lectura elegible; `nil` si no hay lectura.

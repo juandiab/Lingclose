@@ -26,7 +26,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-07 | 1 | Opus | LingoCore: dominio, elegibilidad y almacén SQLite | T-06 | cerrada |
 | T-08 | 1 | Opus | SensorSessionCoordinator y NFCService | T-03, T-05, T-07 | cerrada |
 | T-11 | 1 | Sonnet | Shell de la app, Hoy y Sensor con Liquid Glass | T-06, T-07 | cerrada |
-| T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | pendiente |
+| T-14 | 1 | Fable | Firma, instalación en iPhone, permisos, diagnóstico NFC solo lectura | T-08, T-11 | en curso (instalada; falta lectura NFC con Juampa) |
 | T-09 | 2 | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | pendiente |
 | T-10 | 2 | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | pendiente |
 | T-19 | 2 | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | pendiente |

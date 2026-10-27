@@ -1,7 +1,7 @@
 import Foundation
 import LingoCore
 
-/// Datos sintéticos para `#Preview`, pruebas y la app antes de conectar T-08 y `SQLiteStore`.
+/// Datos sintéticos para `#Preview`, pruebas y el arranque con `-previewSensorState` (DEBUG).
 ///
 /// Sesión de 3 días marcada `synthetic: true` con una curva simulada (comidas, una desconexión de
 /// 25 minutos, un tramo con bandera de calidad y el calentamiento inicial) más los vectores públicos
@@ -91,11 +91,8 @@ struct PreviewData: TodayDataSource, SensorStatusSource {
 
     /// Estado forzado por el argumento de lanzamiento `-previewSensorState <caso>` (solo DEBUG).
     static var launchSensorState: SensorPresentationState? {
-        #if DEBUG
-        UserDefaults.standard.string(forKey: "previewSensorState").flatMap(SensorPresentationState.init(rawValue:))
-        #else
-        nil
-        #endif
+        if case .preview(let state) = AppLaunchMode.resolve() { return state }
+        return nil
     }
 }
 
@@ -142,6 +139,8 @@ private extension PreviewData {
         switch state {
         case .noSensor:
             return .noSensor
+        case .paused:
+            return SensorStatusSnapshot(state: .paused, profile: profile)
         case .identified, .incompatible, .readyToActivate, .activating, .pairing, .authenticationFailed:
             if state == .incompatible { profile.productType = 4; profile.family = .libre3 }
         case .warmingUp:

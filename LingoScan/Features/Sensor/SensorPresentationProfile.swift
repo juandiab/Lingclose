@@ -13,6 +13,13 @@ struct SensorPresentationProfile: Sendable, Hashable {
     var lastConnection: Date?
     /// Receiver ID parcial (por ejemplo "••••A3F2"); nunca completo.
     var receiverIDPartial: String?
+    /// Serial recortado (`Redactor.serial`); nunca completo.
+    var serialRedacted: String?
+    /// Calentamiento y vida útil declarados por el sensor (NFC `0xA1`), en minutos.
+    var warmupMinutes: Int?
+    var wearMinutes: Int?
+    /// `state` del parche leído por NFC; `nil` si no viene de una lectura.
+    var stateByte: Int?
     /// `true` para datos de previsualización.
     var synthetic = false
 

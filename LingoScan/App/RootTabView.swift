@@ -4,18 +4,25 @@ import SwiftUI
 struct RootTabView: View {
     @State private var todayViewModel: TodayViewModel
     @State private var sensorViewModel: SensorViewModel
+    private let identityImport: IdentityImportModel?
 
-    /// Mientras T-08 y `SQLiteStore` no tengan adaptador, la app usa `PreviewData` (sintético y señalado como tal en pantalla).
-    init() {
-        let data = PreviewData(sensorState: PreviewData.launchSensorState ?? .streaming)
+    /// Fuentes reales: `SQLiteStore` y `SensorSessionCoordinator`.
+    init(environment: AppEnvironment) {
+        _todayViewModel = State(initialValue: TodayViewModel(
+            dataSource: environment.todayData, sensorSource: environment.sensorStatus
+        ))
+        _sensorViewModel = State(initialValue: SensorViewModel(
+            statusSource: environment.sensorStatus, actions: environment.sensorActions
+        ))
+        identityImport = environment.identityImport
+    }
+
+    /// `PreviewData` (sintético y señalado como tal): `#Preview` y `-previewSensorState`.
+    init(previewState: SensorPresentationState) {
+        let data = PreviewData(sensorState: previewState)
         _todayViewModel = State(initialValue: TodayViewModel(dataSource: data, sensorSource: data))
-        let sensor = SensorViewModel(statusSource: data)
-        #if DEBUG
-        // Acciones de ejemplo solo en depuración para poder ver la pantalla de activación; no envían nada.
-        sensor.readSensorAction = {}
-        sensor.activateAction = { _ in }
-        #endif
-        _sensorViewModel = State(initialValue: sensor)
+        _sensorViewModel = State(initialValue: SensorViewModel(statusSource: data, actions: PreviewSensorActions()))
+        identityImport = nil
     }
 
     var body: some View {
@@ -33,12 +40,13 @@ struct RootTabView: View {
                 DataView()
             }
             Tab(String(localized: "tab.settings", defaultValue: "Ajustes"), systemImage: "gearshape") {
-                SettingsView()
+                SettingsView(identity: identityImport)
             }
         }
+        .modifier(IdentityImportAlert(model: identityImport))
     }
 }
 
 #Preview {
-    RootTabView()
+    RootTabView(previewState: .streaming)
 }

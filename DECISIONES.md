@@ -23,3 +23,4 @@
 | D-18 | 2026-10-27 | Fable (orquestador) puede escribir código delicado y de alto valor y revisa toda entrega de Opus y Sonnet | Juampa | Calidad en criptografía, protocolo y contrato |
 
 Pendientes de Juampa: confirmar D-04, D-12; indicar la carpeta de iCloud Drive para los archivos (Q-06 del contrato); identificar la segunda caja de sensores; decidir `include_material` (Q-05).
+| D-19 | 2026-10-27 | Asistente de comidas con LLM (T-21): clave por proveedor en Keychain, nunca exportada; foto, nombre del plato o tabla nutricional → propuesta editable que el usuario confirma; modelos económicos por defecto (Anthropic `claude-haiku-5-5`), editables; DeepSeek solo texto. Ejercicio sin LLM: entrenamientos importados de Salud (Apple Watch, app nativa) | Juampa (petición), Fable (diseño) | Coste por foto ≈ 0,0004 $ con Haiku 5.5; privacidad avisada en pantalla; estimaciones no médicas |

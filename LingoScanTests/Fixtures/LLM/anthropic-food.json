@@ -1,0 +1,37 @@
+{
+  "id": "msg_fixture",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-haiku-5-5",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_1",
+      "name": "record_food_analysis",
+      "input": {
+        "kind": "food",
+        "name": "Arepa con queso",
+        "basis": {
+          "type": "estimated_serving",
+          "description": "1 arepa mediana",
+          "grams": 120
+        },
+        "nutrients": {
+          "kcal": 320,
+          "carbs_g": 38,
+          "protein_g": 11,
+          "fat_g": 14
+        },
+        "confidence": 0.7,
+        "assumptions": "Arepa de maíz blanco con 30 g de queso.",
+        "unreadable": []
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_details": null,
+  "usage": {
+    "input_tokens": 900,
+    "output_tokens": 120
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": 500,
+    "message": "Incorrect API key provided: sk-test-NO-REAL. You can find your API key in the dashboard.",
+    "status": "INTERNAL"
+  }
+}

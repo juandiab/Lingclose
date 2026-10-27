@@ -1,0 +1,80 @@
+{
+  "data": [
+    {
+      "id": "anthropic/claude-haiku-5-5",
+      "name": "Anthropic: Claude Haiku 5.5",
+      "context_length": 1000000,
+      "architecture": {
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      },
+      "pricing": {
+        "prompt": "0.0000001",
+        "completion": "0.0000005"
+      },
+      "top_provider": {
+        "max_completion_tokens": 128000
+      },
+      "supported_parameters": [
+        "max_tokens",
+        "response_format",
+        "structured_outputs",
+        "reasoning"
+      ]
+    },
+    {
+      "id": "deepseek/deepseek-flash",
+      "name": "DeepSeek: Flash",
+      "context_length": 128000,
+      "architecture": {
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      },
+      "pricing": {
+        "prompt": "0.00000027",
+        "completion": "0.0000011"
+      },
+      "top_provider": {
+        "max_completion_tokens": 8192
+      },
+      "supported_parameters": [
+        "max_tokens",
+        "response_format"
+      ]
+    },
+    {
+      "id": "openai/gpt-image-2",
+      "name": "OpenAI: GPT Image",
+      "architecture": {
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "image"
+        ]
+      },
+      "pricing": {
+        "prompt": "0.000005",
+        "completion": "0.00004"
+      },
+      "top_provider": {
+        "max_completion_tokens": null
+      },
+      "supported_parameters": []
+    }
+  ],
+  "total_count": 3,
+  "links": {
+    "next": null
+  }
+}

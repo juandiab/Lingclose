@@ -1,0 +1,22 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"kind\": \"nutrition_label\", \"name\": \"Galletas integrales\", \"basis\": {\"type\": \"per_100g\", \"description\": null, \"grams\": null}, \"nutrients\": {\"kcal\": 450, \"carbs_g\": 60, \"protein_g\": null, \"fat_g\": 20}, \"confidence\": 0.9, \"assumptions\": \"La proteína no se lee en la foto.\", \"unreadable\": [\"protein_g\"]}"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 900,
+    "candidatesTokenCount": 120,
+    "totalTokenCount": 1020
+  },
+  "modelVersion": "gemini-3.6-flash"
+}

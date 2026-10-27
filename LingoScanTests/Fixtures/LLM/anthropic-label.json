@@ -1,0 +1,39 @@
+{
+  "id": "msg_fixture",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-haiku-5-5",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_2",
+      "name": "record_food_analysis",
+      "input": {
+        "kind": "nutrition_label",
+        "name": "Galletas integrales",
+        "basis": {
+          "type": "per_100g",
+          "description": null,
+          "grams": null
+        },
+        "nutrients": {
+          "kcal": 450,
+          "carbs_g": 60,
+          "protein_g": null,
+          "fat_g": 20
+        },
+        "confidence": 0.9,
+        "assumptions": "La proteína no se lee en la foto.",
+        "unreadable": [
+          "protein_g"
+        ]
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_details": null,
+  "usage": {
+    "input_tokens": 900,
+    "output_tokens": 120
+  }
+}

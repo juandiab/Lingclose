@@ -1,0 +1,22 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"kind\": \"food\", \"name\": \"Arepa con queso\", \"basis\": {\"type\": \"estimated_serving\", \"description\": \"1 arepa mediana\", \"grams\": 120}, \"nutrients\": {\"kcal\": 320, \"carbs_g\": 38, \"protein_g\": 11, \"fat_g\": 14}, \"confidence\": 0.7, \"assumptions\": \"Arepa de maíz blanco con 30 g de queso.\", \"unreadable\": []}"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 900,
+    "candidatesTokenCount": 120,
+    "totalTokenCount": 1020
+  },
+  "modelVersion": "gemini-3.6-flash"
+}

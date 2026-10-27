@@ -1,0 +1,22 @@
+{
+  "id": "chatcmpl-fixture",
+  "object": "chat.completion",
+  "created": 1761500000,
+  "model": "m",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"kind\": \"food\", \"name\": \"Arepa con queso\", \"basis\": {\"type\": \"estimated_serving\", \"description\": \"1 arepa mediana\", \"grams\": 120}, \"nutrients\": {\"kcal\": 320, \"carbs_g\": 38, \"protein_g\": 11, \"fat_g\": 14}, \"confidence\": 0.7, \"assumptions\": \"Arepa de maíz blanco con 30 g de queso.\", \"unreadable\": []}",
+        "refusal": null
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 900,
+    "completion_tokens": 120,
+    "total_tokens": 1020
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "error",
+  "error": {
+    "type": "api_error",
+    "message": "Incorrect API key provided: sk-test-NO-REAL. You can find your API key in the dashboard."
+  }
+}

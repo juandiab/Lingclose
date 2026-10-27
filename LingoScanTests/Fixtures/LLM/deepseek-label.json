@@ -1,0 +1,22 @@
+{
+  "id": "chatcmpl-fixture",
+  "object": "chat.completion",
+  "created": 1761500000,
+  "model": "m",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"kind\": \"nutrition_label\", \"name\": \"Galletas integrales\", \"basis\": {\"type\": \"per_100g\", \"description\": null, \"grams\": null}, \"nutrients\": {\"kcal\": 450, \"carbs_g\": 60, \"protein_g\": null, \"fat_g\": 20}, \"confidence\": 0.9, \"assumptions\": \"La proteína no se lee en la foto.\", \"unreadable\": [\"protein_g\"]}\n```",
+        "refusal": null
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 900,
+    "completion_tokens": 120,
+    "total_tokens": 1020
+  }
+}

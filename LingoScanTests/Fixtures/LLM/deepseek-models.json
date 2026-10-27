@@ -1,0 +1,23 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "deepseek-flash",
+      "object": "model",
+      "owned_by": "deepseek",
+      "name": "DeepSeek Flash",
+      "max_output_tokens": 8192
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "object": "model",
+      "owned_by": "deepseek",
+      "effort": {
+        "supported_levels": [
+          "low",
+          "high"
+        ]
+      }
+    }
+  ]
+}

@@ -2,6 +2,19 @@
 
 Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias, criterios de aceptación y cómo la verifica Fable. Estado: `pendiente` → `en curso` → `en verificación` → `cerrada (commit)`. Una tarea no se cierra sin la salida real de build y tests.
 
+## Ajuste autorizado por Juampa — interoperabilidad (Astra, 2026-10-27)
+
+El contrato compartido está recibiendo correcciones posteriores a draft.3. T-01..T-08 pueden avanzar sobre sus interfaces; T-10, T-15 y la fusión de T-19 deben fijar la revisión corregida antes de cerrarse. No copiar el importador de referencia draft.3 como implementación final. Consultar `../LingoScan_Shared/RESPUESTA_ASTRA_DRAFT3.md` y el siguiente registro de cambios del contrato.
+
+Criterios adicionales concretos:
+
+- T-07/T-09/T-10: rechazar una lectura marcada real si pertenece a una sesión sintética, incluso cuando el manifest no sea sintético. La exportación a Health valida la procedencia persistida.
+- T-10: transportar los ancestros necesarios de ediciones, preservar observaciones crudas complementarias con su origen y comprobar dos sesiones con el mismo minuto. Un cambio de `origin` no debe atribuir a live los bytes de otra ruta.
+- T-19: un snapshot más reciente del mismo intento no autoriza reemplazar secretos contradictorios. Distinguir campos inmutables de valores que evolucionan; conservar el conflicto y no conectar automáticamente. Importar y validar no ejecuta NFC ni BLE.
+- T-15: comprobar datos crudos, procedencia, sesiones, ledger y conflictos, además de conteos. Documentar diferencias intencionales entre la vista local de cada app; no llamarlas convergencia completa.
+
+Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pegar logs completos en cada nivel. El revisor repite las pruebas cuando un cambio, fallo o duda lo justifique, no automáticamente por cada agente. Esto no elimina criterios de aceptación.
+
 | ID | Fase | Modelo | Título | Depende de | Estado |
 |---|---|---|---|---|---|
 | T-01 | 1 | Opus | Fork de RoundWhiteDiscKit: clon fijado y línea base | — | pendiente |

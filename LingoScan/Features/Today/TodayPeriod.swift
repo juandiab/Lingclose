@@ -1,0 +1,36 @@
+import Foundation
+
+/// Ventana de la curva en Hoy.
+enum TodayPeriod: Int, Sendable, Hashable, CaseIterable, Identifiable {
+    case threeHours = 3
+    case sixHours = 6
+    case twentyFourHours = 24
+
+    var id: Int { rawValue }
+
+    var hours: Int { rawValue }
+
+    var duration: TimeInterval { TimeInterval(rawValue) * 3_600 }
+
+    /// Separación de las marcas del eje horizontal, en horas.
+    var axisStrideHours: Int {
+        switch self {
+        case .threeHours: 1
+        case .sixHours: 2
+        case .twentyFourHours: 4
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .threeHours: String(localized: "today.period.3h", defaultValue: "3 h")
+        case .sixHours: String(localized: "today.period.6h", defaultValue: "6 h")
+        case .twentyFourHours: String(localized: "today.period.24h", defaultValue: "24 h")
+        }
+    }
+
+    /// Texto largo para VoiceOver ("las últimas 6 horas").
+    var spokenTitle: String {
+        String(localized: "today.period.spoken", defaultValue: "últimas \(hours) horas")
+    }
+}

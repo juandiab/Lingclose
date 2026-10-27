@@ -49,6 +49,8 @@ targets:
       - target: LingoScan
       - package: LingoCore
         product: LingoCore
+      - package: RoundWhiteDiscKit
+        product: RoundWhiteDiscKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.otalvaro.lingoscan.tests

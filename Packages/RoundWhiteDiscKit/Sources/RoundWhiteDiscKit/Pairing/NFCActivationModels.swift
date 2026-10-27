@@ -118,14 +118,17 @@ public struct Libre3NFCActivationResponse: Sendable, Equatable {
     public let activationTimeRaw: Data
     public let trailingCRC: Data
 
-    /// Size guard (T-02 review, unchanged): a successful activation/switch
-    /// response is exactly 19 bytes (`struct nfc2` in Juggluco, identical for
-    /// Lingo, `nfc.cpp:141-154`). A 4-byte `00 A5 01 <err>` error response
-    /// (e.g. `0xB1` account-ID rejection) fails this guard and surfaces as
-    /// `invalidActivationResponse` with the raw bytes. Not yet confirmed with
-    /// a real Lingo capture.
+    /// Size guard: a successful activation/switch response is exactly 19
+    /// bytes (`struct nfc2` in Juggluco, identical for Lingo,
+    /// `nfc.cpp:141-154`). A 4-byte `00 A5 01 <err>` error response
+    /// (`recogn == 0x01A5`) throws `Libre3NFCActivationError(code: err)`
+    /// (T-03); anything else still throws `invalidActivationResponse`.
+    /// Not yet confirmed with a real Lingo capture.
     public init(raw: Data) throws {
         let frame = Self.normalizeResponse(raw)
+        if frame.count == 4, frame[0] == 0x00, frame[1] == 0xa5, frame[2] == 0x01 {
+            throw Libre3NFCActivationError(code: frame[3], raw: frame)
+        }
         guard frame.count == 19, frame[0] == 0x00, frame[1] == 0xa5, frame[2] == 0x00 else {
             throw Libre3NFCError.invalidActivationResponse(raw)
         }
@@ -154,8 +157,8 @@ public struct Libre3NFCActivationResponse: Sendable, Equatable {
             bleAddress: bleAddressDisplay,
             receiverID: receiverID,
             source: source,
-            warmupDurationMinutes: patchInfo.map { Int($0.warmupMinutes) },
-            wearDurationMinutes: patchInfo.map { Int($0.wearDurationMinutes) },
+            warmupDurationMinutes: patchInfo.map { SensorLifecycle.warmupDurationMinutes(for: $0) },
+            wearDurationMinutes: patchInfo.map { SensorLifecycle.wearDurationMinutes(for: $0) },
             productType: patchInfo?.productType,
             securityVersion: patchInfo?.securityVersion,
             family: patchInfo?.family
@@ -172,6 +175,58 @@ private extension Libre3NFCActivationResponse {
             return Data([0x00]) + raw
         }
         return raw
+    }
+}
+
+/// Explicit error answer of the sensor to an activation (`0xA0`) or switch
+/// (`0xA8`) command: 4 bytes `00 A5 01 <code>`.
+///
+/// Juggluco `interpret3NFC2` (`nfc.cpp:141-154, 219-316`,
+/// `docs/PROTOCOLO_LINGO.md` §1.6): `code == 0xB1` → the Receiver ID
+/// (account ID) was rejected; otherwise, when the patch-info `state` byte is
+/// 8 or 6 the sensor is terminated; any other combination is unclassified.
+public struct Libre3NFCActivationError: Error, Sendable, Equatable {
+    public static let receiverIDRejectedCode: UInt8 = 0xB1
+
+    public enum Reason: Sendable, Equatable {
+        case receiverIDRejected
+        case sensorTerminated
+        case other(code: UInt8)
+    }
+
+    public let code: UInt8
+    /// Normalised 4-byte response (`00 A5 01 code`).
+    public let raw: Data
+
+    public init(code: UInt8, raw: Data? = nil) {
+        self.code = code
+        self.raw = raw ?? Data([0x00, 0xa5, 0x01, code])
+    }
+
+    public var isReceiverIDRejected: Bool {
+        code == Self.receiverIDRejectedCode
+    }
+
+    /// Classification following Juggluco's order: `0xB1` first, then the
+    /// patch-info state byte read before the command (6 or 8 → terminated).
+    public func reason(patchStateByte: UInt8?) -> Reason {
+        if isReceiverIDRejected {
+            return .receiverIDRejected
+        }
+        if let patchStateByte, patchStateByte == 8 || patchStateByte == 6 {
+            return .sensorTerminated
+        }
+        return .other(code: code)
+    }
+}
+
+extension Libre3NFCActivationError: CustomStringConvertible, LocalizedError {
+    public var description: String {
+        String(format: "activationError(code=0x%02x)", code)
+    }
+
+    public var errorDescription: String? {
+        description
     }
 }
 

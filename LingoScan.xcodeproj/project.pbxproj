@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		288E75E9C9883E8707335CBD /* CredentialImportError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78F0A89DD90EDA6FEC78DD5 /* CredentialImportError.swift */; };
 		31710DE52C6474D534427DCC /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B57C98574E51B83B9D134 /* TodayView.swift */; };
 		333D2F34D249842D59B4C33C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFBE20D617F29D3726482E8 /* SettingsView.swift */; };
 		5FBC488BB8B6F6C8D66B569E /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109BD86FF872161AA10019D9 /* ReportsView.swift */; };
 		64F64E06BA1FFE566570FDDB /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0126D12B2304782444C652E0 /* RootTabView.swift */; };
+		6A5A9004CB712B2E700AFAE3 /* CredentialStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E5854217366EDAA41557B /* CredentialStoreTests.swift */; };
 		7424D94EB709F1AE89E265A9 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8FB3975E80C230A9028D3A /* Tokens.swift */; };
+		87EF4F32C1307BACFC13A427 /* CredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAFDD7B393F93E40ECA16CC /* CredentialStore.swift */; };
+		949D65B8C3A394AE088DEDEA /* KeychainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9829202897649B6BD471A325 /* KeychainItem.swift */; };
 		9CD16863E29B250966F7917D /* DiaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D03F0327C1C7AF1FAD923C4 /* DiaryView.swift */; };
 		A42A9CECC73CC78FBC759E44 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AE0E6D410CD0396814329E65 /* Localizable.xcstrings */; };
 		B1340005350F58A81CD5855D /* LingoScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5528B00F2CB66B3751256182 /* LingoScanTests.swift */; };
@@ -19,6 +23,7 @@
 		BD6FCF42EF0BA6A2E399D625 /* RoundWhiteDiscKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4CDA16D167645F514B63084C /* RoundWhiteDiscKit */; };
 		C0879979192D51894F26324A /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A27507A4ECBDC9D0BABCFC9 /* DataView.swift */; };
 		CA066DC1CB28F8B5DD82C14C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB02128C66F9313E06F29E5E /* Assets.xcassets */; };
+		CD8579EE2C3B61C0BC482630 /* RoundWhiteDiscKit in Frameworks */ = {isa = PBXBuildFile; productRef = 75D48628ED45EC094CAEF86F /* RoundWhiteDiscKit */; };
 		F0BC7A3CF563C470286A507C /* LingoCore in Frameworks */ = {isa = PBXBuildFile; productRef = ED472A11D87ACCE9B7D240CF /* LingoCore */; };
 		F92B4FF0B79517B17226728D /* LingoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 663D0252EF35BAC1C49B97E8 /* LingoCore */; };
 		FE545677BED4CB2FAD9E76EA /* SensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20281B4FB52AA07E6CAA730 /* SensorView.swift */; };
@@ -42,12 +47,16 @@
 		13A583F60FC42D67B8A21307 /* LingoScan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LingoScan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A27507A4ECBDC9D0BABCFC9 /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		2D8FB3975E80C230A9028D3A /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
+		2EAFDD7B393F93E40ECA16CC /* CredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialStore.swift; sourceTree = "<group>"; };
 		4DA4485AD9720638C1290281 /* LingoScanTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LingoScanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5528B00F2CB66B3751256182 /* LingoScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LingoScanTests.swift; sourceTree = "<group>"; };
 		5D03F0327C1C7AF1FAD923C4 /* DiaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryView.swift; sourceTree = "<group>"; };
+		9829202897649B6BD471A325 /* KeychainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
+		A01E5854217366EDAA41557B /* CredentialStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialStoreTests.swift; sourceTree = "<group>"; };
 		ADFBE20D617F29D3726482E8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AE0E6D410CD0396814329E65 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		BD097990B2EDC7E41194BEA0 /* LingoCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LingoCore; path = Packages/LingoCore; sourceTree = SOURCE_ROOT; };
+		C78F0A89DD90EDA6FEC78DD5 /* CredentialImportError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialImportError.swift; sourceTree = "<group>"; };
 		DAE359B3E3C566095929F101 /* LingoScanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LingoScanApp.swift; sourceTree = "<group>"; };
 		F20281B4FB52AA07E6CAA730 /* SensorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorView.swift; sourceTree = "<group>"; };
 		FB02128C66F9313E06F29E5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -60,6 +69,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F92B4FF0B79517B17226728D /* LingoCore in Frameworks */,
+				CD8579EE2C3B61C0BC482630 /* RoundWhiteDiscKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +145,9 @@
 			isa = PBXGroup;
 			children = (
 				FB91CE646640822CFA687C73 /* .gitkeep */,
+				C78F0A89DD90EDA6FEC78DD5 /* CredentialImportError.swift */,
+				2EAFDD7B393F93E40ECA16CC /* CredentialStore.swift */,
+				9829202897649B6BD471A325 /* KeychainItem.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -187,6 +200,7 @@
 		BD4ED02B0B66586F2BB9C480 /* LingoScanTests */ = {
 			isa = PBXGroup;
 			children = (
+				A01E5854217366EDAA41557B /* CredentialStoreTests.swift */,
 				5528B00F2CB66B3751256182 /* LingoScanTests.swift */,
 			);
 			path = LingoScanTests;
@@ -236,6 +250,7 @@
 			name = LingoScanTests;
 			packageProductDependencies = (
 				663D0252EF35BAC1C49B97E8 /* LingoCore */,
+				75D48628ED45EC094CAEF86F /* RoundWhiteDiscKit */,
 			);
 			productName = LingoScanTests;
 			productReference = 4DA4485AD9720638C1290281 /* LingoScanTests.xctest */;
@@ -323,6 +338,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A5A9004CB712B2E700AFAE3 /* CredentialStoreTests.swift in Sources */,
 				B1340005350F58A81CD5855D /* LingoScanTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,8 +347,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				288E75E9C9883E8707335CBD /* CredentialImportError.swift in Sources */,
+				87EF4F32C1307BACFC13A427 /* CredentialStore.swift in Sources */,
 				C0879979192D51894F26324A /* DataView.swift in Sources */,
 				9CD16863E29B250966F7917D /* DiaryView.swift in Sources */,
+				949D65B8C3A394AE088DEDEA /* KeychainItem.swift in Sources */,
 				BCF7DF9635C25C61EA4E2ABE /* LingoScanApp.swift in Sources */,
 				5FBC488BB8B6F6C8D66B569E /* ReportsView.swift in Sources */,
 				64F64E06BA1FFE566570FDDB /* RootTabView.swift in Sources */,
@@ -608,6 +627,10 @@
 		663D0252EF35BAC1C49B97E8 /* LingoCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LingoCore;
+		};
+		75D48628ED45EC094CAEF86F /* RoundWhiteDiscKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RoundWhiteDiscKit;
 		};
 		ED472A11D87ACCE9B7D240CF /* LingoCore */ = {
 			isa = XCSwiftPackageProductDependency;

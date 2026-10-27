@@ -242,3 +242,45 @@ Antes: 78 (75 de la línea base + 3 de `CCMVectorTests`). Después: **112, 0 fal
 - `PairingFlowInterruptionTests` (11): lista vacía → `noTrustedSigningKeys` (ambos `init`); el init de testing la acepta; fin de flujo tras `0x03` → `.certificateAcceptance`, `lastCommandSent == 0x03`; timeout tras `0x03` → igual; byte `0x05` tras `0x03` → interrupción, no rechazo, con `lastBytesReceived == [0x05]`; fin tras efímera → `.ephemeral`/`0x0e`; certificado firmado con otra clave → `sensorCertificateVerificationFailed` sin enviar `0x0d`; reconexión corta → `.challenge`/`0x11` y `.phase6`/`0x08`; el clasificador no envuelve `writeTimeout` ni fallos de verificación.
 
 No se cubre (sin vector): respuesta negativa explícita guionada → `certificateRejected`, porque el caso no existe (ver arriba).
+
+## T-03
+
+Cambios 5 a 13 de §3 más la respuesta NFC de error de 4 B. Solo `Packages/RoundWhiteDiscKit/`, `Fixtures/lingo_realtime_vectors.json` y este documento. Log: `Logs/T-03-swift-test.log`.
+
+### Qué cambió (`Sources/RoundWhiteDiscKit/`)
+
+| Archivo | Cambio |
+|---|---|
+| `DataPlane/DataPlaneDecoder.swift` | `DataPlaneNotificationAssembler(targetLength:)` / `init(family:)` (35 Libre 3, 57 Lingo): acumula fragmentos de cualquier tamaño hasta la longitud objetivo; exceso o fragmento vacío → descarta todo y reinicia. `ingest(fragment:channel:)` devuelve `DataPlaneAssemblyResult` (`.complete`, `.pending`, `.overflow`, `.emptyFragment`); `feed` se mantiene (devuelve `nil` salvo trama completa); contadores `discardedFrameCount`, `lastDiscard`, `pendingByteCount`. `DataPlaneDecoder(crypto:family:)` (por defecto `.libre3`); casos nuevos `.lingoRealtime`, `.lingoHistoricalPage`, `.lingoFastData`; `decodePayload` ahora público; los fallos de parser ya no se tragan: `unexpectedRawCount` y `lastDecodeError` (`DataPlaneDecodeFailure`: canal, familia, longitud, motivo; sin bytes) |
+| `DataPlane/LingoReadingWord.swift` (nuevo) | Palabra u16 Lingo: `qualityFlag` (bit 15), `mgDL` (`& 0x0FFF`, `nil` si bandera), `rangeBits`, `bit12`. Helpers de bytes LE |
+| `DataPlane/LingoRealtimeReading.swift` (nuevo) | 51 B exactos. `LingoAnalyteBlock` (15 B: capped, `rateCentiRaw`/`rateCenti`, `extendedCode`, `projected`, historic capped, `trendByte`→`trend` (6,7→0), `actionable`, uncapped, historic uncapped). `analyteTypes` desde @34, `channel` = primer canal glucosa, `glucose`, `rangeBits`, `qualityFlag`, `reserved` = 35..50, temperatura @37 (`0x8000` → `nil`) |
+| `DataPlane/LingoHistoricalPage.swift` (nuevo) | 4..14 B par, bit 15 obligatorio en la palabra 0 (`missingChannelFlag`), `0` termina, muestra i ↔ `lifeCount + 5·i` |
+| `DataPlane/LingoFastData.swift` (nuevo) | 14 B, bit 15 obligatorio, `rawData[8]`, actual @10, histórica @12, `historicLifeCount` = `lc < 22 ? 0 : ((lc-17)/5)*5` |
+| `DataPlane/PatchStatus.swift` | `init(plaintext:family:)`: Libre 3/unknown solo 12 B; Lingo 12 o 14 B; `analyteBytes: Data?` |
+| `DataPlane/HistoricalBackfill.swift`, `PatchControlCommand.swift` | `BackfillStream.wireValue(for:)` (Lingo `0x02`/`0x03`); constructores con `family:`; `PatchControlCommand.lingoBackfillCommands(currentLifeCount:lastHistoricLifeCountReceived:lastLifeCountReceived:)` con las condiciones de §6.1 |
+| `DataPlane/Libre3DataPlaneState.swift` | `record(_:)` con casos Lingo: `latestLingoRealtime`, `latestLingoGlucoseByChannel` (`LingoGlucoseSnapshot` con `qualityFlag`, también si está marcada), `lingoHistoricalPages`, `latestLingoFastData`, `lastLingoLifeCountReceived`, `lastLingoHistoricLifeCountReceived`. `reconnectBackfillCommands(..., family:)` |
+| `DataPlane/SensorLifecycle.swift` | `defaultWearDurationMinutes = 20160`; `warmupDurationMinutes(for:)`/`wearDurationMinutes(for:)`: en Lingo 0 → 60 / 20160; Libre 3 conserva el valor crudo. `init(currentLifeCountMinutes:patchInfo:)`. Usados por `PatchStatus.lifecycle(patchInfo:)`, `Libre3DataPlaneState(patchInfo:)` y `Libre3NFCActivationResponse.sensorState` |
+| `DataPlane/RealtimeGlucoseReading.swift` | Solo documentación: `Libre3GlucoseValueStatus` (39…501) es de Libre 3; en Lingo la política de rango es de la app; no se recorta nada |
+| `Pairing/NFCActivationModels.swift` | `Libre3NFCActivationError(code:raw:)`: la respuesta `00 A5 01 err` (también `A5 01 err`) lanza este error; `reason(patchStateByte:)` → `.receiverIDRejected` (`0xB1`), `.sensorTerminated` (state 6/8), `.other`. El guard de 19 B del éxito no cambia |
+
+### Decisiones donde la especificación no era explícita
+
+1. **Ensamblador:** al exceder se descartan el búfer **y** el fragmento entrante. Al llegar exactamente a la longitud objetivo se emite la trama. Los canales que no son de glucosa pasan sin tocar, como antes.
+2. **`unexpectedRawCount`** solo cuenta los canales con parser (glucosa, estado, histórico, clínico). En `patchControl`, `eventLog` y `factoryData` el `.raw` es lo esperado. El contador vive en una caja con lock compartida por las copias del `struct`. El `try?` que queda en `decrypt` (probar primero el `kind` preferido) es el original y cae a `decryptTryingAllKinds`.
+3. **Familia `.unknown`:** en glucosa se despacha por longitud (29/51). Los demás parsers son los de Libre 3. `PatchStatus` solo acepta 12 B. Nunca se generan comandos de backfill.
+4. **`lastAcceptedGlucose*` en Lingo** (ancla de reconexión que se persiste): avanza solo si la palabra **sin recortar** (la que guarda Juggluco, `UNCAPPED 1`) no tiene bit 15. No se aplica el rango 39..501. El snapshot por canal guarda también las lecturas marcadas.
+5. **Backfill Lingo:** exige un `patchStatus` (`currentLifeCount`); sin él devuelve `[]`. Si nunca se recibió un lifeCount **no se pide el clínico**, para no pedir el registro completo de minutos. El histórico usa `from = max(último, 5)`. `lastLingoHistoricLifeCountReceived` avanza con valores válidos de páginas de historial y con la histórica válida de fast data. **No** avanza con la histórica embebida en la trama de tiempo real (en Juggluco no está claro).
+6. **`SensorLifecycle`:** los valores por defecto 60/20160 se aplican solo a Lingo. Libre 3 conserva el comportamiento upstream (valor crudo).
+7. `LingoReadingWord.mgDL` puede valer 0 si la palabra es válida: es un número del protocolo, y filtrarlo es política de la app.
+
+### Tests
+
+Antes: 112. Después: **147, 0 fallos** (`swift build` y `swift test` con exit 0). Además, `xcodebuild -scheme RoundWhiteDiscKit -destination 'generic/platform=iOS Simulator' build` termina en BUILD SUCCEEDED, porque el lector CoreNFC solo compila en iOS. Nuevos: `LingoDataPlaneTests` (35). Se ajustó `LingoFamilyTests.testFourByteActivationErrorResponseIsRejectedBySizeGuard` al nuevo error. Vectores: `Fixtures/lingo_realtime_vectors.json` (12 plaintexts públicos de Juggluco, §8), con copia en `Tests/RoundWhiteDiscKitTests/Fixtures/`, cargada por `#filePath`.
+
+### Riesgos para el primer sensor
+
+- `DataPlaneDecoder.swift:278-282`: si se repite el **último** fragmento de una trama ya completa, se queda como prefijo de la siguiente. Esa trama se pierde (exceso o fallo de CCM) y el ensamblador se recupera en la siguiente. El reparto real de los 57 B sigue sin captura.
+- `CoreNFCActivationReader.swift:181`: solo convierte `invalidActivationResponse` en el error con `patchInfo`. `Libre3NFCActivationError` sale sin el `state` del parche, así que la app tiene que llamar a `reason(patchStateByte: scan.patchInfo.stateByte)`.
+- `PatchControlCommand.swift:81-89`: las condiciones y el `from` de §6.1 están portados de Juggluco sin captura Lingo. Falta saber cómo delimita el sensor el final del rango.
+- `Libre3DataPlaneState.swift:252`: el ancla de reconexión usa el valor sin recortar. Si el sensor marca `uncapped` y no `capped`, el ancla no avanza.
+- `LibreSensorGATT.swift:52-53` (riesgo 5): hay que activar a mano las notificaciones de `historicData` y `clinicalData` para recibir backfill.

@@ -65,10 +65,10 @@ final class LingoFamilyTests: XCTestCase {
 
     func testFourByteActivationErrorResponseIsRejectedBySizeGuard() {
         // `00 A5 01 B1`: Juggluco's account-ID rejection shape (nfc.cpp).
+        // T-03: no longer `invalidActivationResponse`; parsed as an explicit
+        // activation error (see LingoDataPlaneTests for the full matrix).
         XCTAssertThrowsError(try Libre3NFCActivationResponse(raw: Data([0x00, 0xa5, 0x01, 0xb1]))) { error in
-            guard case Libre3NFCError.invalidActivationResponse = error else {
-                return XCTFail("unexpected \(error)")
-            }
+            XCTAssertEqual(error as? Libre3NFCActivationError, Libre3NFCActivationError(code: 0xb1))
         }
     }
 

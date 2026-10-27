@@ -2,6 +2,9 @@ import Foundation
 
 public struct PatchStatus: Equatable, Sendable {
     public static let plaintextSize = 12
+    /// Lingo adds two trailing "analyte" bytes (`docs/PROTOCOLO_LINGO.md` §4,
+    /// Juggluco `bluetooth.cpp:623-627`).
+    public static let lingoPlaintextSize = 14
 
     public let lifeCount: Int16
     public let errorData: Int16
@@ -13,6 +16,9 @@ public struct PatchStatus: Equatable, Sendable {
     public let currentLifeCount: Int16
     public let stackDisconnectReason: Int8
     public let appDisconnectReason: Int8
+    /// Lingo only: bytes 12-13 of a 14-byte record, exposed without
+    /// semantics. `nil` for 12-byte records.
+    public let analyteBytes: Data?
 
     public var patchStateKind: Libre3PatchState {
         Libre3PatchState(rawValue: patchState)
@@ -133,13 +139,24 @@ public struct PatchStatus: Equatable, Sendable {
     /// patch info rather than the assumed defaults.
     public func lifecycle(patchInfo: Libre3NFCPatchInfo) -> SensorLifecycle {
         lifecycle(
-            warmupDurationMinutes: Int(patchInfo.warmupMinutes),
-            wearDurationMinutes: Int(patchInfo.wearDurationMinutes)
+            warmupDurationMinutes: SensorLifecycle.warmupDurationMinutes(for: patchInfo),
+            wearDurationMinutes: SensorLifecycle.wearDurationMinutes(for: patchInfo)
         )
     }
 
-    public init(plaintext: Data) throws {
-        guard plaintext.count == Self.plaintextSize else {
+    /// Accepted sizes per family: Libre 3 and unknown families accept only
+    /// 12 B; Lingo accepts 12 or 14 B (Juggluco: `len == 12 || (isLingo && len == 14)`).
+    public static func acceptedPlaintextSizes(for family: SensorFamily) -> Set<Int> {
+        switch family {
+        case .lingo:
+            return [plaintextSize, lingoPlaintextSize]
+        case .libre3, .unknown:
+            return [plaintextSize]
+        }
+    }
+
+    public init(plaintext: Data, family: SensorFamily = .libre3) throws {
+        guard Self.acceptedPlaintextSizes(for: family).contains(plaintext.count) else {
             throw PatchStatusError.wrongPlaintextSize(plaintext.count)
         }
         self.lifeCount = Self.s16(plaintext, 0)
@@ -152,6 +169,12 @@ public struct PatchStatus: Equatable, Sendable {
         self.currentLifeCount = Self.s16(plaintext, 8)
         self.stackDisconnectReason = Int8(bitPattern: plaintext[plaintext.startIndex + 10])
         self.appDisconnectReason = Int8(bitPattern: plaintext[plaintext.startIndex + 11])
+        if plaintext.count == Self.lingoPlaintextSize {
+            let start = plaintext.startIndex + Self.plaintextSize
+            self.analyteBytes = Data(plaintext[start..<(start + 2)])
+        } else {
+            self.analyteBytes = nil
+        }
     }
 
     private static func s16(_ data: Data, _ offset: Int) -> Int16 {

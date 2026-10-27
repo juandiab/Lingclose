@@ -57,10 +57,24 @@ public enum BackfillStream: Equatable, Sendable {
     case clinical
 
     var wireValue: UInt8 {
-        switch self {
-        case .historical:
+        wireValue(for: .libre3)
+    }
+
+    /// Second byte of the 7-byte backfill request (`01 <stream> arg from[4]`).
+    /// Libre 3: historical `0x00`, clinical `0x01`. Lingo: historical `0x02`,
+    /// clinical `0x03` (`docs/PROTOCOLO_LINGO.md` §6.1, Juggluco
+    /// `bluetooth.cpp:712-719`). `.unknown` uses the Libre 3 values, but
+    /// `Libre3DataPlaneState.reconnectBackfillCommands(family: .unknown)`
+    /// never builds commands for it.
+    public func wireValue(for family: SensorFamily) -> UInt8 {
+        switch (self, family) {
+        case (.historical, .lingo):
+            return 0x02
+        case (.clinical, .lingo):
+            return 0x03
+        case (.historical, .libre3), (.historical, .unknown):
             return 0x00
-        case .clinical:
+        case (.clinical, .libre3), (.clinical, .unknown):
             return 0x01
         }
     }

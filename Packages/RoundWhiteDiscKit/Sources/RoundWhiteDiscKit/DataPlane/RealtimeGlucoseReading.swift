@@ -557,6 +557,13 @@ public enum Libre3GlycemicAlarmStatus: Equatable, Sendable, CustomStringConverti
     }
 }
 
+/// Libre 3 display-range classification (39...501 mg/dL with clamping).
+///
+/// Libre 3 only. Lingo parsers (`LingoRealtimeReading`, `LingoHistoricalPage`,
+/// `LingoFastData`) never use it and never clamp: they expose
+/// `LingoReadingWord` (raw word, quality flag, `& 0x0FFF` value) and the
+/// display/export range for Lingo is an app policy (LingoCore), see
+/// `docs/PROTOCOLO_LINGO.md` §7.
 public enum Libre3GlucoseValueStatus: Equatable, Sendable {
     case valid(mgDL: UInt16)
     case belowDisplayRange(raw: UInt16, displayMgDL: UInt16)

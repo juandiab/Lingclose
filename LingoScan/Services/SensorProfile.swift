@@ -14,6 +14,8 @@ struct SensorProfile: Sendable, Equatable, CustomStringConvertible {
     let wearMinutes: Int
     let firmwareHex: String
     let stateByte: UInt8
+    /// Original NFC patch bytes contain the serial and must remain protected.
+    let patchInfoRaw: Data?
 
     init(
         family: RWDKSensorFamily,
@@ -23,7 +25,8 @@ struct SensorProfile: Sendable, Equatable, CustomStringConvertible {
         warmupMinutes: Int,
         wearMinutes: Int,
         firmwareHex: String,
-        stateByte: UInt8
+        stateByte: UInt8,
+        patchInfoRaw: Data? = nil
     ) {
         self.family = family
         self.productType = productType
@@ -33,6 +36,7 @@ struct SensorProfile: Sendable, Equatable, CustomStringConvertible {
         self.wearMinutes = wearMinutes
         self.firmwareHex = firmwareHex
         self.stateByte = stateByte
+        self.patchInfoRaw = patchInfoRaw
     }
 
     init(patchInfo: Libre3NFCPatchInfo) {
@@ -46,7 +50,8 @@ struct SensorProfile: Sendable, Equatable, CustomStringConvertible {
             warmupMinutes: SensorLifecycle.warmupDurationMinutes(for: patchInfo),
             wearMinutes: SensorLifecycle.wearDurationMinutes(for: patchInfo),
             firmwareHex: firmware.lowercaseHex,
-            stateByte: patchInfo.stateByte
+            stateByte: patchInfo.stateByte,
+            patchInfoRaw: patchInfo.raw
         )
     }
 

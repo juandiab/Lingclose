@@ -75,6 +75,14 @@ final class RecoveryViewModel {
         }
     }
 
+    func exportForAstra() async {
+        await run {
+            let record = try await self.service.exportCurrentForAstra(includeMaterial: self.includeMaterial)
+            self.includeMaterial = false
+            return "Exportado para Astra: \(record.fileName)"
+        }
+    }
+
     func importFile(_ url: URL) async {
         await run {
             let report = try await self.service.importFile(at: url)

@@ -24,8 +24,11 @@ final class HealthKitSink: HealthSink {
     func authorizationStatus() async -> HealthAuthorizationStatus {
         guard isAvailable else { return .unavailable }
         let statuses = Self.coreTypes.map { store.authorizationStatus(for: $0) }
-        if statuses.allSatisfy({ $0 == .sharingAuthorized }) { return .authorized }
         if statuses.contains(.sharingDenied) { return .denied }
+        // Un tipo nuevo (nutrientes de T-21) aún sin preguntar vuelve a mostrar "Pedir permiso": la petición
+        // solo presenta los tipos que faltan. Denegar un nutriente no bloquea la glucosa.
+        let nutrientStatuses = Self.nutrientTypes.map { store.authorizationStatus(for: $0) }
+        if statuses.allSatisfy({ $0 == .sharingAuthorized }), !nutrientStatuses.contains(.notDetermined) { return .authorized }
         return .notDetermined
     }
 

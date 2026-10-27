@@ -144,6 +144,7 @@ private struct TodayLifecycle: ViewModifier {
             .onChange(of: scenePhase) { _, phase in
                 guard phase == .active else { return }
                 HealthDrainTrigger.current?.sceneDidBecomeActive()
+                WorkoutImportTrigger.current?.sceneDidBecomeActive()
                 Task { await viewModel.refresh() }
             }
             .onAppear {

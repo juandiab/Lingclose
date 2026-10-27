@@ -10,6 +10,8 @@ struct QuickAddSheet: View {
     @Environment(\.mealAssistant) private var services
     @FocusState private var noteFocused: Bool
     @State private var analysis: MealAnalysisViewModel?
+    @State private var workoutImportResult: String?
+    @Environment(\.workoutImport) private var workoutImport
 
     var body: some View {
         @Bindable var model = model
@@ -36,6 +38,9 @@ struct QuickAddSheet: View {
                             .keyboardType(.decimalPad)
                             .textFieldStyle(.roundedBorder)
                     case .exercise:
+                        if let workoutImport {
+                            importWorkoutsButton(workoutImport)
+                        }
                         TextField(String(localized: "diary.editor.duration", defaultValue: "Duración (min)"), text: $model.draft.durationText)
                             .keyboardType(.numberPad)
                             .textFieldStyle(.roundedBorder)
@@ -90,6 +95,28 @@ struct QuickAddSheet: View {
             MealAnalysisView(model: analysis) {
                 onSaved()
                 dismiss()
+            }
+        }
+    }
+
+    private func importWorkoutsButton(_ trigger: WorkoutImportTrigger) -> some View {
+        VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {
+            Button {
+                Task {
+                    let report = await trigger.importNow()
+                    workoutImportResult = WorkoutImportSection.summary(report)
+                    if (report?.changed ?? 0) > 0 { onSaved() }
+                }
+            } label: {
+                Label(String(localized: "workouts.importFromHealth", defaultValue: "Importar de Salud"), systemImage: "applewatch")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .disabled(trigger.isImporting)
+            if let workoutImportResult {
+                Text(workoutImportResult)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
     }

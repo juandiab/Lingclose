@@ -5,12 +5,16 @@
 ///
 /// v2 (T-21) = tabla `meal_nutrition`: base, multiplicador y correcciones de un evento `meal`. Es local:
 /// no entra en el `.lingoscan` (el contrato solo lleva `carbs_g` y `text` del evento).
+///
+/// v3 (T-21 §5) = tabla `workout_links`: qué entrenamiento de Salud (`HKWorkout.uuid`) generó qué evento
+/// `exercise`, para no duplicar al reimportar. Local: no entra en el `.lingoscan`.
 enum StoreSchema {
-    static let currentVersion = 2
+    static let currentVersion = 3
 
     static let migrations: [SchemaMigration] = [
         SchemaMigration(version: 1) { try $0.executeScript(v1) },
         SchemaMigration(version: 2) { try $0.executeScript(v2) },
+        SchemaMigration(version: 3) { try $0.executeScript(v3) },
     ]
 
     static func userVersion(_ c: SQLiteConnection) throws -> Int {
@@ -209,5 +213,15 @@ enum StoreSchema {
     );
 
     PRAGMA user_version = 2;
+    """
+
+    static let v3: StaticString = """
+    CREATE TABLE workout_links (
+      health_workout_uuid      TEXT PRIMARY KEY,
+      event_id                 TEXT NOT NULL REFERENCES events(event_id),
+      imported_at_epoch_s      INTEGER NOT NULL
+    );
+
+    PRAGMA user_version = 3;
     """
 }

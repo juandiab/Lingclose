@@ -199,7 +199,7 @@ actor SensorSessionCoordinator {
         let receiverID = receiverIDGenerator()
         let now = clock.now
 
-        try await pairingStore.saveSecrets(PairingSecrets(receiverID: receiverID, serial: candidate.serialNumber), sessionID: id)
+        try await pairingStore.saveSecrets(PairingSecrets(receiverID: receiverID, serial: candidate.serialNumber, patchInfoRaw: candidate.patchInfoRaw), sessionID: id)
         let saved = PairingState(activation: .prepared(sessionID: id, attemptID: attempt, now: now), profile: candidate)
         try await store.upsertSession(makeSessionRecord(
             saved, profile: candidate, state: .prepared, epoch: Int64(now.timeIntervalSince1970), source: .command

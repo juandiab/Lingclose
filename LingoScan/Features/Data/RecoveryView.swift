@@ -112,6 +112,10 @@ struct RecoveryView: View {
                 Task { await model.exportNow() }
             }
             .disabled(!model.status.hasPassphrase)
+            Button("Exportar sesión actual para Astra") { Task { await model.exportForAstra() } }
+                .disabled(!model.status.hasPassphrase)
+            Text("Astra necesita la identidad original instalada o incluida en la copia cifrada. Una sesión preparada aún no permite recuperar un sensor activo.")
+                .font(.footnote).foregroundStyle(.secondary)
             if let error = model.status.lastError {
                 Text(error)
                     .font(.footnote)

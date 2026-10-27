@@ -14,6 +14,8 @@ struct PairingSecrets: Sendable, Equatable, CustomStringConvertible {
     var activationResponse: Data?
     /// Serial completo (9 ASCII). Decisión T-08: se guarda con los secretos, no en el JSON.
     var serial: String?
+    /// Original patch data includes the serial; store alongside the other secrets.
+    var patchInfoRaw: Data?
 
     var description: String { "PairingSecrets(‹redactado›)" }
 }

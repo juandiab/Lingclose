@@ -1,6 +1,7 @@
 import CryptoKit
 import Foundation
 import LingoCore
+import RoundWhiteDiscKit
 import Testing
 @testable import LingoScan
 
@@ -268,5 +269,59 @@ struct RecoveryFolderAndPassphraseTests {
         // Una frase corta en el Llavero se ignora.
         try item.save(Data("corta".utf8))
         #expect(await (try make()).status().hasPassphrase == false)
+    }
+}
+
+extension RecoveryServiceTests {
+    @Test func astraExportUsesOriginalPatchAndOneCurrentSessionWithoutSensorOperations() async throws {
+        let pairing = InMemoryPairingStateStore(recoveryHook: RecordingRecoveryHook())
+        let dir = try Self.tempDir("astra")
+        let signing = P256.Signing.PrivateKey().publicKey.x963Representation
+        let simple = try StaticCredentials.synthetic(signingPublicKey: signing)
+        let original = simple.appIdentity
+        let multi = try AppIdentity(label: original.label, privateKey: original.privateKey, certificate: original.certificate,
+                                    productTypes: [4, 9], securityVersions: [1, 3], patchSigningPublicKey: signing)
+        let credentials = StaticCredentials(appIdentity: multi, keys: [signing])
+        let service = RecoveryService(pairingStore: pairing, credentials: credentials, store: nil, exportDirectory: dir,
+                                      stateDirectory: try Self.tempDir("astra-state"), evidenceItem: nil, passphraseItem: nil, iterations: RecoveryKDF.defaultIterations)
+        try await service.setPassphrase(Self.passphrase)
+        var raw = Data(repeating: 0, count: 29)
+        raw[1] = 0xa5; raw[3] = 3; raw[9] = 0xc0; raw[10] = 0x4e
+        raw[11] = 1; raw[12] = 2; raw[13] = 3; raw[14] = 4; raw[15] = 9; raw[16] = 12; raw[17] = 1
+        raw.replaceSubrange(18..<27, with: Data("SYNTH0001".utf8))
+        let patch = try Libre3NFCPatchInfo(raw: raw)
+        let profile = SensorProfile(patchInfo: patch)
+        #expect(profile.patchInfoRaw == raw)
+        let id = UUID().uuidString.lowercased()
+        let at = Date(timeIntervalSince1970: 1_700_000_000)
+        let previousID = UUID().uuidString.lowercased()
+        let previous = PairingState(activation: .prepared(sessionID: previousID, attemptID: UUID().uuidString.lowercased(), now: at.addingTimeInterval(-1)), profile: profile)
+        await pairing.saveState(previous)
+        await pairing.saveSecrets(PairingSecrets(receiverID: 123, serial: "SYNTH0001", patchInfoRaw: raw), sessionID: previousID)
+        var state = PairingState(activation: .prepared(sessionID: id, attemptID: UUID().uuidString.lowercased(), now: at), profile: profile)
+        state.activation = try state.activation.advancing(to: .sent, now: at)
+        state.activation = try state.activation.advancing(to: .responseSaved, now: at)
+        state.activation = try state.activation.advancing(to: .authenticated, now: at)
+        state.activationTimeEpochS = 1_700_000_000
+        await pairing.saveState(state)
+        var response = Data([0, 0xa5, 0, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 1, 2, 3, 4])
+        let epoch: UInt32 = 1_700_000_000
+        response.append(contentsOf: [UInt8(epoch & 255), UInt8((epoch >> 8) & 255), UInt8((epoch >> 16) & 255), UInt8(epoch >> 24), 0, 0])
+        await pairing.saveSecrets(PairingSecrets(receiverID: 123, pin: Data([1, 2, 3, 4]), kAuth: Data(repeating: 0x42, count: 16), bleAddress: "11:22:33:44:55:66", activationResponse: response, serial: "SYNTH0001", patchInfoRaw: raw), sessionID: id)
+        let record = try await service.exportCurrentForAstra(includeMaterial: true)
+        let envelope = try RecoveryEnvelope.decode(Data(contentsOf: record.fileURL))
+        let payload = try RecoveryPayload.decode(RecoveryCrypto.open(envelope, passphrase: Self.passphrase))
+        #expect(payload.sessions.count == 1)
+        #expect(payload.sessions[0].patchInfoHex == raw.lowercaseHex)
+        #expect(payload.sessions[0].activation.responseHex == response.lowercaseHex)
+        #expect(payload.appIdentity.includeMaterial)
+        try Data(contentsOf: record.fileURL).write(to: FileManager.default.temporaryDirectory.appendingPathComponent("synthetic-astra-recovery.json"), options: .atomic)
+        let olderID = UUID().uuidString.lowercased()
+        let older = PairingState(activation: .prepared(sessionID: olderID, attemptID: UUID().uuidString.lowercased(), now: at.addingTimeInterval(1)), profile: profile)
+        await pairing.saveState(older)
+        await pairing.saveSecrets(PairingSecrets(receiverID: 123, serial: "SYNTH0001"), sessionID: olderID)
+        do { _ = try await service.exportCurrentForAstra(); Issue.record("missing patch accepted") }
+        catch RecoveryService.RecoveryServiceError.missingPatchInfo { }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: dir.path(percentEncoded: false)).count == 1)
     }
 }

@@ -22,6 +22,7 @@ struct SettingsView: View {
                 if let identity {
                     IdentitySection(model: identity)
                 }
+                WorkoutImportSection()
                 permissionsSection
                 appearanceSection
                 diagnosticsSection

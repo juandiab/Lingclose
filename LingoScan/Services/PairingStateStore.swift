@@ -69,6 +69,7 @@ actor PairingStateStore: PairingStatePersisting {
         secrets.bleAddress = try text(sessionID, .bleAddress)
         secrets.activationResponse = try text(sessionID, .activationResponse).flatMap { Data(lowercaseHex: $0) }
         secrets.serial = try text(sessionID, .serial)
+        secrets.patchInfoRaw = try text(sessionID, .patchInfo).flatMap { Data(lowercaseHex: $0) }
         return secrets
     }
 
@@ -79,6 +80,7 @@ actor PairingStateStore: PairingStatePersisting {
         if let v = secrets.bleAddress { try save(v, sessionID, .bleAddress) }
         if let v = secrets.activationResponse { try save(v.lowercaseHex, sessionID, .activationResponse) }
         if let v = secrets.serial { try save(v, sessionID, .serial) }
+        if let v = secrets.patchInfoRaw { try save(v.lowercaseHex, sessionID, .patchInfo) }
     }
 
     /// Borra JSON y secretos de una sesión. Solo para tests y para una acción explícita del usuario.
@@ -96,6 +98,7 @@ actor PairingStateStore: PairingStatePersisting {
         case bleAddress = "ble_address"
         case activationResponse = "activation_response_hex"
         case serial = "sensor_serial"
+        case patchInfo = "patch_info_hex"
     }
 
     private func fileURL(_ sessionID: String) -> URL {

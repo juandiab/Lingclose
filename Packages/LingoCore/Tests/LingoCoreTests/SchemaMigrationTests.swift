@@ -4,12 +4,12 @@ import Testing
 
 struct SchemaMigrationTests {
     static let expectedTables = ["archives", "conflicts", "edit_lineage", "event_log", "events",
-                                 "health_export_ledger", "imported_archives", "meal_nutrition", "readings", "sensor_sessions"]
+                                 "health_export_ledger", "imported_archives", "meal_nutrition", "readings", "sensor_sessions", "workout_links"]
 
     @Test func freshDatabaseGetsCurrentSchemaWithWALAndForeignKeys() async throws {
         let store = try TestSupport.makeStore()
-        #expect(try await store.schemaVersion() == 2)
-        #expect(SQLiteStore.currentSchemaVersion == 2)
+        #expect(try await store.schemaVersion() == 3)
+        #expect(SQLiteStore.currentSchemaVersion == 3)
         #expect(try await store.journalMode() == "wal")
         #expect(try await store.foreignKeysEnabled())
         #expect(try await store.tableNames() == Self.expectedTables)
@@ -24,12 +24,12 @@ struct SchemaMigrationTests {
             #expect(try StoreSchema.userVersion(c) == 0)
         }
         let store = try SQLiteStore(path: path)
-        #expect(try await store.schemaVersion() == 2)
+        #expect(try await store.schemaVersion() == 3)
         #expect(Set(try await store.tableNames()) == Set(Self.expectedTables + ["legacy_note"]))
 
         // Reabrir no reaplica la migración (fallaría con "table already exists").
         let reopened = try SQLiteStore(path: path)
-        #expect(try await reopened.schemaVersion() == 2)
+        #expect(try await reopened.schemaVersion() == 3)
         let c = try SQLiteConnection(path: path)
         #expect(try c.queryFirst("SELECT t FROM legacy_note") { $0.text(0) } == "hola")
     }
@@ -40,10 +40,10 @@ struct SchemaMigrationTests {
             let c = try SQLiteConnection(path: path)
             try c.executeScript("PRAGMA user_version = 99;")
         }
-        #expect(throws: StoreError.schemaTooNew(found: 99, supported: 2)) { try SQLiteStore(path: path) }
+        #expect(throws: StoreError.schemaTooNew(found: 99, supported: 3)) { try SQLiteStore(path: path) }
     }
 
-    @Test func migratesV1DatabaseToV2KeepingEvents() async throws {
+    @Test func migratesV1DatabaseToCurrentKeepingEvents() async throws {
         let path = try TestSupport.temporaryDatabasePath("v1")
         let eventID = TestSupport.newID(), editID = TestSupport.newID()
         let at: Int64 = 1_793_110_000
@@ -64,7 +64,7 @@ struct SchemaMigrationTests {
             #expect(try StoreSchema.userVersion(c) == 1)
         }
         let store = try SQLiteStore(path: path)
-        #expect(try await store.schemaVersion() == 2)
+        #expect(try await store.schemaVersion() == 3)
         #expect(try await store.tableNames() == Self.expectedTables)
         let event = try #require(try await store.event(id: eventID))
         #expect(event.kind == .meal && event.carbsG == 42.5 && event.text == "Comida de prueba" && event.editID == editID)
@@ -72,7 +72,7 @@ struct SchemaMigrationTests {
         #expect(try await store.mealNutrition(eventID: eventID) == nil)
 
         let reopened = try SQLiteStore(path: path)
-        #expect(try await reopened.schemaVersion() == 2)
+        #expect(try await reopened.schemaVersion() == 3)
         #expect(try await reopened.event(id: eventID) == event)
     }
 

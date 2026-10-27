@@ -28,6 +28,7 @@ actor InMemoryPairingStateStore: PairingStatePersisting {
         if let v = new.bleAddress { merged.bleAddress = v }
         if let v = new.activationResponse { merged.activationResponse = v }
         if let v = new.serial { merged.serial = v }
+        if let v = new.patchInfoRaw { merged.patchInfoRaw = v }
         secrets[sessionID] = merged
     }
 }

@@ -16,6 +16,8 @@ final class AppEnvironment {
     let todayData: LiveTodayDataSource
     let sensorActions: LiveSensorActions
     let identityImport: IdentityImportModel
+    /// Entrenamientos de Salud (T-21 §5, solo lectura).
+    let workoutImport: WorkoutImportTrigger
 
     private var startTask: Task<Void, Never>?
 
@@ -42,6 +44,8 @@ final class AppEnvironment {
         self.todayData = LiveTodayDataSource(store: store, coordinator: coordinator)
         self.sensorActions = LiveSensorActions(coordinator: coordinator, credentials: credentials, pairingStore: pairingStore)
         self.identityImport = IdentityImportModel(credentials: credentials)
+        self.workoutImport = Self.makeWorkoutImport(store: store)
+        workoutImport.install()
         installRecovery()
         // T-10: servicio de archivo portable, tarea diaria (BGAppRefreshTask) y limpieza de `.partial`.
         configureArchive(databaseURL: databaseURL)

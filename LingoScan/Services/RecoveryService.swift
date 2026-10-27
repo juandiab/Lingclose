@@ -204,6 +204,30 @@ actor RecoveryService {
         }
     }
 
+    /// Export exactly one complete current session for Astra, without contacting a sensor.
+    func exportCurrentForAstra(includeMaterial: Bool = false) async throws -> ExportRecord {
+        guard let id = try await pairingStore.currentSessionID(),
+              let (session, receiver, state) = try await localSnapshot(sessionID: id) else { throw RecoveryServiceError.nothingToExport }
+        guard let rawPatch = session.patchInfoHex.flatMap({ Data(lowercaseHex: $0) }) else { throw RecoveryServiceError.missingPatchInfo }
+        guard let patch = try? Libre3NFCPatchInfo(raw: rawPatch), patch.productType == 9, patch.securityVersion == 3,
+              patch.serialNumber == session.sensorSerial, patch.wearDurationMinutes > 0, patch.warmupMinutes > 0,
+              patch.warmupMinutes < patch.wearDurationMinutes,
+              [.responseSaved, .authenticated].contains(session.activation.state), receiver != 0,
+              session.activation.receiverIDUsed == receiver,
+              let responseData = session.activation.responseHex.flatMap({ Data(lowercaseHex: $0) }),
+              let response = try? Libre3NFCActivationResponse(raw: responseData),
+              response.blePIN.lowercaseHex == session.ble.pinHex, response.bleAddressDisplay == session.ble.address,
+              response.bleAddressDisplay != "00:00:00:00:00:00", response.bleAddressDisplay != "FF:FF:FF:FF:FF:FF",
+              let epoch = session.activation.activationTimeEpochS, epoch > 0,
+              epoch <= Int64(now().timeIntervalSince1970 + 300),
+              Int64(response.activationTimeRaw.enumerated().reduce(UInt32(0)) { $0 | UInt32($1.element) << (8 * $1.offset) }) == epoch,
+              session.firmwareHex != nil else { throw RecoveryServiceError.incompleteForAstra }
+        let identity = try await appIdentity(for: state, includeMaterial: includeMaterial)
+        guard identity.productTypes.contains(9), identity.securityVersions.contains(3), identity.certificateSHA256 != nil,
+              identity.patchSigningKeySHA256 != nil else { throw RecoveryServiceError.identityUnavailable }
+        return try await export(sessionIDs: [id], includeMaterial: includeMaterial, trigger: "astra")
+    }
+
     private func flushPending() async {
         let pending = ledger.pendingSessionIDs
         guard !pending.isEmpty else { return }
@@ -407,6 +431,7 @@ actor RecoveryService {
         secrets.bleAddress = session.ble.address
         secrets.activationResponse = session.activation.responseHex.flatMap { Data(lowercaseHex: $0) }
         secrets.serial = session.sensorSerial
+        secrets.patchInfoRaw = session.patchInfoHex.flatMap { Data(lowercaseHex: $0) }
         try await pairingStore.saveSecrets(secrets, sessionID: id)
         try await pairingStore.saveState(state)
 
@@ -503,7 +528,7 @@ actor RecoveryService {
             productType: Int(state.productType),
             securityVersion: Int(state.securityVersion),
             firmwareHex: firmware,
-            patchInfoHex: nil,
+            patchInfoHex: secrets.patchInfoRaw?.lowercaseHex,
             attemptID: record.attemptID,
             sequence: 1,
             updatedAtUTC: updated,
@@ -655,6 +680,8 @@ extension RecoveryService {
         case nothingToExport
         case sessionIncomplete(String)
         case identityUnavailable
+        case missingPatchInfo
+        case incompleteForAstra
         case unreadableFile
 
         var description: String {
@@ -663,6 +690,8 @@ extension RecoveryService {
             case .passphraseTooShort(let n): String(localized: "recovery.error.short", defaultValue: "La frase debe tener al menos \(n) caracteres")
             case .nothingToExport: String(localized: "recovery.error.nothing", defaultValue: "No hay sesión que exportar")
             case .sessionIncomplete(let id): String(localized: "recovery.error.incomplete", defaultValue: "La sesión \(id) no tiene Receiver ID o serial")
+            case .missingPatchInfo: "Faltan los datos originales del sensor. Esta sesión antigua no se puede exportar para Astra de forma segura."
+            case .incompleteForAstra: "La sesión no contiene los datos completos y coherentes necesarios para Astra."
             case .identityUnavailable: String(localized: "recovery.error.identity", defaultValue: "No hay identidad de app con clave de firma")
             case .unreadableFile: String(localized: "recovery.error.unreadable", defaultValue: "No se pudo leer el archivo")
             }

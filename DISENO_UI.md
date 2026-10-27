@@ -1,0 +1,57 @@
+# Diseño de LingoScan
+
+Dirección: **calma, legibilidad, datos primero.** No es una app médica ni lo parece: nada de rojo de alarma permanente, ni semáforos. El valor actual, su antigüedad y su calidad siempre van juntos. iOS 26 con Liquid Glass nativo en el cromo (barras, acciones flotantes, chips) y superficies sólidas para texto y gráficas.
+
+## Pantallas de la v1
+
+| Pantalla | Contenido | Comportamiento |
+|---|---|---|
+| **Hoy** | Valor válido más reciente en grande (`.rounded`, `monospacedDigit`), tendencia con flecha SF Symbol, "hace N min", chip de calidad/estado del sensor; curva Swift Charts con selector 3 h / 6 h / 24 h; marcas de comidas y ejercicio; huecos visibles (sin interpolar) | Se actualiza al llegar cada lectura; `contentTransition(.numericText())` en el valor; haptic suave solo cuando cambia el estado del sensor, no cada minuto |
+| **Sensor** | Estado (máquina de estados), calentamiento restante, días restantes, última conexión, Receiver ID (parcial), botón "Leer sensor (solo NFC)" y, en pantalla aparte, "Activar sensor" con resumen de lo que se enviará y confirmación | El diagnóstico nunca activa. La activación muestra `productType`, `securityVersion`, Receiver ID y exige un toggle "entiendo que es irreversible" + botón `.glassProminent` |
+| **Diario** | Lista por día de comidas (gramos opcionales), ejercicio y notas; botón flotante "+" | Añadir en dos toques: tipo, hora (por defecto ahora), texto. Edición y borrado con tombstone |
+| **Reportes** | Tiempo en rango (rango por defecto 70–180 mg/dL, editable, marcado "no médico"), promedio, SD y CV, respuesta a comidas (pico, tiempo al pico, retorno a línea base), noche (00:00–06:00), comparación semana a semana | Período seleccionable (7/14/30 días); cada métrica con su definición en un popover |
+| **Datos** | Estado de Health (último export, pendientes), carpeta de archivo, última copia y verificación, exportar ahora, importar, export de recuperación cifrado, resumen de errores | Estados distintos: "archivo creado", "disponible en iCloud", "restaurado y verificado" |
+| **Ajustes** | Unidad (mg/dL), alarmas y umbrales, permisos, apariencia, accesibilidad, diagnóstico privado, acerca de (versiones, commit del fork) | Texto fijo de no uso médico en alarmas |
+
+Navegación: `TabView` con cinco pestañas (Hoy, Diario, Reportes, Datos, Ajustes); Sensor accesible desde el chip de estado en Hoy y desde Ajustes. `NavigationStack` por pestaña.
+
+## Liquid Glass
+
+Skill: `swiftui-liquid-glass` (`references/liquid-glass.md`). Reglas de uso en LingoScan:
+
+- Vidrio en: barra de pestañas y de navegación (lo da el sistema), botón flotante "+" del Diario, chips de período (3 h/6 h/24 h, 7/14/30 d), chip de estado del sensor, acciones principales (`.buttonStyle(.glassProminent)` solo en "Activar sensor" y "Exportar ahora").
+- Varios elementos de vidrio juntos van dentro de un `GlassEffectContainer(spacing:)`; `.glassEffect(...)` se aplica después de padding y fondo; `.interactive()` solo en lo tocable; `glassEffectID` con `@Namespace` cuando el chip se transforma en panel.
+- Nunca vidrio sobre vidrio, ni vidrio bajo la gráfica o bajo texto largo: la curva y las tablas van sobre `Color(.systemBackground)` / `secondarySystemBackground`.
+- Target iOS 26: no hace falta `#available` ni fallback de materiales.
+
+## Tipografía y color
+
+- San Francisco en sus ejes: `.rounded` para números grandes (valor actual, métricas), `.default` para texto, `.monospaced` solo en diagnóstico. `monospacedDigit()` en todo número que cambia. Tamaños semánticos y Dynamic Type siempre; nada de tamaños fijos.
+- Color semántico: acento único (azul del sistema) para interacción; verde apagado para "en rango" en la banda de la gráfica; ámbar para "fuera de rango" y para "dato atrasado"; gris para huecos y calentamiento. El rojo se reserva a errores de la app, no a valores de glucosa. Todo definido en `DesignSystem/Tokens` como assets con variantes claro/oscuro y contraste aumentado.
+- Superficies: fondo → tarjeta (`secondarySystemBackground`, radio 16) → contenido. Una sombra sutil (`radius 2, y 1`) solo en tarjetas elevadas.
+
+## Movimiento y feedback
+
+Skill `apple-design` (principios, no CSS): respuesta inmediata al toque, animaciones interrumpibles, mismo camino de entrada y salida, origen anclado al control que abre. Skills `swiftui-animation` y `swiftui-microinteractions` para la implementación.
+
+- Springs críticamente amortiguados por defecto (`.smooth`); `.bouncy` solo tras gestos con velocidad.
+- `sensoryFeedback(.success)` al confirmar activación, exportación y restauración; `.warning` al entrar en `stale`; nunca por cada lectura.
+- `symbolEffect(.pulse)` en el icono de Bluetooth mientras reconecta; `.bounce` una vez al llegar la primera lectura válida.
+- Reduce Motion: cross-fades en lugar de desplazamientos; sin pulsos continuos. Reduce Transparency: el sistema sustituye el vidrio; no se añade blur propio.
+
+## Accesibilidad
+
+- VoiceOver lee "N miligramos por decilitro, estable, hace 2 minutos, sensor conectado" en un solo elemento (`accessibilityElement(children: .combine)`).
+- Gráfica con `accessibilityChartDescriptor` (resumen, rango, último valor) y tabla alternativa.
+- Targets ≥ 44 pt; contraste AA en claro y oscuro; etiquetas de texto en todo botón con icono.
+
+## Revisión obligatoria por pantalla
+
+1. `swiftui-pro:swiftui-pro` sobre los archivos de la pantalla (API moderna, flujo de datos, navegación, accesibilidad, rendimiento).
+2. `swiftui-liquid-glass` checklist (contenedor, orden de modificadores, interactividad, consistencia).
+3. `ios-design-agent-skill` con capturas del simulador (iPhone 17 Pro Max, claro y oscuro, Dynamic Type grande).
+4. `swiftui-performance` en Hoy y Reportes (listas y gráficas con 20 000 puntos: 14 días a 1/min).
+
+## Datos de previsualización
+
+`PreviewData` en el target de app genera una sesión sintética de 3 días (marcada `synthetic`) a partir de los vectores públicos de Juggluco más una curva simulada, para `#Preview` y para la pantalla de Reportes antes de la Fase 3. Nunca se exporta a Health.

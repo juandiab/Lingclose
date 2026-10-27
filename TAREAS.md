@@ -8,7 +8,7 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 | T-02 | 1 | Opus | Fork: familia Lingo, identidad por `productType`, clave de firma, errores explícitos | T-01 | pendiente |
 | T-03 | 1 | Opus | Fork: plano de datos Lingo (51 B, 14 B, historial, fast data) | T-02 | pendiente |
 | T-04 | 1 | Sonnet | Vectores AES-CCM independientes y tests negativos | T-01 | pendiente |
-| T-05 | 1 | Sonnet | Cargador de credenciales JSON → Keychain | T-02 | pendiente |
+| T-05 | 1 | Sonnet | Cargador de credenciales JSON → Keychain | T-02, T-06 | pendiente |
 | T-06 | 1 | Sonnet | Proyecto Xcode LingoScan + paquete LingoCore | — | pendiente |
 | T-07 | 1 | Opus | LingoCore: dominio, elegibilidad y almacén SQLite | T-06 | pendiente |
 | T-08 | 1 | Opus | SensorSessionCoordinator y NFCService | T-03, T-05, T-07 | pendiente |
@@ -17,10 +17,11 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 | T-09 | 2 | Sonnet | HealthExporter con outbox y elegibilidad | T-07 | pendiente |
 | T-10 | 2 | Sonnet | ArchiveService: paquete `.lingoscan` según `../LingoScan_Shared/CONTRATO_V1.md`, carpeta del usuario, cadencia | T-07 | pendiente |
 | T-19 | 2 | Fable + Opus | Archivo de recuperación cifrado y transferencia de rol según `../LingoScan_Shared/RECUPERACION_V1.md` | T-05, T-07, T-08 | pendiente |
-| T-12 | 2 | Sonnet | Diario, Reportes (ReportsEngine + Swift Charts), Datos, Ajustes | T-09, T-10, T-11 | pendiente |
-| T-13 | 2 | Sonnet | Alarmas alta, baja y sin datos | T-07 | pendiente |
-| T-15 | 2 | Sonnet | App de prueba de reemplazo (otro bundle ID) y pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) | T-10, T-19 | pendiente |
-| T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2 cerrada | pendiente |
+| T-12a | 2a | Sonnet | Diario, Datos, Ajustes y gráfica básica (sin reportes avanzados) | T-09, T-10, T-11 | pendiente |
+| T-13 | 2a | Sonnet | Alarmas alta, baja y sin datos | T-07 | pendiente |
+| T-15 | 2a | Fable + Sonnet | Pruebas cruzadas con Astra (P-01..P-11, R-01..R-05) con paquetes de ambas apps y el verificador externo; app de prueba solo si hace falta | T-10, T-19 | pendiente |
+| T-16 | 3 | Fable + Juampa | Protocolo del sensor de sacrificio | Fase 2a cerrada (T-09, T-10, T-12a, T-13, T-15, **T-19**) | pendiente |
+| T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |
 
@@ -44,10 +45,10 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 - `enum SensorFamily: Sendable { case libre3, lingo, unknown }` y `var family` en `Libre3NFCPatchInfo` (`lingo` si `productType == 9 && securityVersion == 3`; `libre3` si `productType == 4`; si no `unknown`).
 - `AppIdentity` gana `productTypes: [UInt8]?` y `patchSigningPublicKey: Data?`; el JSON acepta `productTypes`, `securityVersions`, `patchSigningPublicKeyHex`. `AppIdentities.identity(for: SensorFamily)` y `PatchSigningKeys.keys(for:)`.
 - `PairingFlow.init` lanza `PairingFlowError.noTrustedSigningKeys` si `sensorCertSigningKeys` está vacío (nuevo comportamiento; mantener un init interno para tests que lo necesiten).
-- `PairingFlowError.certificateRejected(phase:)` cuando tras `0x03` no llega `0x04` y el transporte reporta fin de flujo o timeout (clasificar, no adivinar).
+- `PairingFlowError.authenticationInterrupted(phase:evidence:)` cuando tras `0x03` el transporte reporta fin de flujo o timeout antes de `0x04`: la fase (`certificateLoad`, `certificateAcceptance`, `sensorCertificate`, `ephemeral`, `challenge`) y la evidencia (último comando enviado, último byte recibido, tiempo transcurrido). `PairingFlowError.certificateRejected` **solo** cuando el sensor responde con un código o notificación que lo demuestre; una desconexión nunca se clasifica como rechazo de credenciales (ajuste 1 de Astra).
 - `Libre3SensorState` gana `productType`, `securityVersion`, `identityLabel` opcionales con decodificación tolerante.
 - Textos "Libre 3" de NFC → "sensor".
-**Aceptación:** tests nuevos: patchInfo sintético con `productType 9`/`sec 3` → `.lingo`; `productType 9`/`sec 2` → `.unknown`; JSON con `productTypes` se parsea y se selecciona por familia; lista vacía → error; `ScriptedCommandPairingTransport` que corta tras `0x03` → `certificateRejected`; `Libre3SensorStateLoader` carga JSON antiguo sin los campos nuevos. `swift test` verde.
+**Aceptación:** tests nuevos: patchInfo sintético con `productType 9`/`sec 3` → `.lingo`; `productType 9`/`sec 2` → `.unknown`; JSON con `productTypes` se parsea y se selecciona por familia; lista vacía → error; `ScriptedCommandPairingTransport` que corta tras `0x03` → `authenticationInterrupted(phase: .certificateAcceptance, …)` con evidencia; respuesta negativa explícita guionada → `certificateRejected`; `Libre3SensorStateLoader` carga JSON antiguo sin los campos nuevos. `swift test` verde.
 **Verificación Fable:** diff limitado a los archivos listados; tests; commit `T-02`.
 
 ## T-03 — Fork: plano de datos Lingo
@@ -79,7 +80,7 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 
 **Modelo:** Sonnet. **Skill:** `swiftui-pro` (`swift.md`, `hygiene.md`).
 **Archivos:** `LingoScan/Services/CredentialStore.swift`, `LingoScan/Services/KeychainItem.swift`, `LingoScanTests/CredentialStoreTests.swift`, `Credentials/README.md` (actualizar si cambia el formato).
-**Objetivo:** actor `CredentialStore` que importa el JSON (desde Archivos o AirDrop vía `onOpenURL`/`fileImporter`), valida con `AppIdentity` (clave pública = certificado), guarda en Keychain (`AfterFirstUnlockThisDeviceOnly`, sin iCloud), expone `identity(for: .lingo)` y `signingKeys(for: .lingo)`, y borra el archivo importado. Ningún `print`/log con el contenido; `description` de los tipos redactada.
+**Objetivo:** actor `CredentialStore` que importa el JSON (desde Archivos o AirDrop vía `onOpenURL`/`fileImporter`), valida con `AppIdentity` (clave pública = certificado), guarda en Keychain (`AfterFirstUnlockThisDeviceOnly`, sin iCloud), expone `identity(for: .lingo)` y `signingKeys(for: .lingo)`, y borra **solo la copia temporal propia** del archivo importado; nunca borra ni mueve el archivo que Juampa eligió (puede ser su única copia) (ajuste 2 de Astra). Ningún `print`/log con el contenido; `description` de los tipos redactada. Los tests de integración en iOS requieren el proyecto de T-06.
 **Aceptación:** tests con una identidad sintética (clave P-256 generada en el test y certificado de 162 B construido con esa clave); JSON inválido → error tipado; segunda importación reemplaza; `signingKeys` nunca devuelve vacío (error si no hay).
 **Verificación Fable:** grep de `print(`/`os_log` con `privateKey|certificate|kAuth|pin`; tests en simulador; commit `T-05`.
 
@@ -104,15 +105,16 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 **Modelo:** Opus. **Skills:** `swiftui-pro` (`swift.md`, `data.md`), revisión cruzada de Fable con `docs/FORK_RWDK.md` §1 y §6.
 **Archivos:** `LingoScan/Services/NFCService.swift`, `LingoScan/Services/SensorSessionCoordinator.swift`, `LingoScan/Services/PairingStateStore.swift`, `LingoScan/Services/SessionState.swift`, `LingoScanTests/SessionCoordinatorTests.swift` (con transportes guionados del fork).
 **Objetivo:** la máquina de estados de `ARQUITECTURA.md` §3 sobre la API del fork (`docs/FORK_RWDK.md` §1): NFC solo lectura (`.readPatchInfo`), activación solo con `ActivationTicket`, pairing completo (`runCommandGatedFirstPairHandshake` con `phase5RawKeyProvider` calculando kAuth desde `CredentialStore`), suscripciones incluidas `historicData` y `clinicalData`, `DataPlaneCrypto` + ensamblador + decodificador por familia, backfill tras `patchStatus`, persistencia de `PairingState` (kAuth en Keychain), reconexión corta con fallback a completa, restauración de CoreBluetooth en segundo plano, contador de secuencia saliente, timeouts configurables, `EventLog` redactado, contador de raw inesperados.
-**Aceptación:** tests con transporte guionado: pairing feliz → `warmingUp`; corte tras `0x03` → `certificateRejected`; trama de 57 B en tres fragmentos → lectura en el almacén; 5 min sin tramas → `stale`; reconexión corta rechazada → completa; restauración con `PairingState` guardado → `reconnecting`. Ningún camino de `NFCService.readPatchInfo` puede invocar `.activateFreshSensor` (test de tipo: `ActivationTicket` solo se construye desde la vista de activación).
+**Aceptación:** tests con transporte guionado: pairing feliz → `warmingUp`; corte tras `0x03` → `authenticationFailed(phase: .certificateAcceptance, reason: .interrupted)` con evidencia en `event_log` y sin reintento automático de credenciales; respuesta negativa explícita → `reason: .rejected`; trama de 57 B en tres fragmentos → lectura en el almacén; 5 min sin tramas → `stale`; reconexión corta rechazada → completa; restauración con `PairingState` guardado → `reconnecting`. Ningún camino de `NFCService.readPatchInfo` puede invocar `.activateFreshSensor` (test de tipo: `ActivationTicket` solo se construye desde la vista de activación).
 **Verificación Fable:** tests; lectura completa del archivo del coordinador; grep de `activateOrSwitchReceiver` y `forceActivationCommand` (no deben usarse); commit `T-08`.
 
 ## T-09 — HealthExporter con outbox y elegibilidad
 
 **Modelo:** Sonnet. **Skill:** `swiftui-pro`.
 **Archivos:** `LingoScan/Services/HealthExporter.swift`, `Packages/LingoCore/Sources/LingoCore/Health/HealthSampleMapper.swift`, `LingoScanTests/HealthExporterTests.swift`.
-**Objetivo:** autorización (escritura de glucosa y carbohidratos; lectura de entrenamientos), drenado del outbox con `HKQuantitySample` y metadatos de `DATOS_Y_HEALTHKIT.md`, reintentos con backoff, nunca exportar `eligible == 0`, lectura de entrenamientos por rango para la curva.
-**Aceptación:** en simulador: 100 lecturas sintéticas elegibles → 100 muestras con `SyncIdentifier`; reintento no duplica; una lectura con `qualityFlag` nunca aparece; carbohidratos con nota en metadatos; denegación de permiso deja el outbox intacto.
+**Objetivo:** autorización (escritura de glucosa y carbohidratos; lectura de entrenamientos), drenado del outbox con `HKQuantitySample` y metadatos de `DATOS_Y_HEALTHKIT.md`, reintentos con backoff, ledger append-only por `attempt_id` y estado derivado (`CONTRATO_V1.md` §5.4), nunca exportar `eligible == 0` ni `synthetic == true` (filtro estructural: el exportador recibe un tipo `HealthEligibleReading` que solo se construye desde registros no sintéticos), lectura de entrenamientos por rango para la curva.
+**Diseño de pruebas (ajuste 6 de Astra):** el exportador escribe contra un protocolo `HealthSink`; los tests usan un `HealthSink` en memoria inyectado. La integración con HealthKit del simulador vive en un target de tests separado activado por una condición de compilación de pruebas (`LINGOSCAN_HEALTH_SIM_TESTS`) que no existe en la build que se instala en el iPhone; no hay ningún interruptor en tiempo de ejecución que permita escribir datos sintéticos en Health.
+**Aceptación:** con el sink en memoria: 100 lecturas elegibles → 100 muestras con `SyncIdentifier`; reintento no duplica; `qualityFlag`, `synthetic` y tombstones nunca aparecen; `failed` seguido de `written` deja estado derivado `written`; carbohidratos con nota en metadatos; denegación de permiso deja el outbox intacto. En el target de simulador: las mismas comprobaciones contra `HKHealthStore`.
 **Verificación Fable:** tests en simulador; consulta `HKSampleQuery` de comprobación; commit `T-09`.
 
 ## T-10 — ArchiveService: `.lingoscan` export/import
@@ -131,13 +133,21 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 **Aceptación:** capturas claro/oscuro/Dynamic Type grande en iPhone 17 Pro Max; checklist de `swiftui-liquid-glass` cumplido; VoiceOver lee el valor combinado; sin `foregroundColor`, `NavigationView` ni `onChange` de un parámetro; `Instruments`-free: scroll de 24 h sin hitches en simulador.
 **Verificación Fable:** `swiftui-pro` sobre los archivos; `ios-design-agent-skill` con capturas; commit `T-11`.
 
-## T-12 — Diario, Reportes, Datos y Ajustes
+## T-12a — Diario, Datos, Ajustes y gráfica básica (Fase 2a)
 
-**Modelo:** Sonnet. **Skills:** `swiftui-pro`, `swiftui-liquid-glass`, `ios-design-agent-skill`, `swiftui-performance`.
-**Archivos:** `LingoScan/Features/Diary/**`, `Reports/**`, `Data/**`, `Settings/**`, `Packages/LingoCore/Sources/LingoCore/Reports/ReportsEngine.swift`, tests.
-**Objetivo:** pantallas de `DISENO_UI.md`; `ReportsEngine` con tiempo en rango, media, SD, CV, respuesta a comidas (pico, tiempo al pico, retorno a ±10 % de la línea base en 3 h), noche 00:00–06:00, comparación semanal; definiciones visibles en la UI.
-**Aceptación:** `ReportsEngine` con fixtures y valores esperados calculados a mano (al menos 6 casos, incluidos huecos y comidas sin retorno); capturas; checklist de skills.
-**Verificación Fable:** tests; capturas; commit `T-12`.
+**Modelo:** Sonnet. **Skills:** `swiftui-pro`, `swiftui-liquid-glass`, `ios-design-agent-skill`.
+**Archivos:** `LingoScan/Features/Diary/**`, `Data/**`, `Settings/**`, `Packages/LingoCore/Sources/LingoCore/Reports/BasicStats.swift`, tests.
+**Objetivo (ajuste 4 de Astra):** lo mínimo para validar el sensor: Diario (comidas, ejercicio, notas con linaje de ediciones `edit_id`/`parent_edit_id`), Datos (estado de Health con huecos pendientes, exportar/importar, estado de iCloud, recuperación), Ajustes (unidad, alarmas, permisos, diagnóstico), y en Hoy la curva 3/6/24 h con huecos y marcas más tiempo en rango, media y SD del período visible. Sin pulido visual más allá del checklist de accesibilidad.
+**Aceptación:** `BasicStats` con 4 fixtures (huecos, calentamiento, vacío, 24 h completas); capturas claro/oscuro; VoiceOver en Diario y Datos.
+**Verificación Fable:** tests; capturas; commit `T-12a`.
+
+## T-12b — Reportes avanzados y pulido (Fase 2b, después del primer sensor)
+
+**Modelo:** Sonnet. **Skills:** `swiftui-pro`, `ios-design-agent-skill`, `apple-design`, `swiftui-performance`.
+**Archivos:** `LingoScan/Features/Reports/**`, `Packages/LingoCore/Sources/LingoCore/Reports/ReportsEngine.swift`, tests.
+**Objetivo:** `ReportsEngine` con respuesta a comidas (pico, tiempo al pico, retorno a ±10 % de la línea base en 3 h), noche 00:00–06:00, CV y comparación semanal; definiciones visibles; pulido de movimiento y Liquid Glass. Se hace con lecturas reales de T-16 para calibrar definiciones.
+**Aceptación:** `ReportsEngine` con fixtures y valores esperados calculados a mano (al menos 6 casos, incluidos huecos y comidas sin retorno); capturas; checklist de skills; scroll de 14 días sin hitches.
+**Verificación Fable:** tests; capturas; commit `T-12b`.
 
 ## T-13 — Alarmas
 
@@ -153,13 +163,13 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 **Objetivo:** instalar en "iPhone 17 JP", conceder Bluetooth, NFC y Health, importar `lingo-identity.json`, y leer un sensor con `0xA1` sin activarlo (primero dentro del aplicador; si no responde, después de aplicarlo y antes de activar).
 **Aceptación:** app abre; estado `identified` con `productType`, `securityVersion`, calentamiento y duración; nada enviado salvo `0xA1` (verificado en `event_log`). Resultado anotado en `../NOTAS.md` sin el serial completo.
 
-## T-15 — App de prueba de reemplazo
+## T-15 — Pruebas cruzadas con Astra
 
-**Modelo:** Sonnet.
-**Archivos:** `LingoScanReplacementProbe/**` (target nuevo, bundle ID `com.otalvaro.lingoscan.probe`).
-**Objetivo:** app mínima que importa un `.lingoscan` con `LingoCore` y muestra conteos y la última semana en una lista. Demuestra el contrato sin la base original.
-**Aceptación:** importa el archivo exportado por LingoScan en simulador y muestra los mismos conteos que el manifest.
-**Verificación Fable:** ejecutar en simulador; commit `T-15`.
+**Modelo:** Fable coordina; Sonnet prepara paquetes y automatiza.
+**Archivos:** `../LingoScan_Shared/interop/lingoscan/**` (paquetes exportados por LingoScan), `../LingoScan_Shared/interop/RESULTADOS.md`, `LingoScanTests/InteropTests.swift`.
+**Objetivo (ajuste 5 de Astra):** la prueba de independencia del importador son los paquetes producidos por **las dos implementaciones** más el verificador externo (`tools/verify_archive.py`, `tools/verify_merge_fixtures.py`), no una tercera app que reutiliza `LingoCore`. LingoScan importa los paquetes de `interop/astra/` y los fixtures de `examples/merge/` en todos los órdenes y compara con `expected.json`; exporta los suyos a `interop/lingoscan/` para Astra.
+**Aceptación:** P-01..P-11 y R-01..R-05 de `PRUEBAS_INTEROPERABILIDAD.md` registradas en `RESULTADOS.md` con commit y evidencia. Una app de prueba con otro bundle ID (`LingoScanReplacementProbe`) se crea **solo** si la prueba R-03 (recuperación desde otro bundle ID sin Keychain original) no puede hacerse con LingoScan_Astra a tiempo.
+**Verificación Fable:** ejecutar `verify_archive.py` sobre cada paquete de `interop/lingoscan/`; commit `T-15`.
 
 ## T-19 — Archivo de recuperación cifrado y transferencia de rol
 
@@ -171,7 +181,7 @@ Formato: cada tarea tiene un modelo asignado, archivos con dueño, dependencias,
 
 ## T-16 — Protocolo del sensor de sacrificio
 
-**Modelo:** Fable + Juampa. Pasos en `PLAN.md` Fase 3. Requiere confirmación escrita en el chat antes del paso 5.
+**Modelo:** Fable + Juampa. Pasos en `PLAN.md` Fase 3. Requiere confirmación escrita en el chat antes del paso 5. **Precondiciones duras (ajuste 3 de Astra):** T-19 cerrada y probada (R-01, R-04, R-05 verdes; exportación de recuperación en `prepared` funcionando), T-10 con exportación verificada por `verify_archive.py`, y Fase 2a cerrada. Ninguna activación real antes de eso.
 
 ## T-17 — Nightscout uploader (Fase 4, opcional)
 

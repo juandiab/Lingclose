@@ -64,7 +64,7 @@ stateDiagram-v2
   identified --> paired: sensor ya activado por esta app (PairingState)
   readyToActivate --> activating: confirmación escrita + ActivationTicket
   activating --> pairing: respuesta 0xA0 (MAC, PIN, hora)
-  pairing --> certificateRejected: enlace cortado tras 0x03 o verificación fallida
+  pairing --> authenticationFailed: interrupted (corte o timeout, con fase y evidencia), rejected (respuesta negativa explícita) o sensorCertInvalid
   pairing --> warmingUp: Phase 6 OK, patchStatus recibido
   warmingUp --> streaming: primera trama sin bit 15
   streaming --> stale: > 5 min sin trama válida
@@ -73,7 +73,7 @@ stateDiagram-v2
   reconnecting --> pairing: handshake corto rechazado → completo
   streaming --> ended: patchState > 4 o vida útil agotada
   paired --> reconnecting
-  certificateRejected --> [*]: Fase 3b
+  authenticationFailed --> [*]: Fase 3b (un corte no se diagnostica como credenciales equivocadas)
 ```
 
 Cada transición se registra en `EventLog` (SQLite, redactado) con marca de tiempo y motivo. La UI muestra siempre el estado, la antigüedad de la última lectura válida y la calidad.

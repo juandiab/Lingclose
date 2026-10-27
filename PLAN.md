@@ -32,9 +32,10 @@ Alcance v1 decidido por Juampa: **núcleo + reportes en app**.
 ```mermaid
 flowchart LR
   F0[Fase 0<br/>Investigación<br/>hecha 27 oct] -->|OK de Juampa al plan| F1[Fase 1<br/>Núcleo sin sensor<br/>fork + app + tests]
-  F1 -->|instala en iPhone, tests verdes,<br/>NFC solo lectura funciona| F2[Fase 2<br/>Datos, Health, reportes<br/>backup probado]
-  F2 -->|round-trip y restauración<br/>probados + confirmación escrita| F3[Fase 3<br/>Sensor de sacrificio]
-  F3 -->|lecturas 1/min en Health 24 h| F4[Fase 4<br/>Operación y ampliaciones]
+  F1 -->|instala en iPhone, tests verdes,<br/>NFC solo lectura funciona| F2[Fase 2a<br/>Datos, Health, recuperación,<br/>UI mínima, backup probado]
+  F2 -->|round-trip, restauración y<br/>recuperación probados + confirmación escrita| F3[Fase 3<br/>Sensor de sacrificio]
+  F3 -->|lecturas 1/min en Health 24 h| F2b[Fase 2b<br/>Reportes avanzados y pulido]
+  F2b --> F4[Fase 4<br/>Operación y ampliaciones]
   F3 -.->|si falla| F3b[Fase 3b<br/>logs, issue, parche;<br/>no activar otro sensor]
   style F3 fill:#dbe8fb,stroke:#2f6fdd
 ```
@@ -60,15 +61,22 @@ Orden de trabajo:
 
 Criterios de salida: `swift test` de los dos paquetes verde; `xcodebuild test` del target de app verde en simulador; app instalada en el iPhone con permisos de Bluetooth, NFC y Health concedidos; estado `identified` mostrado con `productType`, `securityVersion`, calentamiento y duración leídos por NFC sin enviar `0xA0`.
 
-### Fase 2 — Datos, HealthKit, reportes y backup (T-09, T-10, T-12, T-13, T-15)
+### Fase 2a — Datos, HealthKit, recuperación y UI mínima (T-09, T-10, T-19, T-12a, T-13, T-15)
 
-1. **T-09** Sonnet: exportador HealthKit con cola durable, matriz de elegibilidad, identificadores de sincronización, carbohidratos; lectura de entrenamientos.
-2. **T-10** Sonnet: archivo `.lingoscan` (exportación e importación), carpeta elegida por el usuario en iCloud Drive, cadencia diaria y manual, tombstones.
-3. **T-12** Sonnet: Diario, Reportes (Swift Charts), Datos y Ajustes.
-4. **T-13** Sonnet: alarmas locales alta, baja y sin datos. Umbrales iniciales propuestos 70 y 180 mg/dL, 20 minutos sin datos; Juampa los confirma. Texto fijo: "no es un dispositivo médico".
-5. **T-15** Sonnet: app de prueba con otro bundle ID que importa un archivo `.lingoscan` y muestra el historial. Es la prueba de reemplazo.
+Puerta de validación del sensor (ajuste 4 de Astra): entra en 2a solo lo necesario para que la Fase 3 sea segura y no pierda datos; los reportes avanzados y el pulido esperan a tener lecturas reales.
 
-Criterios de salida: round-trip exportar→importar sin pérdida ni duplicados (tres importaciones seguidas); restauración en la app de prueba; muestras de glucosa sintéticas visibles en Health del simulador con fuente LingoScan y sin duplicados tras reintentos; reportes calculados sobre fixtures con valores esperados; alarmas disparan en simulador.
+1. **T-09** Sonnet: exportador HealthKit con cola durable y ledger append-only, matriz de elegibilidad, filtro estructural de sintéticos, identificadores de sincronización, carbohidratos; lectura de entrenamientos. Pruebas con sink inyectado; HealthKit del simulador en target aparte.
+2. **T-10** Sonnet: paquete `.lingoscan` según el contrato compartido, carpeta elegida por el usuario en iCloud Drive, estados de iCloud, cadencia diaria y manual, importación con alias, linaje y conflictos.
+3. **T-19** Fable + Opus: archivo de recuperación cifrado, registro durable de activación y modo "en pausa" para transferir el rol.
+4. **T-12a** Sonnet: Diario, Datos, Ajustes y gráfica básica con tiempo en rango, media y SD.
+5. **T-13** Sonnet: alarmas locales alta, baja y sin datos. Umbrales iniciales propuestos 70 y 180 mg/dL, 20 minutos sin datos; Juampa los confirma. Texto fijo: "no es un dispositivo médico".
+6. **T-15** Fable + Sonnet: pruebas cruzadas con los paquetes de Astra y el verificador externo.
+
+Criterios de salida: round-trip exportar→importar sin pérdida ni duplicados (tres importaciones seguidas y en ambos órdenes con los fixtures de `examples/merge/`); recuperación cifrada exportada e importada (R-01, R-04, R-05); muestras de glucosa visibles en Health del simulador desde el target aislado, sin duplicados tras reintentos; alarmas disparan en simulador.
+
+### Fase 2b — Reportes avanzados y pulido (T-12b), después del primer sensor
+
+Respuesta a comidas, noche, CV y comparación semanal, calibrados con lecturas reales; pulido de movimiento y Liquid Glass; rendimiento con 14 días de datos. No bloquea la Fase 3 ni la 4.
 
 ### Fase 3 — Primer sensor (de sacrificio)
 

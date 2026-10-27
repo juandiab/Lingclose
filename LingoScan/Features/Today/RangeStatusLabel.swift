@@ -5,6 +5,8 @@ import SwiftUI
 struct RangeStatusLabel: View {
     let value: Int
     let isStale: Bool
+    var low = ReferenceLines.defaultLow
+    var high = ReferenceLines.defaultHigh
 
     var body: some View {
         if isStale {
@@ -13,13 +15,13 @@ struct RangeStatusLabel: View {
                 systemImage: "clock.badge.exclamationmark"
             )
             .foregroundStyle(Tokens.Palette.stale)
-        } else if value < Tokens.ReferenceRange.lower {
+        } else if value < low {
             Label(
                 String(localized: "today.status.below", defaultValue: "Por debajo del rango de referencia"),
                 systemImage: "arrow.down.circle"
             )
             .foregroundStyle(Tokens.Palette.outOfRange)
-        } else if value > Tokens.ReferenceRange.upper {
+        } else if value > high {
             Label(
                 String(localized: "today.status.above", defaultValue: "Por encima del rango de referencia"),
                 systemImage: "arrow.up.circle"

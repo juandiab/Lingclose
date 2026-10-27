@@ -48,3 +48,36 @@ struct SettingsViewModelTests {
         #expect(about.build != "?")
     }
 }
+
+struct AppearanceModeTests {
+    @Test func storedValuesMapToColorSchemes() {
+        #expect(AppearanceMode(stored: "system").colorScheme == nil)
+        #expect(AppearanceMode(stored: "light").colorScheme == .light)
+        #expect(AppearanceMode(stored: "dark").colorScheme == .dark)
+    }
+
+    @Test func unknownOrMissingValueFallsBackToSystem() {
+        #expect(AppearanceMode(stored: nil) == .system)
+        #expect(AppearanceMode(stored: "sepia") == .system)
+        #expect(AppearanceMode.allCases.map(\.rawValue) == ["system", "light", "dark"])
+    }
+
+    @Test func referenceRangesCanNeverCross() {
+        #expect(ReferenceLines.lowRange.upperBound < ReferenceLines.highRange.lowerBound)
+        let clamped = ReferenceLines.clampedForSettings(low: 300, high: 10)
+        #expect(clamped.low == 100)
+        #expect(clamped.high == 120)
+        #expect(clamped.low < clamped.high)
+        #expect(ReferenceLines.clampedForSettings(low: 70, high: 140) == (70, 140))
+    }
+
+    @Test @MainActor func statsFollowTheReferenceLines() async {
+        let data = PreviewData()
+        let model = TodayViewModel(dataSource: data, sensorSource: data)
+        await model.refresh()
+        #expect(model.stats.range == 70...140)
+        model.referenceLow = 80
+        model.referenceHigh = 160
+        #expect(model.stats.range == 80...160)
+    }
+}

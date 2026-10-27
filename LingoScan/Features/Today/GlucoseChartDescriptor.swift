@@ -8,6 +8,8 @@ struct GlucoseChartDescriptor: AXChartDescriptorRepresentable {
     let end: Date
     let valueDomain: ClosedRange<Int>
     let periodTitle: String
+    var referenceLow = ReferenceLines.defaultLow
+    var referenceHigh = ReferenceLines.defaultHigh
 
     /// Máximo de puntos que se entregan a VoiceOver.
     private static let maxPoints = 120
@@ -23,7 +25,7 @@ struct GlucoseChartDescriptor: AXChartDescriptorRepresentable {
         let yAxis = AXNumericDataAxisDescriptor(
             title: "mg/dL",
             range: Double(valueDomain.lowerBound)...Double(valueDomain.upperBound),
-            gridlinePositions: [Double(Tokens.ReferenceRange.lower), Double(Tokens.ReferenceRange.upper)]
+            gridlinePositions: [Double(referenceLow), Double(referenceHigh)]
         ) { value in
             String(localized: "today.chart.axis.value", defaultValue: "\(Int(value)) miligramos por decilitro")
         }

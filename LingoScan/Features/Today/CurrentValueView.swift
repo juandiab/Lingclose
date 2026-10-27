@@ -17,7 +17,7 @@ struct CurrentValueView: View {
                         .monospacedDigit()
                 }
                 .font(.title3)
-                RangeStatusLabel(value: value, isStale: viewModel.isStale(at: now))
+                RangeStatusLabel(value: value, isStale: viewModel.isStale(at: now), low: viewModel.referenceLow, high: viewModel.referenceHigh)
                     .font(.subheadline)
             }
         }

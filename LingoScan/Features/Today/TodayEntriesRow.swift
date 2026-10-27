@@ -1,12 +1,16 @@
 import SwiftUI
 
-/// Fila "Registro de hoy: N" con acceso a la lista del día.
+/// Fila "Registro de hoy: N", que lleva a la pestaña Diario.
 struct TodayEntriesRow: View {
     let count: Int
     let isToday: Bool
 
+    @Environment(\.tabSelector) private var tabSelector
+
     var body: some View {
-        NavigationLink(value: TodayRoute.entries) {
+        Button {
+            tabSelector(.diary)
+        } label: {
             Card {
                 HStack(spacing: Tokens.Spacing.sm) {
                     Image(systemName: "book.closed")
@@ -25,7 +29,7 @@ struct TodayEntriesRow: View {
             }
         }
         .buttonStyle(.plain)
-        .accessibilityHint(String(localized: "today.entries.hint", defaultValue: "Abre los registros del día para editarlos"))
+        .accessibilityHint(String(localized: "today.entries.hint.diary", defaultValue: "Abre la pestaña Diario para ver y editar los registros"))
     }
 
     private var title: String {

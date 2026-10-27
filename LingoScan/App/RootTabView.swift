@@ -5,6 +5,7 @@ struct RootTabView: View {
     @State private var todayViewModel: TodayViewModel
     @State private var sensorViewModel: SensorViewModel
     @State private var ui: AppUIModels
+    @State private var selection = AppTab.today
     private let identityImport: IdentityImportModel?
 
     /// Fuentes reales: `SQLiteStore` y `SensorSessionCoordinator`.
@@ -29,23 +30,24 @@ struct RootTabView: View {
     }
 
     var body: some View {
-        TabView {
-            Tab(String(localized: "tab.today", defaultValue: "Hoy"), systemImage: "drop.fill") {
+        TabView(selection: $selection) {
+            Tab(String(localized: "tab.today", defaultValue: "Hoy"), systemImage: "drop.fill", value: AppTab.today) {
                 TodayView(viewModel: todayViewModel, sensorViewModel: sensorViewModel)
             }
-            Tab(String(localized: "tab.diary", defaultValue: "Diario"), systemImage: "book.closed") {
+            Tab(String(localized: "tab.diary", defaultValue: "Diario"), systemImage: "book.closed", value: AppTab.diary) {
                 DiaryView(viewModel: ui.diary)
             }
-            Tab(String(localized: "tab.reports", defaultValue: "Reportes"), systemImage: "chart.xyaxis.line") {
+            Tab(String(localized: "tab.reports", defaultValue: "Reportes"), systemImage: "chart.xyaxis.line", value: AppTab.reports) {
                 ReportsView()
             }
-            Tab(String(localized: "tab.data", defaultValue: "Datos"), systemImage: "externaldrive") {
+            Tab(String(localized: "tab.data", defaultValue: "Datos"), systemImage: "externaldrive", value: AppTab.data) {
                 DataView(viewModel: ui.data)
             }
-            Tab(String(localized: "tab.settings", defaultValue: "Ajustes"), systemImage: "gearshape") {
+            Tab(String(localized: "tab.settings", defaultValue: "Ajustes"), systemImage: "gearshape", value: AppTab.settings) {
                 SettingsView(viewModel: ui.settings, identity: identityImport, alarms: ui.alarmModel)
             }
         }
+        .environment(\.tabSelector, TabSelector { selection = $0 })
         .modifier(IdentityImportAlert(model: identityImport))
     }
 }

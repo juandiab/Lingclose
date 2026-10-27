@@ -18,9 +18,11 @@ final class TodayViewModel {
     private(set) var dayOffset = 0
 
     /// Líneas de referencia (mg/dL). El umbral alto es también el de los picos sombreados.
-    var referenceLow = ReferenceLines.defaultLow
+    var referenceLow = ReferenceLines.defaultLow {
+        didSet { if referenceLow != oldValue { recomputeStats() } }
+    }
     var referenceHigh = ReferenceLines.defaultHigh {
-        didSet { if referenceHigh != oldValue { recomputeSpikes() } }
+        didSet { if referenceHigh != oldValue { recomputeSpikes(); recomputeStats() } }
     }
 
     private(set) var latest: GlucoseReading?
@@ -228,12 +230,7 @@ final class TodayViewModel {
             segments = newSegments
             points = newSegments.flatMap(\.points)
             gaps = GlucoseSegmenter.gaps(in: newSegments)
-            stats = BasicStats(
-                samples: points.map {
-                    BasicStats.Sample(measuredAt: UTCInstant($0.date), valueMgdl: $0.value)
-                },
-                range: Tokens.ReferenceRange.bounds,
-                window: range)
+            recomputeStats()
             marks = newEvents.compactMap(DiaryMark.init).sorted { $0.date < $1.date }
             dayEntryCount = newDayEvents.filter { !$0.deleted }.count
             recomputeSpikes()
@@ -252,6 +249,13 @@ final class TodayViewModel {
             result += local.filter { !known.contains($0.eventID) }
         }
         return result
+    }
+
+    /// Tiempo en rango, media y SD con las mismas líneas de referencia que dibuja la curva.
+    private func recomputeStats() {
+        let samples = points.map { BasicStats.Sample(measuredAt: UTCInstant($0.date), valueMgdl: $0.value) }
+        let bounds = referenceLow...max(referenceLow, referenceHigh)
+        stats = BasicStats(samples: samples, range: bounds, window: UTCInstant(windowStart)...UTCInstant(windowEnd))
     }
 
     private func recomputeSpikes() {

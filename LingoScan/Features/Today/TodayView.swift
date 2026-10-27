@@ -46,11 +46,13 @@ struct TodayView: View {
                     }
                 }
                 .padding(.horizontal, Tokens.Spacing.sm)
-                // Espacio para que el "+" flotante no tape la última tarjeta.
-                .padding(.bottom, Tokens.Spacing.xl + Tokens.Spacing.md)
             }
-            .overlay(alignment: .bottomTrailing) {
-                TodayAddButton { quickAdd = makeQuickAdd() }
+            // Barra inferior propia: el contenido termina sobre el "+" y el último elemento siempre queda visible.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                HStack {
+                    Spacer(minLength: 0)
+                    TodayAddButton { quickAdd = makeQuickAdd() }
+                }
             }
             .navigationTitle(String(localized: "today.title", defaultValue: "Hoy"))
             .navigationBarTitleDisplayMode(.inline)

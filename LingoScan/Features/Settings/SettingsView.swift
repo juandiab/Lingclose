@@ -9,12 +9,14 @@ struct SettingsView: View {
     let alarms: AlarmSettingsModel?
 
     @Environment(\.openURL) private var openURL
+    @AppStorage(AppearanceMode.storageKey) private var appearance = AppearanceMode.system
 
     var body: some View {
         NavigationStack {
             Form {
                 unitSection
                 alarmsSection
+                ReferenceRangeSection()
                 if let identity {
                     IdentitySection(model: identity)
                 }
@@ -75,11 +77,16 @@ struct SettingsView: View {
 
     private var appearanceSection: some View {
         Section {
-            LabeledContent(
-                String(localized: "settings.appearance", defaultValue: "Apariencia"),
-                value: String(localized: "settings.appearance.system", defaultValue: "Sistema"))
+            Picker(String(localized: "settings.appearance", defaultValue: "Apariencia"), selection: $appearance) {
+                ForEach(AppearanceMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+        } header: {
+            Text(String(localized: "settings.appearance", defaultValue: "Apariencia"))
         } footer: {
-            Text(String(localized: "settings.appearance.footer", defaultValue: "Sigue el modo claro u oscuro y el tamaño de texto de iOS."))
+            Text(String(localized: "settings.appearance.footer", defaultValue: "Sistema sigue el modo claro u oscuro de iOS. El tamaño de texto siempre sigue el de iOS."))
         }
     }
 

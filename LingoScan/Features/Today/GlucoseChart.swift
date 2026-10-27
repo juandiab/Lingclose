@@ -85,7 +85,9 @@ struct GlucoseChart: View {
                 start: viewModel.windowStart,
                 end: viewModel.windowEnd,
                 valueDomain: domain,
-                periodTitle: viewModel.isToday ? viewModel.period.spokenTitle : viewModel.shownDay.formatted(date: .complete, time: .omitted)
+                periodTitle: viewModel.isToday ? viewModel.period.spokenTitle : viewModel.shownDay.formatted(date: .complete, time: .omitted),
+                referenceLow: viewModel.referenceLow,
+                referenceHigh: viewModel.referenceHigh
             )
         )
         .containerRelativeFrame(.vertical) { height, _ in height * 0.36 }

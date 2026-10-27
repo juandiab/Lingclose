@@ -5947,13 +5947,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Área sobre %1$lld mg/dL; el número bajo cada pico es el índice de pico. Líneas de referencia %2$lld y %1$lld mg/dL · no médico"
+            "value" : "Rojo sobre %1$lld mg/dL; el número bajo cada pico es el índice de pico. Líneas de referencia %2$lld y %1$lld mg/dL · no médico"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Area above %1$lld mg/dL; the number under each spike is the spike index. Reference lines %2$lld and %1$lld mg/dL · not medical"
+            "value" : "Red above %1$lld mg/dL; the number under each spike is its spike index. Reference lines %2$lld and %1$lld mg/dL · not medical"
           }
         }
       }
@@ -8232,6 +8232,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Manual entry"
+          }
+        }
+      }
+    },
+    "today.legend.low" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul bajo %lld mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blue below %lld mg/dL"
           }
         }
       }

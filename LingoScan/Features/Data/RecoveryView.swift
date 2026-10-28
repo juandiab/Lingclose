@@ -115,9 +115,9 @@ struct RecoveryView: View {
                 Task { await model.exportNow() }
             }
             .disabled(!model.status.hasPassphrase)
-            Button("Exportar sesión actual para Astra") { Task { await model.exportForAstra() } }
+            Button(String(localized: "recovery.astra.export", defaultValue: "Exportar sesión actual para Astra")) { Task { await model.exportForAstra() } }
                 .disabled(!model.status.hasPassphrase)
-            Text("Astra necesita la identidad original instalada o incluida en la copia cifrada. Una sesión preparada aún no permite recuperar un sensor activo.")
+            Text(String(localized: "recovery.astra.note", defaultValue: "Astra necesita la identidad original instalada o incluida en la copia cifrada. Una sesión preparada aún no permite recuperar un sensor activo."))
                 .font(.footnote).foregroundStyle(.secondary)
             if let error = model.status.lastError {
                 Text(error)
@@ -206,7 +206,7 @@ struct RecoveryView: View {
                     Text(conflict.fields.joined(separator: ", "))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                    Text("local seq \(conflict.localSequence) · remota seq \(conflict.remoteSequence) · \(conflict.remoteExporter)")
+                    Text(String(localized: "recovery.conflict.seqs", defaultValue: "local seq \(conflict.localSequence) · remota seq \(conflict.remoteSequence) · \(conflict.remoteExporter)"))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

@@ -38,6 +38,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-21 | 2b | Sonnet + Fable | Asistente de comidas con LLM (foto, nombre, tabla nutricional; clave por proveedor en Keychain; modelos económicos) y entrenamientos importados de Salud/Apple Watch | T-11b | hecha en código (`669de29`, `3f24f58`, `34e898a`, `c04e16f`, `604a4ea`, `42eaaf9`, `c873361`, `ab7ad32`, `0ec0e58`); pendiente prueba real de cámara y proveedor con la clave de Juampa en el iPhone |
 | T-12c | 2b | Sonnet | Pulido de Hoy, Datos y Ajustes: apariencia, rango de referencia, Registro de hoy → Diario; Datos y Recuperación con destino claro, confirmación de exportar y compartir siempre visible | T-12a | hecha (`80dc798`, `46f8ded`, `db9a3ec`, `4b24678`; curva con zoom/pan `63fa6a7`, `f5dc830`, `7d9e792`; rediseño de Hoy `08d36cb`) |
 | T-25 | 2b | Opus | Recomendaciones al disparar una alerta: consejos por reglas (LingoCore), consejo en la notificación, tarjeta "Qué hacer" en Hoy y asistente LLM opcional bajo demanda | T-24, T-21 | hecha en código, sin commit (pendiente revisión de Fable) |
+| T-26 | 2b | Sonnet | Localización: portugués de Brasil (pt-BR) en todo el catálogo y repaso del inglés | T-25 | hecha en código, sin commit (pendiente revisión de Fable) |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |
@@ -243,6 +244,14 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 **Archivos:** `Packages/LingoCore/Sources/LingoCore/Coaching/**` (nuevo), `AlertSettings.includeTips`, `SQLiteStore+WorkoutLinks.isWorkoutEvent`; `LingoScan/Services/Coaching/**` (nuevo); `Services/Alerts/` (`AlertService`, `AlertMessageComposer`, `AlertNotification`, `AlertNotifier`, `AlertNotificationDelegate`, `AlertDataStore`); `Services/LLM/` (`CoachingRequest`, `CoachingPrompt`, `CoachingReplyParser`, `LLMCoachingReply`, `coach` en los seis proveedores); `Features/Today/Coaching/**` (nuevo), `TodayView`, `RootTabView`, `AppEnvironment+Alerts`; `Features/Settings/Alerts/AlertTipsSection` + `AlertsSettingsView`; `Localizable.xcstrings` (61 claves es/en); tests `CoachingRulesTests`, `LingoScanTests/Coaching/**`, 8 fixtures `*-coach*.json`, `FakeLLMProvider.coach`.
 **Comportamiento y contrato:** `docs/T-25.md`, D-27.
 **Verificación 28-oct:** `swift test` 227 tests en 37 suites en verde; `xcodebuild test -only-testing:LingoScanTests` 350 tests en 57 suites en verde (iPhone 17 Pro Max, iOS 27.0). Capturas en simulador: notificación de prueba con consejo, Ajustes → "Incluir consejos", tarjeta "Qué hacer" y hoja del asistente (vista previa sintética). Sin commit. No probado en el iPhone ni con proveedor real.
+
+## T-26 — Portugués (pt-BR) y repaso del inglés
+
+**Modelo:** Sonnet.
+**Archivos:** `LingoScan/Resources/Localizable.xcstrings` (716 claves con es, en y pt-BR; 3 claves nuevas `recovery.astra.*`/`recovery.conflict.seqs` que estaban como literales en `RecoveryView.swift`), `project.yml` (`options.knownRegions: [es, en, pt-BR, Base]`), `LingoScan/Info.plist` (`CFBundleLocalizations` + `pt-BR`), `LingoScanTests/LocalizationCatalogTests.swift` (nuevo).
+**Comportamiento:** todas las traducciones pt-BR con `state: translated`, mismos especificadores que `en`, plural de `sensor.days.remaining` incluido; los consejos de `Coaching` y los nombres de alerta se resuelven por clave del catálogo (ninguna clave faltaba salvo las 3 anteriores). Inglés: Title Case en títulos y botones de barra, comillas y apóstrofos tipográficos, sin contracciones.
+**Verificación 28-oct:** build en verde; `LocalizationCatalogTests` (3 tests: es/en/pt-BR completas, especificadores iguales, títulos de aviso ≤ 40 caracteres). Capturas en simulador con `-AppleLanguages "(pt-BR)"`: Hoje, Diário y Ajustes → Alertas, sin cortes ni textos sin traducir.
+**Limitaciones:** traducción sin revisión de un hablante nativo; la hora y la fecha usan el formato del sistema.
 
 ## T-17 — Nightscout uploader (Fase 4, opcional)
 

@@ -66,6 +66,7 @@
 		1EC1A28E95FBE037DE22483C /* ArchiveManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0646A1C68E1B4FDC96C4B62A /* ArchiveManaging.swift */; };
 		1F32E44F82B48FF30B74AA67 /* AlertMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF41717623D88BDC0A6C3CEE /* AlertMessageComposer.swift */; };
 		1F74513927EE472169CD9B05 /* TodayDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E084662B86696AF3DD911C5 /* TodayDataSource.swift */; };
+		1FC29944B16D81C8A15366AA /* LocalizationCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E4CC4A2D9334070282998F /* LocalizationCatalogTests.swift */; };
 		215741F1E3C93ADAE3321A74 /* TodayCoachingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F926A39FC10A85BB372D178 /* TodayCoachingCard.swift */; };
 		2445F4E94067726B477FAA87 /* PreviewSensorActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A625DE698F0593913D1564 /* PreviewSensorActions.swift */; };
 		247BEE7FE769266A7EBDF7E7 /* CoachingRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142C1C41057125ABEF8D61E /* CoachingRecord.swift */; };
@@ -586,6 +587,7 @@
 		26218F4ABE19FE533CF0C30D /* PortionSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortionSlider.swift; sourceTree = "<group>"; };
 		26EB713B7508221AEF2C15B5 /* deepseek-402.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "deepseek-402.json"; sourceTree = "<group>"; };
 		27654D4B93E63526D9DB19B4 /* CoreSensorFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSensorFamily.swift; sourceTree = "<group>"; };
+		27E4CC4A2D9334070282998F /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
 		282F27D5227F151FDC35EA40 /* anthropic-429.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anthropic-429.json"; sourceTree = "<group>"; };
 		2854D3C0EF813634A80BECF3 /* GlucoseGap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseGap.swift; sourceTree = "<group>"; };
 		2B4A58ECAE75655570100BCD /* openai-broken.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "openai-broken.json"; sourceTree = "<group>"; };
@@ -1550,6 +1552,7 @@
 				9DF6FF6FE998E0791BD47C71 /* LingoTestFrames.swift */,
 				0A741C10C19A81A62288B967 /* LiveSensorStatusSourceTests.swift */,
 				A854DDBF661D1F4D92E98238 /* LiveTodayDataSourceTests.swift */,
+				27E4CC4A2D9334070282998F /* LocalizationCatalogTests.swift */,
 				E3195E0792B7D4F5D533C5F0 /* PairingStateStoreTests.swift */,
 				91135FFAC5C529D06B09AA05 /* PassphraseEntryValidationTests.swift */,
 				3D36721DBED80353A720AEFD /* RecordingRecoveryHook.swift */,
@@ -1852,6 +1855,7 @@
 				Base,
 				en,
 				es,
+				"pt-BR",
 			);
 			mainGroup = 69438DE8C51F3BD201DC241B;
 			minimizedProjectReferenceProxies = 1;
@@ -2003,6 +2007,7 @@
 				A47E8753A489FDC5462A7377 /* LingoTestFrames.swift in Sources */,
 				B4CECA191EA0DE39944D6AED /* LiveSensorStatusSourceTests.swift in Sources */,
 				69C2E1255A4E159EA41031A4 /* LiveTodayDataSourceTests.swift in Sources */,
+				1FC29944B16D81C8A15366AA /* LocalizationCatalogTests.swift in Sources */,
 				279F16400D5110B38E905C50 /* MealAnalysisViewModelTests.swift in Sources */,
 				C3EEC108A980622835C6E727 /* MealImageDownscalerTests.swift in Sources */,
 				09DFEC631E3EA6F52C13F0FC /* MealReopenNoticeTests.swift in Sources */,
@@ -2418,14 +2423,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LingoScan/LingoScan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LingoScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.otalvaro.lingoscan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2524,14 +2529,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LingoScan/LingoScan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LingoScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.otalvaro.lingoscan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;

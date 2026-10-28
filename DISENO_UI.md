@@ -71,6 +71,10 @@ Skill `apple-design` (principios, no CSS): respuesta inmediata al toque, animaci
 - `symbolEffect(.pulse)` en el icono de Bluetooth mientras reconecta; `.bounce` una vez al llegar la primera lectura válida.
 - Reduce Motion: cross-fades en lugar de desplazamientos; sin pulsos continuos. Reduce Transparency: el sistema sustituye el vidrio; no se añade blur propio.
 
+## Idiomas
+
+- Español (origen), inglés y portugués de Brasil (pt-BR) en `Localizable.xcstrings`; el test `LocalizationCatalogTests` exige las tres lenguas con los mismos especificadores (T-26).
+
 ## Accesibilidad
 
 - VoiceOver lee "N miligramos por decilitro, estable, hace 2 minutos, sensor conectado" en un solo elemento (`accessibilityElement(children: .combine)`).

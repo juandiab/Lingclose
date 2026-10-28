@@ -57,6 +57,11 @@ final class FakeLLMProvider: LLMProvider, @unchecked Sendable {
         return rangeReply
     }
 
+    /// T-25: el falso no sabe aconsejar; las pruebas del asistente usan `FixtureTransport`.
+    func coach(_ request: CoachingRequest, model: LLMModel, apiKey: String) async throws -> LLMCoachingReply {
+        throw LLMError.invalidResponse("FakeLLMProvider.coach")
+    }
+
     /// 200 kcal / 30 g de carbohidratos por porción estimada.
     static let arepa = FoodAnalysis(
         kind: .food, name: "Arepa con queso",

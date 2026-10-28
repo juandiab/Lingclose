@@ -1,0 +1,37 @@
+{
+  "id": "msg_fixture",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-haiku-5-5",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_1",
+      "name": "give_wellbeing_suggestions",
+      "input": {
+        "summary": "Tras una comida con bastantes carbohidratos es habitual un pico así; suele bajar solo en una o dos horas. Es informativo.",
+        "suggestions": [
+          {
+            "title": "Pausa activa",
+            "body": "Si estás sentado, levántate y camina un par de minutos cada media hora."
+          },
+          {
+            "title": "Cena ligera",
+            "body": "En la próxima comida prioriza verdura y proteína."
+          },
+          {
+            "title": "Mira la tendencia",
+            "body": "Revisa la curva en una hora para ver si vuelve a tu rango."
+          }
+        ],
+        "caution": null
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_details": null,
+  "usage": {
+    "input_tokens": 650,
+    "output_tokens": 140
+  }
+}

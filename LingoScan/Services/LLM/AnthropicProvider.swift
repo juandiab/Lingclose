@@ -89,6 +89,17 @@ struct AnthropicProvider: LLMProvider {
         }
     }
 
+    func coach(_ request: CoachingRequest, model: LLMModel, apiKey: String) async throws -> LLMCoachingReply {
+        try LLMHTTP.validate(model: model, provider: id)
+        let prompt = CoachingPrompt.prompt(for: request)
+        let data = try await send(Self.body(prompt: prompt, content: [["type": "text", "text": prompt.userText]], model: model),
+                                  apiKey: apiKey)
+        switch try Self.structuredReply(from: data, toolName: prompt.toolName, apiKey: apiKey) {
+        case .object(let input): return try CoachingReplyParser.parse(object: input)
+        case .text(let text): return try CoachingReplyParser.parse(text: text)
+        }
+    }
+
     private func send(_ body: [String: Any], apiKey: String) async throws -> Data {
         let urlRequest = try LLMHTTP.request(url: Self.baseURL.appending(path: "messages"), method: "POST",
                                              headers: headers(apiKey: apiKey), body: body)

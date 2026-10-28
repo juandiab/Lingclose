@@ -34,4 +34,8 @@ struct GrokProvider: LLMProvider {
     func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply {
         try await client.suggestRange(request, model: model, apiKey: apiKey)
     }
+
+    func coach(_ request: CoachingRequest, model: LLMModel, apiKey: String) async throws -> LLMCoachingReply {
+        try await client.coach(request, model: model, apiKey: apiKey)
+    }
 }

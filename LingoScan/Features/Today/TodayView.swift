@@ -14,7 +14,10 @@ struct TodayView: View {
     @State private var quickAdd: QuickAddModel?
     @State private var mealAnalysis: MealAnalysisViewModel?
     @State private var isShowingInsights = false
+    /// Alerta cuya pregunta al asistente está abierta (T-25).
+    @State private var askingRecord: CoachingRecord?
     @Environment(\.mealAssistant) private var mealServices
+    @Environment(\.coaching) private var coaching
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -23,9 +26,11 @@ struct TodayView: View {
                 VStack(alignment: .leading, spacing: Tokens.Spacing.sm) {
                     if viewModel.hasNoData {
                         SensorStatusChip(state: viewModel.sensor.state)
+                        TodayCoachingCard(coaching: coaching, askingRecord: $askingRecord)
                         TodayEmptyView(sensor: viewModel.sensor)
                     } else {
                         TodayHeader(viewModel: viewModel)
+                        TodayCoachingCard(coaching: coaching, askingRecord: $askingRecord)
                         if viewModel.failure != nil {
                             Label(
                                 String(localized: "today.failure", defaultValue: "No se pudieron leer los datos guardados."),
@@ -77,6 +82,13 @@ struct TodayView: View {
             .sheet(isPresented: $isShowingInsights) {
                 TodayInsightsSheet(viewModel: viewModel)
             }
+            .sheet(item: $askingRecord) { record in
+                if let coaching {
+                    CoachingAssistantSheet(record: record, assistant: coaching.assistant, diary: viewModel.diaryStore) {
+                        Task { await viewModel.refresh() }
+                    }
+                }
+            }
             .sheet(item: $mealAnalysis) { analysis in
                 MealAnalysisView(model: analysis, onSaved: {
                     Task { await viewModel.refresh() }
@@ -89,6 +101,7 @@ struct TodayView: View {
         }
         .modifier(TodayLifecycle(
             viewModel: viewModel,
+            coaching: coaching,
             storedHours: storedHours,
             storedSeconds: storedSeconds,
             referenceLow: $referenceLow,
@@ -135,6 +148,7 @@ struct TodayView: View {
 /// Carga de datos, preferencias y primer plano de Hoy.
 private struct TodayLifecycle: ViewModifier {
     let viewModel: TodayViewModel
+    let coaching: CoachingController?
     let storedHours: Int
     let storedSeconds: Double
     @Binding var referenceLow: Int
@@ -151,12 +165,18 @@ private struct TodayLifecycle: ViewModifier {
                 guard phase == .active else { return }
                 HealthDrainTrigger.current?.sceneDidBecomeActive()
                 WorkoutImportTrigger.current?.sceneDidBecomeActive()
-                Task { await viewModel.refresh() }
+                Task {
+                    await viewModel.refresh()
+                    await coaching?.refresh()
+                }
             }
             .onAppear {
                 restoreLength()
                 // Primera carga y, al volver desde el Diario, marcas nuevas, editadas o borradas.
-                Task { await viewModel.refresh() }
+                Task {
+                    await viewModel.refresh()
+                    await coaching?.refresh()
+                }
             }
             .sensoryFeedback(.warning, trigger: viewModel.sensor.state) { _, newState in
                 newState == .stale

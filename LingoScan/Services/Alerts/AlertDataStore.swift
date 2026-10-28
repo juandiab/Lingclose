@@ -6,6 +6,9 @@ protocol AlertDataStore: Sendable {
     func alertSamples(in range: ClosedRange<UTCInstant>) async throws -> [BasicStats.Sample]
     /// Registra en `event_log` con categoría `alert`.
     func logAlert(_ level: EventLogLevel, _ message: LogMessage) async
+    /// Última comida y último ejercicio del diario en el rango, para los consejos (T-25). Tiene implementación por
+    /// defecto vacía (`AlertDataStore+Coaching.swift`).
+    func coachingActivity(in range: ClosedRange<UTCInstant>) async -> CoachingActivity
 }
 
 extension SQLiteStore: AlertDataStore {

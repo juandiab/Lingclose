@@ -11108,6 +11108,1043 @@
           }
         }
       }
+    },
+    "coaching.note.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informativo, no es consejo médico."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For information only, not medical advice."
+          }
+        }
+      }
+    },
+    "coaching.note.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asistente · alerta %1$@, %2$lld mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistant · %1$@ alert, %2$lld mg/dL"
+          }
+        }
+      }
+    },
+    "coaching.note.header.noValue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asistente · alerta %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistant · %@ alert"
+          }
+        }
+      }
+    },
+    "coaching.assistant.notConfigured" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes → Asistente de comidas."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No assistant is set up. Choose a provider, key and model in Settings → Meal assistant."
+          }
+        }
+      }
+    },
+    "coaching.preview.source" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista previa sintética"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synthetic preview"
+          }
+        }
+      }
+    },
+    "coaching.reply.summary" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Summary"
+          }
+        }
+      }
+    },
+    "coaching.reply.suggestions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugerencias"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggestions"
+          }
+        }
+      }
+    },
+    "coaching.sheet.noRetry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se reintentó para no cobrar dos veces. Cierra y vuelve a tocar \"Preguntar al asistente\" si quieres intentarlo de nuevo."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not retried to avoid paying twice. Close and tap \"Ask the assistant\" again if you want another try."
+          }
+        }
+      }
+    },
+    "coaching.sheet.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asistente"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistant"
+          }
+        }
+      }
+    },
+    "coaching.sheet.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preguntando al asistente…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asking the assistant…"
+          }
+        }
+      }
+    },
+    "coaching.sheet.loading.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se envía solo el contexto de la alerta: tipo, valor, tendencia, hora, tiempo en rango, la última comida (nutrientes) y el último ejercicio. Nunca lecturas sueltas, nombres ni fotos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the alert context is sent: type, value, trend, time, time in range, the last meal (nutrients) and the last workout. Never individual readings, names or photos."
+          }
+        }
+      }
+    },
+    "coaching.sheet.note.saved" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardada en el diario"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved to the diary"
+          }
+        }
+      }
+    },
+    "coaching.sheet.note.saving" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardando…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saving…"
+          }
+        }
+      }
+    },
+    "coaching.sheet.note.save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar como nota"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save as note"
+          }
+        }
+      }
+    },
+    "coaching.sheet.note.failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo guardar la nota."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The note could not be saved."
+          }
+        }
+      }
+    },
+    "coaching.sheet.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugerencias de bienestar, no consejo médico ni un diagnóstico. Si tienes síntomas que persisten, consulta a un profesional de la salud. LingoScan no es un dispositivo médico."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wellbeing suggestions, not medical advice or a diagnosis. If symptoms persist, talk to a health professional. LingoScan is not a medical device."
+          }
+        }
+      }
+    },
+    "coaching.card.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué hacer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What to do"
+          }
+        }
+      }
+    },
+    "coaching.card.dismiss" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "coaching.card.ask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preguntar al asistente"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask the assistant"
+          }
+        }
+      }
+    },
+    "coaching.card.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informativo, no es consejo médico."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For information only, not medical advice."
+          }
+        }
+      }
+    },
+    "coaching.card.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tras la alerta %1$@ · %2$lld mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After the %1$@ alert · %2$lld mg/dL"
+          }
+        }
+      }
+    },
+    "coaching.card.subtitle.noValue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tras la alerta %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After the %@ alert"
+          }
+        }
+      }
+    },
+    "alerts.tips.toggle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluir consejos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include tips"
+          }
+        }
+      }
+    },
+    "alerts.tips.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade a cada aviso un consejo de bienestar según el tipo de alerta, la hora y tu última comida o ejercicio del diario. Al tocar el aviso, Hoy muestra \"Qué hacer\". Se calcula en el teléfono, sin red."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adds a wellbeing tip to each alert based on the alert type, the time and your last meal or workout in the diary. Tapping the alert shows \"What to do\" in Today. Worked out on the phone, offline."
+          }
+        }
+      }
+    },
+    "coaching.parse.noJSON" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "la respuesta no contiene un objeto JSON"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the reply contains no JSON object"
+          }
+        }
+      }
+    },
+    "coaching.parse.noSummary" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "falta el resumen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the summary is missing"
+          }
+        }
+      }
+    },
+    "coaching.parse.noSuggestions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "faltan las sugerencias"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the suggestions are missing"
+          }
+        }
+      }
+    },
+    "coaching.parse.badSuggestion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sugerencia sin título o sin texto"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "suggestion without a title or text"
+          }
+        }
+      }
+    },
+    "coaching.parse.forbidden" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "la respuesta habla de medicación (%@) y se descartó"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the reply talks about medication (%@) and was discarded"
+          }
+        }
+      }
+    },
+    "coaching.walkAfterMeal.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camina un poco"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take a short walk"
+          }
+        }
+      }
+    },
+    "coaching.walkAfterMeal.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caminar 10–15 min ayuda a suavizar el pico."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walking for 10–15 min helps smooth out the peak."
+          }
+        }
+      }
+    },
+    "coaching.waterNoSugar.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agua, sin más azúcar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Water, no more sugar"
+          }
+        }
+      }
+    },
+    "coaching.waterNoSugar.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bebe agua y evita más azúcar ahora."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drink water and avoid more sugar for now."
+          }
+        }
+      }
+    },
+    "coaching.mealOrder.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para la próxima comida"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For your next meal"
+          }
+        }
+      }
+    },
+    "coaching.mealOrder.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empezar por verdura o proteína y dejar los carbohidratos al final suele dar un pico más suave."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting with vegetables or protein and leaving carbs for last usually gives a gentler peak."
+          }
+        }
+      }
+    },
+    "coaching.noteContext.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anota el contexto"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note the context"
+          }
+        }
+      }
+    },
+    "coaching.noteContext.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estrés, poco sueño o café? Anótalo para ver el patrón."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stress, little sleep or coffee? Note it down to spot the pattern."
+          }
+        }
+      }
+    },
+    "coaching.moveLight.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movimiento suave"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gentle movement"
+          }
+        }
+      }
+    },
+    "coaching.moveLight.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unos minutos de movimiento suave, como subir escaleras o caminar, suelen ayudar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A few minutes of gentle movement, like taking the stairs or walking, usually helps."
+          }
+        }
+      }
+    },
+    "coaching.alreadyFalling.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya va bajando"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already coming down"
+          }
+        }
+      }
+    },
+    "coaching.alreadyFalling.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La curva ya baja: espera y vuelve a mirar en 30 min."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The curve is already falling: wait and look again in 30 min."
+          }
+        }
+      }
+    },
+    "coaching.risingWait.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espera y mira"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wait and look"
+          }
+        }
+      }
+    },
+    "coaching.risingWait.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin síntomas, lo normal es esperar: vuelve a mirar la curva en 30 min."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without symptoms, waiting is usually fine: check the curve again in 30 min."
+          }
+        }
+      }
+    },
+    "coaching.highPersisting.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si se repite"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If it keeps happening"
+          }
+        }
+      }
+    },
+    "coaching.highPersisting.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si ves valores altos a menudo sin motivo claro, coméntalo con un profesional de la salud."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you often see high values with no clear reason, talk to a health professional."
+          }
+        }
+      }
+    },
+    "coaching.lowSymptoms.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si tienes síntomas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you have symptoms"
+          }
+        }
+      }
+    },
+    "coaching.lowSymptoms.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con mareo o temblor, toma algo con carbohidratos y vuelve a mirar en 15 min."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you feel dizzy or shaky, have something with carbs and look again in 15 min."
+          }
+        }
+      }
+    },
+    "coaching.lowCompression.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin síntomas, espera"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No symptoms? Wait"
+          }
+        }
+      }
+    },
+    "coaching.lowCompression.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede ser compresión del sensor al dormir sobre él: espera la siguiente lectura."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It may be sensor compression from sleeping on it: wait for the next reading."
+          }
+        }
+      }
+    },
+    "coaching.afterExercise.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normal tras entrenar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normal after training"
+          }
+        }
+      }
+    },
+    "coaching.afterExercise.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es normal tras entrenar; hidrátate y toma algo ligero si vas a seguir."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is normal after training; drink water and have a light snack if you keep going."
+          }
+        }
+      }
+    },
+    "coaching.fallingWatch.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelve a mirar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Look again"
+          }
+        }
+      }
+    },
+    "coaching.fallingWatch.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mira de nuevo en 15 min para ver si se estabiliza."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check again in 15 min to see whether it levels off."
+          }
+        }
+      }
+    },
+    "coaching.fallingSnack.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo ligero"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something light"
+          }
+        }
+      }
+    },
+    "coaching.fallingSnack.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si llevas horas sin comer y sigue bajando, toma algo ligero."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you have not eaten for hours and it keeps falling, have a light snack."
+          }
+        }
+      }
+    },
+    "coaching.noDataPhone.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca el teléfono"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bring the phone closer"
+          }
+        }
+      }
+    },
+    "coaching.noDataPhone.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca el iPhone al sensor y abre LingoScan un momento."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bring the iPhone close to the sensor and open LingoScan for a moment."
+          }
+        }
+      }
+    },
+    "coaching.noDataBluetooth.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa Bluetooth"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Bluetooth"
+          }
+        }
+      }
+    },
+    "coaching.noDataBluetooth.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprueba que Bluetooth está activado y que el sensor sigue bien pegado."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that Bluetooth is on and the sensor is still firmly attached."
+          }
+        }
+      }
+    },
+    "coaching.restBreath.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausa y respira"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause and breathe"
+          }
+        }
+      }
+    },
+    "coaching.restBreath.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unos minutos de calma o de respiración lenta ayudan cuando el estrés sube la glucosa."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A few minutes of calm or slow breathing help when stress raises glucose."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

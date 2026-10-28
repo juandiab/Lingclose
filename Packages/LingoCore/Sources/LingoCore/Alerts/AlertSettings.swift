@@ -21,6 +21,8 @@ public struct AlertSettings: Sendable, Hashable, Codable {
     public var quietHours: QuietHours?
     /// La alerta baja suena también en horas de silencio.
     public var lowOverridesQuietHours: Bool
+    /// Añadir un consejo de bienestar (T-25, `CoachingRules`) al cuerpo de la notificación. Activado por defecto.
+    public var includeTips: Bool
 
     public init(
         isEnabled: Bool = false,
@@ -30,7 +32,8 @@ public struct AlertSettings: Sendable, Hashable, Codable {
         noDataAfterMinutes: Int = 20,
         cooldownMinutes: [AlertKind: Int] = [:],
         quietHours: QuietHours? = nil,
-        lowOverridesQuietHours: Bool = true
+        lowOverridesQuietHours: Bool = true,
+        includeTips: Bool = true
     ) {
         self.isEnabled = isEnabled
         self.kindEnabled = kindEnabled
@@ -40,6 +43,7 @@ public struct AlertSettings: Sendable, Hashable, Codable {
         self.cooldownMinutes = cooldownMinutes
         self.quietHours = quietHours
         self.lowOverridesQuietHours = lowOverridesQuietHours
+        self.includeTips = includeTips
     }
 
     public static let `default` = AlertSettings()
@@ -66,7 +70,7 @@ public struct AlertSettings: Sendable, Hashable, Codable {
 
     private enum CodingKeys: String, CodingKey {
         case isEnabled, kindEnabled, rateThreshold, rateWindowMinutes, noDataAfterMinutes, cooldownMinutes,
-             quietHours, lowOverridesQuietHours
+             quietHours, lowOverridesQuietHours, includeTips
     }
 
     public init(from decoder: any Decoder) throws {
@@ -80,5 +84,6 @@ public struct AlertSettings: Sendable, Hashable, Codable {
         cooldownMinutes = try c.decodeIfPresent([AlertKind: Int].self, forKey: .cooldownMinutes) ?? d.cooldownMinutes
         quietHours = try c.decodeIfPresent(QuietHours.self, forKey: .quietHours)
         lowOverridesQuietHours = try c.decodeIfPresent(Bool.self, forKey: .lowOverridesQuietHours) ?? d.lowOverridesQuietHours
+        includeTips = try c.decodeIfPresent(Bool.self, forKey: .includeTips) ?? d.includeTips
     }
 }

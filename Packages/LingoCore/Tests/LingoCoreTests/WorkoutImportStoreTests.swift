@@ -35,5 +35,7 @@ struct WorkoutImportStoreTests {
         #expect(try await store.eventID(forWorkoutUUID: "w-1") == first)
         #expect(try await store.events(in: Self.start...Self.start).count == 1)
         #expect(try await store.linkedWorkoutCount() == 1)
+        #expect(try await store.isWorkoutEvent(eventID: first))
+        #expect(try await !store.isWorkoutEvent(eventID: "manual-exercise"))
     }
 }

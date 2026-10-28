@@ -19,6 +19,8 @@ actor AlertService {
     private let data: any AlertDataStore
     private let notifier: any AlertNotifying
     private let settingsStore: AlertSettingsStore
+    /// Última alerta con consejos para la tarjeta "Qué hacer" (T-25); `nil` en pruebas que no la miran.
+    private let coachingStore: CoachingStore?
     private let thresholds: @Sendable () -> (low: Int, high: Int)
     private let now: @Sendable () -> Date
     private let timeZone: @Sendable () -> TimeZone
@@ -29,6 +31,7 @@ actor AlertService {
         data: any AlertDataStore,
         notifier: any AlertNotifying,
         settingsStore: AlertSettingsStore,
+        coachingStore: CoachingStore? = nil,
         thresholds: @escaping @Sendable () -> (low: Int, high: Int),
         now: @escaping @Sendable () -> Date = { Date() },
         timeZone: @escaping @Sendable () -> TimeZone = { .current }
@@ -36,6 +39,7 @@ actor AlertService {
         self.data = data
         self.notifier = notifier
         self.settingsStore = settingsStore
+        self.coachingStore = coachingStore
         self.thresholds = thresholds
         self.now = now
         self.timeZone = timeZone
@@ -117,8 +121,17 @@ actor AlertService {
                 await data.logAlert(.info, "alerta \(public: event.kind.rawValue) sin notificar: sin permiso")
                 continue
             }
+            // T-25: el primer consejo de reglas va al final del cuerpo; la alerta se guarda para la tarjeta de Hoy.
+            let record = settings.includeTips ? await coachingRecord(for: event, low: low, high: high, timeZone: zone) : nil
+            var notification = composer.notification(
+                for: event, low: low, high: high, tip: record?.tips.first?.localizedBody)
+            if var record {
+                record.id = notification.id
+                notification.coachingID = record.id
+                coachingStore?.save(record)
+            }
             do {
-                try await notifier.deliver(composer.notification(for: event, low: low, high: high))
+                try await notifier.deliver(notification)
             } catch {
                 await data.logAlert(.warning, "alerta \(public: event.kind.rawValue) no notificada: \(public: String(describing: type(of: error)))")
             }
@@ -143,7 +156,8 @@ actor AlertService {
     func sendTest() async -> Bool {
         guard await notifier.authorization() == .authorized else { return false }
         do {
-            try await notifier.deliver(AlertMessageComposer(timeZone: timeZone()).testNotification(at: now()))
+            let tip = settingsStore.loadSettings().includeTips ? CoachingCatalog.walkAfterMeal.localizedBody : nil
+            try await notifier.deliver(AlertMessageComposer(timeZone: timeZone()).testNotification(at: now(), tip: tip))
             await data.logAlert(.info, "notificación de prueba enviada")
             return true
         } catch {
@@ -165,7 +179,13 @@ actor AlertService {
         if let quiet = settings.quietHours,
            quiet.contains(minuteOfDay: AlertEvaluator.localMinute(of: deadline, in: composer.timeZone)) { return }
         let event = AlertEvent(kind: .noData, at: deadline, value: nil, slopePerMinute: nil, since: lastReadingAt)
-        let base = composer.notification(for: event, low: 0, high: 0)
+        // Consejo de "sin datos" (Bluetooth) sin tarjeta: se programa sin saber si llegará a mostrarse.
+        let tip = settings.includeTips
+            ? CoachingRules.tips(for: CoachingContext(
+                kind: .noData, hour: AlertEvaluator.localMinute(of: deadline, in: composer.timeZone) / 60), limit: 1)
+                .first?.localizedBody
+            : nil
+        let base = composer.notification(for: event, low: 0, high: 0, tip: tip)
         let pending = AlertNotification(id: Self.pendingNoDataID, kind: .noData, title: base.title, body: base.body,
                                         isTimeSensitive: base.isTimeSensitive)
         do {
@@ -174,6 +194,24 @@ actor AlertService {
         } catch {
             await data.logAlert(.warning, "aviso sin datos no programado: \(public: String(describing: type(of: error)))")
         }
+    }
+
+    // MARK: - Consejos (T-25)
+
+    /// Contexto de la alerta (última comida y ejercicio del diario, tiempo en rango del día) y sus consejos de reglas.
+    /// `nil` si las reglas no tienen nada que decir.
+    private func coachingRecord(for event: AlertEvent, low: Int, high: Int, timeZone zone: TimeZone) async -> CoachingRecord? {
+        let activityStart = CoachingContextBuilder.activityWindowStart(for: event.at, timeZone: zone)
+        let activity = await data.coachingActivity(in: activityStart...event.at)
+        let dayStart = CoachingContextBuilder.startOfDay(for: event.at, timeZone: zone)
+        let daySamples = (try? await data.alertSamples(in: dayStart...event.at)) ?? []
+        let context = CoachingContextBuilder.context(
+            for: event, activity: activity, daySamples: daySamples, low: low, high: high, timeZone: zone)
+        let tips = CoachingRules.tips(for: context)
+        guard !tips.isEmpty else { return nil }
+        return CoachingRecord(
+            id: "", context: context, tipIDs: tips.map(\.id), mealNutrients: activity.lastMealNutrients,
+            exerciseKind: activity.lastExerciseKind, exerciseDurationMin: activity.lastExerciseDurationMin, createdAt: now())
     }
 
     private func cancelPendingNoData() async {

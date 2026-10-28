@@ -5,6 +5,7 @@ import UserNotifications
 /// la baja y la bajada rápida van como `.timeSensitive` (entitlement `usernotifications.time-sensitive`).
 struct AlertNotifier: AlertNotifying {
     static let openTodayActionID = "lingoscan.alert.openToday"
+    static let coachingUserInfoKey = "coachingID"
 
     func authorization() async -> AlertPermission {
         switch await UNUserNotificationCenter.current().notificationSettings().authorizationStatus {
@@ -49,6 +50,9 @@ struct AlertNotifier: AlertNotifying {
         content.sound = .default
         content.threadIdentifier = notification.threadIdentifier
         content.categoryIdentifier = AlertNotification.categoryIdentifier
+        if let coachingID = notification.coachingID {
+            content.userInfo = [Self.coachingUserInfoKey: coachingID]
+        }
         content.interruptionLevel = notification.isTimeSensitive ? .timeSensitive : .active
         let request = UNNotificationRequest(identifier: notification.id, content: content, trigger: trigger)
         try await UNUserNotificationCenter.current().add(request)

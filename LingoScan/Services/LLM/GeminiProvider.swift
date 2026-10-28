@@ -70,6 +70,13 @@ struct GeminiProvider: LLMProvider {
         return try RangeSuggestionReplyParser.parse(text: try Self.structuredText(from: data, apiKey: apiKey))
     }
 
+    func coach(_ request: CoachingRequest, model: LLMModel, apiKey: String) async throws -> LLMCoachingReply {
+        try LLMHTTP.validate(model: model, provider: id)
+        let prompt = CoachingPrompt.prompt(for: request)
+        let data = try await send(Self.body(prompt: prompt, parts: [["text": prompt.userText]]), model: model, apiKey: apiKey)
+        return try CoachingReplyParser.parse(text: try Self.structuredText(from: data, apiKey: apiKey))
+    }
+
     private func send(_ body: [String: Any], model: LLMModel, apiKey: String) async throws -> Data {
         let url = Self.baseURL.appending(path: "models/\(model.id):generateContent")
         let urlRequest = try LLMHTTP.request(url: url, method: "POST", headers: headers(apiKey: apiKey), body: body)

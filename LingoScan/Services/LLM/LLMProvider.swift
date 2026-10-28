@@ -10,4 +10,7 @@ protocol LLMProvider: Sendable {
     /// Propone un rango de referencia a partir de cifras agregadas (`RangeSuggestionRequest`). Solo texto;
     /// la respuesta se valida con `RangeSuggestionReplyParser` y se rechaza si sale de los límites.
     func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply
+    /// Sugerencias de bienestar tras una alerta (T-25) a partir del contexto agregado (`CoachingRequest`). Solo texto,
+    /// bajo demanda; la respuesta se valida con `CoachingReplyParser` y se rechaza si menciona insulina o medicación.
+    func coach(_ request: CoachingRequest, model: LLMModel, apiKey: String) async throws -> LLMCoachingReply
 }

@@ -6,6 +6,8 @@ struct RootTabView: View {
     @State private var sensorViewModel: SensorViewModel
     @State private var ui: AppUIModels
     @State private var selection = AppTab.today
+    /// Tarjeta "Qué hacer" (T-25).
+    @State private var coaching: CoachingController?
     private let identityImport: IdentityImportModel?
     private let mealAssistant: MealAssistantServices
     private let rangeSuggester: any RangeSuggesting
@@ -26,6 +28,8 @@ struct RootTabView: View {
         let assistant = MealAssistantServices.live(store: environment.store)
         mealAssistant = assistant
         rangeSuggester = RangeSuggestionService.live(readings: environment.store, assistant: assistant)
+        _coaching = State(initialValue: CoachingController(
+            store: .appGroup(), assistant: CoachingAssistantService.live(assistant: assistant)))
         workoutImport = environment.workoutImport
         alerts = environment.alerts
     }
@@ -39,6 +43,7 @@ struct RootTabView: View {
         identityImport = nil
         mealAssistant = .preview
         rangeSuggester = PreviewRangeSuggester()
+        _coaching = State(initialValue: Self.previewCoaching())
         workoutImport = nil
         alerts = nil
     }
@@ -66,13 +71,24 @@ struct RootTabView: View {
         .environment(\.rangeSuggester, rangeSuggester)
         .environment(\.workoutImport, workoutImport)
         .environment(\.alerts, alerts)
+        .environment(\.coaching, coaching)
         .onReceive(NotificationCenter.default.publisher(for: AlertNotificationDelegate.openToday)) { _ in
             selection = .today
+            // El delegado ya marcó la alerta como abierta: la tarjeta "Qué hacer" aparece en Hoy.
+            Task { await coaching?.refresh() }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { alerts?.sceneDidBecomeActive() }
         }
         .modifier(IdentityImportAlert(model: identityImport))
+    }
+
+    /// `-previewCoaching YES` (DEBUG, con `-previewSensorState`): tarjeta "Qué hacer" y asistente sintéticos.
+    private static func previewCoaching() -> CoachingController? {
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "previewCoaching") { return .preview() }
+        #endif
+        return nil
     }
 }
 

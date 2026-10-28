@@ -11,6 +11,8 @@ struct AlertNotification: Sendable, Equatable {
     let body: String
     /// `.timeSensitive` para baja y bajada rápida (atraviesan un modo de concentración); `.active` para el resto.
     let isTimeSensitive: Bool
+    /// T-25: id de la `CoachingRecord` guardada con esta alerta; al tocar la notificación, Hoy muestra "Qué hacer".
+    var coachingID: String? = nil
 
     /// Hilo por tipo (`lingoscan.alert.high`, …): iOS agrupa los avisos del mismo tipo.
     var threadIdentifier: String { "lingoscan.alert.\(kind?.rawValue ?? "test")" }

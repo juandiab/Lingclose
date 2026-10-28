@@ -1,0 +1,22 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "text": "{\"summary\": \"Tras una comida con bastantes carbohidratos es habitual un pico así; suele bajar solo en una o dos horas. Es informativo.\", \"suggestions\": [{\"title\": \"Pausa activa\", \"body\": \"Si estás sentado, levántate y camina un par de minutos cada media hora.\"}, {\"title\": \"Cena ligera\", \"body\": \"En la próxima comida prioriza verdura y proteína.\"}, {\"title\": \"Mira la tendencia\", \"body\": \"Revisa la curva en una hora para ver si vuelve a tu rango.\"}], \"caution\": null}"
+          }
+        ]
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 650,
+    "candidatesTokenCount": 140,
+    "totalTokenCount": 790
+  },
+  "modelVersion": "gemini-3.6-flash"
+}

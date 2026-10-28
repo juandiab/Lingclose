@@ -8,7 +8,7 @@ extension AppEnvironment {
         AlertNotificationDelegate.install()
         let settingsStore = AlertSettingsStore.appGroup()
         let service = AlertService(
-            data: store, notifier: AlertNotifier(), settingsStore: settingsStore,
+            data: store, notifier: AlertNotifier(), settingsStore: settingsStore, coachingStore: .appGroup(),
             thresholds: { referenceThresholds(UserDefaults.standard) })
         let controller = AlertsController(service: service, store: settingsStore)
         controller.install { await coordinator.states() }

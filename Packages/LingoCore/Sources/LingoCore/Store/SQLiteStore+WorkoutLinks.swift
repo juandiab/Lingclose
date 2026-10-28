@@ -9,6 +9,12 @@ extension SQLiteStore {
                                   [SQLiteValue(uuid)]) { $0.text(0) } ?? nil
     }
 
+    /// `true` si el evento se creó a partir de un entrenamiento de Salud (su texto empieza por el tipo de actividad).
+    public func isWorkoutEvent(eventID: String) throws -> Bool {
+        try connection.queryFirst("SELECT 1 FROM workout_links WHERE event_id = ? LIMIT 1",
+                                  [SQLiteValue(eventID)]) { $0.int(0) } != nil
+    }
+
     /// Enlaza un entrenamiento con un evento existente. Idempotente: si el uuid ya estaba enlazado no cambia nada.
     public func linkWorkout(uuid: String, eventID: String, at: UTCInstant) throws {
         try connection.transaction { try insertLink(uuid: uuid, eventID: eventID, at: at) }

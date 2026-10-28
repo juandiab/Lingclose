@@ -1,8 +1,8 @@
 import Foundation
 import LingoCore
 
-/// Compone título y cuerpo de cada aviso. Punto de extensión: `tip` (por ahora siempre `nil`) se añade al final del
-/// cuerpo; otra tarea puede generar un consejo a partir del `AlertEvent` y pasarlo aquí.
+/// Compone título y cuerpo de cada aviso. `tip` (T-25: primer consejo de `CoachingRules`, si "Incluir consejos" está
+/// activado) se añade en una línea al final del cuerpo.
 struct AlertMessageComposer: Sendable {
     var timeZone: TimeZone = .current
     var locale: Locale = .current
@@ -17,11 +17,12 @@ struct AlertMessageComposer: Sendable {
     }
 
     /// Notificación de ejemplo para "Probar notificación".
-    func testNotification(at date: Date) -> AlertNotification {
-        AlertNotification(
+    func testNotification(at date: Date, tip: String? = nil) -> AlertNotification {
+        let body = String(localized: "alert.test.body", defaultValue: "Así se verán las alertas. Subiendo 2,4 mg/dL por minuto desde las \(time(date)).")
+        return AlertNotification(
             id: "lingoscan.alert.test.\(Int(date.timeIntervalSince1970))", kind: nil,
             title: String(localized: "alert.test.title", defaultValue: "Prueba: glucosa alta, 165 mg/dL"),
-            body: String(localized: "alert.test.body", defaultValue: "Así se verán las alertas. Subiendo 2,4 mg/dL por minuto desde las \(time(date))."),
+            body: [body, tip].compactMap { $0?.isEmpty == false ? $0 : nil }.joined(separator: "\n"),
             isTimeSensitive: false)
     }
 

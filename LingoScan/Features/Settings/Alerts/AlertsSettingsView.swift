@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Configuración detallada de las alertas: permiso, tipos, umbrales (del rango de referencia), sensibilidad,
-/// horas de silencio y notificación de prueba.
+/// horas de silencio, consejos (T-25) y notificación de prueba.
 struct AlertsSettingsView: View {
     let alerts: AlertsController
 
@@ -9,6 +9,7 @@ struct AlertsSettingsView: View {
         Form {
             AlertPermissionSection(alerts: alerts)
             AlertKindsSection(alerts: alerts)
+            AlertTipsSection(alerts: alerts)
             AlertThresholdsSection()
             AlertTimingSection(alerts: alerts)
             QuietHoursSection(alerts: alerts)

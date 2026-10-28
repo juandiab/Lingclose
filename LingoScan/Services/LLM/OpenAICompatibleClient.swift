@@ -39,6 +39,13 @@ struct OpenAICompatibleClient: Sendable {
         return try RangeSuggestionReplyParser.parse(text: try structuredText(from: data, apiKey: apiKey))
     }
 
+    func coach(_ request: CoachingRequest, model: LLMModel, apiKey: String) async throws -> LLMCoachingReply {
+        try LLMHTTP.validate(model: model, provider: config.provider)
+        let prompt = CoachingPrompt.prompt(for: request)
+        let data = try await send(body(prompt: prompt, userContent: prompt.userText, model: model), apiKey: apiKey)
+        return try CoachingReplyParser.parse(text: try structuredText(from: data, apiKey: apiKey))
+    }
+
     private func send(_ body: [String: Any], apiKey: String) async throws -> Data {
         let urlRequest = try LLMHTTP.request(url: config.chatURL, method: "POST", headers: headers(apiKey: apiKey), body: body)
         return try await LLMHTTP.perform(urlRequest, provider: config.provider, operation: "POST chat/completions",

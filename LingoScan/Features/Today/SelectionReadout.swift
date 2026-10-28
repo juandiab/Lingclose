@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Línea sobre la curva: el período visible o, al arrastrar, "N mg/dL a las HH:MM" (o "Sin lectura").
+/// Línea sobre la curva: el período visible o, con el cursor, "N mg/dL a las HH:MM" (o "Sin lectura").
 struct SelectionReadout: View {
     let viewModel: TodayViewModel
     let selection: ChartSelection
@@ -29,9 +29,16 @@ struct SelectionReadout: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// En vivo: "Últimas 4 h 30 min". En el pasado: el intervalo asentado ("08:15 – 14:15").
     private var header: String {
-        viewModel.isToday
-            ? String(localized: "today.chart.header", defaultValue: "Últimas \(viewModel.period.hours) horas")
-            : viewModel.shownDay.formatted(.dateTime.weekday(.wide).day().month(.wide))
+        if viewModel.isLive {
+            let length = GlucoseChart.lengthTitle(viewModel.windowEnd.timeIntervalSince(viewModel.windowStart))
+            return String(localized: "today.chart.header.live", defaultValue: "Últimas \(length)")
+        }
+        let interval = viewModel.windowStart..<viewModel.windowEnd
+        if viewModel.calendar.isDate(interval.lowerBound, inSameDayAs: interval.upperBound) {
+            return interval.formatted(.interval.hour().minute())
+        }
+        return interval.formatted(.interval.weekday(.abbreviated).hour().minute())
     }
 }

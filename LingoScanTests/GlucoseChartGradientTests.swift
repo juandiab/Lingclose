@@ -23,4 +23,22 @@ struct GlucoseChartGradientTests {
         #expect(GlucoseChart.color(for: 60, low: 70, high: 140) == Tokens.Palette.low)
         #expect(GlucoseChart.color(for: 100, low: 70, high: 140) == .primary)
     }
+
+    @Test func segmentStopsUseTheSegmentRangeAndDropClampedEdges() {
+        func segment(_ values: [Int]) -> GlucoseSegment {
+            GlucoseSegment(id: 0, points: values.enumerated().map { index, value in
+                GlucosePoint(id: "p\(index)", sessionID: "s", lifeCount: index, date: Date(timeIntervalSince1970: Double(index) * 60), value: value)
+            })
+        }
+        // 100…160: la baja (70) queda fuera; el borde inferior es neutro, no azul.
+        let stops = GlucoseChart.segmentStops(segment([100, 160]), low: 70, high: 140)
+        #expect(stops.first?.color == .primary)
+        #expect(stops.last?.color == Tokens.Palette.high)
+        #expect(stops.map(\.location) == stops.map(\.location).sorted())
+        // Todo en rango: sin rojo ni azul.
+        let inRange = GlucoseChart.segmentStops(segment([90, 120]), low: 70, high: 140)
+        #expect(inRange.allSatisfy { $0.color == .primary })
+        // Un solo punto: color único según su valor.
+        #expect(GlucoseChart.segmentStops(segment([60]), low: 70, high: 140).allSatisfy { $0.color == Tokens.Palette.low })
+    }
 }

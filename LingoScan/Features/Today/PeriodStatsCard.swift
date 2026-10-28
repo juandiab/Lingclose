@@ -4,12 +4,13 @@ import SwiftUI
 /// Tiempo en rango (70–180), media y SD del período visible, sobre superficie sólida y con la nota "no médico".
 struct PeriodStatsCard: View {
     let stats: BasicStats
-    let period: TodayPeriod
+    /// Longitud visible ya formateada ("4 h 30 min").
+    let lengthTitle: String
 
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: Tokens.Spacing.sm) {
-                Text(String(localized: "today.stats.title", defaultValue: "Período visible (\(period.title))"))
+                Text(String(localized: "today.stats.title", defaultValue: "Período visible (\(lengthTitle))"))
                     .font(.headline)
                 ViewThatFits(in: .horizontal) {
                     HStack(alignment: .top, spacing: Tokens.Spacing.md) { metrics }

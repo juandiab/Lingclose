@@ -1,34 +1,37 @@
 import SwiftUI
 
-/// Selector 3 h / 6 h / 12 h / 24 h con chips de vidrio agrupados en un único contenedor.
-/// En un día anterior la curva muestra el día completo y los chips quedan deshabilitados.
+/// Atajos 3 h / 6 h / 12 h / 24 h con chips de vidrio agrupados en un único contenedor.
+/// Un chip aparece seleccionado solo cuando la longitud visible coincide con él (±1 min); tras un
+/// pellizco libre ninguno lo está.
 struct PeriodPicker: View {
-    @Binding var period: TodayPeriod
-    var isEnabled = true
+    let viewModel: TodayViewModel
+    let onSelect: (TodayPeriod) -> Void
+
+    /// Se lee aquí (y no en `TodayView`) para que el pellizco solo redibuje los chips.
+    private var selected: TodayPeriod? { viewModel.period }
 
     var body: some View {
         GlassEffectContainer(spacing: Tokens.Spacing.xs) {
             HStack(spacing: Tokens.Spacing.xs) {
                 ForEach(TodayPeriod.allCases) { option in
                     Button {
-                        period = option
+                        onSelect(option)
                     } label: {
-                        GlassChip(title: option.title, isSelected: option == period && isEnabled, isInteractive: isEnabled)
+                        GlassChip(title: option.title, isSelected: option == selected)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(option.title)
-                    .accessibilityAddTraits(option == period ? .isSelected : [])
+                    .accessibilityAddTraits(option == selected ? .isSelected : [])
                 }
             }
         }
-        .disabled(!isEnabled)
-        .opacity(isEnabled ? 1 : 0.5)
-        .sensoryFeedback(.selection, trigger: period)
+        .sensoryFeedback(.selection, trigger: selected) { _, new in new != nil }
     }
 }
 
 #Preview {
-    @Previewable @State var period = TodayPeriod.sixHours
-    PeriodPicker(period: $period)
+    let data = PreviewData()
+    let model = TodayViewModel(dataSource: data, sensorSource: data)
+    PeriodPicker(viewModel: model) { model.setVisibleLength($0.duration) }
         .padding()
 }

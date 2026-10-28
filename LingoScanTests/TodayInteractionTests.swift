@@ -3,7 +3,7 @@ import Testing
 import LingoCore
 @testable import LingoScan
 
-/// Arrastre sobre la curva, navegación por día, registro del día y picos (T-11b).
+/// Cursor sobre la curva, navegación por día, registro del día y picos (T-11b; ventana desplazable).
 @MainActor
 struct TodayInteractionTests {
     nonisolated static let now = Date(timeIntervalSince1970: 1_800_000_000)
@@ -38,7 +38,7 @@ struct TodayInteractionTests {
 
     @Test func draggingOverAGapReturnsNil() async throws {
         let (model, _) = makeModel()
-        model.period = .twelveHours
+        model.setVisibleLength(TodayPeriod.twelveHours.duration)
         await model.refresh()
         let gap = try #require(model.gaps.first)
         let middle = gap.start.addingTimeInterval(gap.duration / 2)
@@ -60,55 +60,61 @@ struct TodayInteractionTests {
 
     // MARK: Navegación por día
 
-    @Test func dayNavigationShowsTheWholePreviousDay() async throws {
+    @Test func dayNavigationMovesTheVisibleWindowByOneDayKeepingItsLength() async throws {
         let (model, _) = makeModel()
         await model.refresh()
-        #expect(model.isToday && !model.canGoForward)
+        let length = model.visibleLength
+        #expect(model.isToday && !model.canGoForward && model.isLive)
         model.goForward()
-        #expect(model.dayOffset == 0)
+        #expect(model.visibleEnd == Self.now, "› no pasa de hoy")
 
         model.goBack()
-        await model.refresh()
-        #expect(model.dayOffset == -1 && model.canGoForward)
-        let start = Self.calendar.startOfDay(for: Self.now.addingTimeInterval(-86_400))
-        #expect(model.windowStart == start)
-        #expect(model.windowEnd == start.addingTimeInterval(86_400))
-        #expect(model.points.allSatisfy { $0.date >= model.windowStart && $0.date <= model.windowEnd })
-        #expect(model.points.count > 1_000)
+        await model.settle()
+        let yesterday = Self.calendar.startOfDay(for: Self.now.addingTimeInterval(-86_400))
+        #expect(model.shownDay == yesterday && model.canGoForward && !model.isLive)
+        #expect(close(model.visibleEnd, Self.now.addingTimeInterval(-86_400)))
+        #expect(model.visibleLength == length)
+        #expect(close(model.windowEnd, model.visibleEnd) && close(model.windowStart, model.visibleStart))
+        #expect(model.visiblePoints.allSatisfy { $0.date >= model.windowStart && $0.date <= model.windowEnd })
+        #expect(!model.visiblePoints.isEmpty)
 
         model.goForward()
-        #expect(model.isToday)
-        await model.refresh()
+        await model.settle()
+        #expect(model.isToday && model.isLive)
         #expect(model.windowEnd == Self.now)
     }
 
-    @Test func selectingADateComputesTheOffsetAndNeverGoesIntoTheFuture() {
+    @Test func selectingADateEndsAtTheSameClockTimeAndNeverGoesIntoTheFuture() {
         let (model, _) = makeModel()
         model.select(day: Self.now.addingTimeInterval(-3 * 86_400))
-        #expect(model.dayOffset == -3)
+        #expect(close(model.visibleEnd, Self.now.addingTimeInterval(-3 * 86_400)))
+        #expect(model.shownDay == Self.calendar.startOfDay(for: Self.now.addingTimeInterval(-3 * 86_400)))
         model.select(day: Self.now.addingTimeInterval(5 * 86_400))
-        #expect(model.dayOffset == 0)
+        #expect(model.visibleEnd == Self.now)
+        #expect(model.isToday && model.isLive)
     }
 
     // MARK: Registro del día
 
     @Test func dayEntryCountCoversTheWholeDayNotJustTheVisibleWindow() async throws {
         let (model, data) = makeModel()
-        model.period = .sixHours
+        model.setVisibleLength(TodayPeriod.sixHours.duration)
         await model.refresh()
+        #expect(model.entriesDay == Self.calendar.startOfDay(for: Self.now))
         let dayStart = Self.calendar.startOfDay(for: Self.now)
         let expected = data.events.filter { $0.at.date >= dayStart && $0.at.date < dayStart.addingTimeInterval(86_400) }.count
         #expect(model.dayEntryCount == expected)
-        #expect(model.dayEntryCount >= model.marks.count)
+        #expect(model.dayEntryCount >= model.marks.filter { $0.date >= dayStart }.count)
     }
 
     // MARK: Picos
 
     @Test func spikesAreComputedOverTheVisiblePointsAndFollowTheThreshold() async {
         let (model, _) = makeModel()
-        model.period = .twentyFourHours
+        model.setVisibleLength(TodayPeriod.twentyFourHours.duration)
         await model.refresh()
         #expect(!model.spikes.isEmpty)
+        #expect(model.spikes.allSatisfy { $0.start >= model.windowStart && $0.end <= model.windowEnd })
         #expect(model.spikes.allSatisfy { $0.peakValue > model.referenceHigh && $0.start <= $0.peakAt && $0.peakAt <= $0.end })
         let before = model.spikes.count
         model.referenceHigh = 400
@@ -129,4 +135,9 @@ struct TodayInteractionTests {
         #expect(model.chartValueDomain.lowerBound <= model.referenceLow - 60)
         #expect(model.chartValueDomain.upperBound >= 220)
     }
+}
+
+/// Fechas iguales salvo redondeo de coma flotante.
+private func close(_ lhs: Date, _ rhs: Date) -> Bool {
+    abs(lhs.timeIntervalSince(rhs)) < 0.001
 }

@@ -1,18 +1,20 @@
 import LingoCore
 import SwiftUI
 
-/// Pantalla Hoy: navegación por día, valor actual, curva 6 h / 12 h / 24 h con picos, marcas y arrastre,
-/// fila de registro y "+" para anotar en dos toques.
+/// Pantalla Hoy: navegación por día, valor actual, curva desplazable con zoom (chips 3/6/12/24 h y pellizco),
+/// picos, marcas y cursor, fila de registro y "+" para anotar en dos toques.
 struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
     let sensorViewModel: SensorViewModel
 
     @AppStorage(TodayPeriod.storageKey) private var storedHours = TodayPeriod.sixHours.rawValue
+    @AppStorage(TodayViewModel.visibleSecondsKey) private var storedSeconds = 0.0
     @AppStorage(ReferenceLines.lowKey) private var referenceLow = ReferenceLines.defaultLow
     @AppStorage(ReferenceLines.highKey) private var referenceHigh = ReferenceLines.defaultHigh
     @State private var quickAdd: QuickAddModel?
     @State private var mealAnalysis: MealAnalysisViewModel?
     @Environment(\.mealAssistant) private var mealServices
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         NavigationStack {
@@ -22,10 +24,9 @@ struct TodayView: View {
                     if viewModel.hasNoData {
                         TodayEmptyView(sensor: viewModel.sensor)
                     } else {
-                        if viewModel.isToday {
-                            TimelineView(.periodic(from: .now, by: 30)) { context in
-                                CurrentValueView(viewModel: viewModel, now: context.date)
-                            }
+                        // El último valor es independiente de la ventana visible: se ve también al mirar otro día.
+                        TimelineView(.periodic(from: .now, by: 30)) { context in
+                            CurrentValueView(viewModel: viewModel, now: context.date)
                         }
                         if viewModel.failure != nil {
                             Label(
@@ -34,10 +35,13 @@ struct TodayView: View {
                             )
                             .foregroundStyle(Tokens.Palette.error)
                         }
-                        PeriodPicker(period: periodBinding, isEnabled: viewModel.isToday)
+                        PeriodPicker(viewModel: viewModel) { selectPeriod($0) }
                         GlucoseChartCard(viewModel: viewModel)
                         TodayEntriesRow(count: viewModel.dayEntryCount, isToday: viewModel.isToday)
-                        PeriodStatsCard(stats: viewModel.stats, period: viewModel.period)
+                        PeriodStatsCard(
+                            stats: viewModel.stats,
+                            lengthTitle: GlucoseChart.lengthTitle(viewModel.windowEnd.timeIntervalSince(viewModel.windowStart))
+                        )
                     }
                     if viewModel.isSynthetic {
                         Label(
@@ -85,17 +89,20 @@ struct TodayView: View {
                 })
             }
         }
-        .modifier(TodayLifecycle(viewModel: viewModel, storedHours: $storedHours, referenceLow: $referenceLow, referenceHigh: $referenceHigh))
+        .modifier(TodayLifecycle(
+            viewModel: viewModel,
+            storedHours: storedHours,
+            storedSeconds: storedSeconds,
+            referenceLow: $referenceLow,
+            referenceHigh: $referenceHigh
+        ))
     }
 
-    private var periodBinding: Binding<TodayPeriod> {
-        Binding(
-            get: { viewModel.period },
-            set: { newValue in
-                viewModel.period = newValue
-                storedHours = newValue.rawValue
-            }
-        )
+    /// Chip: fija la longitud visible conservando el fin de la ventana; anima salvo con Reduce Motion.
+    private func selectPeriod(_ period: TodayPeriod) {
+        withAnimation(reduceMotion ? nil : .snappy) { viewModel.setVisibleLength(period.duration) }
+        storedHours = period.rawValue
+        storedSeconds = period.duration
     }
 
     /// Comida: directo a "Analizar con IA" con la cámara abierta (si el asistente está configurado y hay cámara).
@@ -118,8 +125,8 @@ struct TodayView: View {
     private func quickAddDate() -> Date {
         let now = viewModel.now
         let calendar = viewModel.calendar
-        // Hoy: ahora. Otro día: la misma hora del reloj en ese día.
-        return viewModel.isToday
+        // En vivo: ahora. Otro día: la misma hora del reloj en ese día.
+        return viewModel.isToday && viewModel.isLive
             ? now
             : calendar.date(
                 bySettingHour: calendar.component(.hour, from: now),
@@ -130,15 +137,16 @@ struct TodayView: View {
 /// Carga de datos, preferencias y primer plano de Hoy.
 private struct TodayLifecycle: ViewModifier {
     let viewModel: TodayViewModel
-    @Binding var storedHours: Int
+    let storedHours: Int
+    let storedSeconds: Double
     @Binding var referenceLow: Int
     @Binding var referenceHigh: Int
     @Environment(\.scenePhase) private var scenePhase
+    @State private var didRestoreLength = false
 
     func body(content: Content) -> some View {
         content
             .task { await viewModel.observe() }
-            .task(id: viewModel.windowKey) { await viewModel.refresh() }
             .onChange(of: referenceLow, initial: true) { syncReferences() }
             .onChange(of: referenceHigh, initial: true) { syncReferences() }
             .onChange(of: scenePhase) { _, phase in
@@ -148,13 +156,22 @@ private struct TodayLifecycle: ViewModifier {
                 Task { await viewModel.refresh() }
             }
             .onAppear {
-                if let stored = TodayPeriod(rawValue: storedHours), stored != viewModel.period { viewModel.period = stored }
-                // Al volver desde el Diario hay marcas nuevas, editadas o borradas.
+                restoreLength()
+                // Primera carga y, al volver desde el Diario, marcas nuevas, editadas o borradas.
                 Task { await viewModel.refresh() }
             }
             .sensoryFeedback(.warning, trigger: viewModel.sensor.state) { _, newState in
                 newState == .stale
             }
+    }
+
+    /// Al abrir: la longitud libre guardada (pellizco) o, si no hay, la del último chip.
+    private func restoreLength() {
+        guard !didRestoreLength else { return }
+        didRestoreLength = true
+        let hours = TodayPeriod(rawValue: storedHours)?.duration ?? TodayViewModel.defaultVisibleLength
+        let length = storedSeconds > 0 ? storedSeconds : hours
+        if abs(length - viewModel.visibleLength) > 1 { viewModel.setVisibleLength(length) }
     }
 
     private func syncReferences() {

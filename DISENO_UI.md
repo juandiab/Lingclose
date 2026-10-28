@@ -9,17 +9,29 @@ Juampa pidió usar como referencia la pantalla "Today" de la app oficial Lingo t
 - Cabecera con navegación por día (`‹ Hoy ▾ ›`) y chips de período 6 h / 12 h / 24 h.
 - Curva con líneas de referencia a 70 y 140 mg/dL y **sombreado del área por encima de 140** en cada pico; bajo cada pico, un número de "cuenta de pico" (en Lingo es un índice propietario; en LingoScan será el área sobre 140 en mg/dL·min dividida por 10, redondeada, rotulado "índice de pico, no médico").
 - Marcadores de comida y actividad sobre el eje de tiempo, con hora; tocar uno muestra su detalle.
-- Arrastre sobre la curva con línea vertical y lectura "142 mg/dL a las 12:02".
+- Cursor sobre la curva con línea vertical y lectura "142 mg/dL a las 12:02" (tocar o mantener pulsado y arrastrar; ver "Gestos de la curva").
 - Botón "+" central para registrar comida, ejercicio o nota en dos toques; fila "Registro" con el conteo del día y acceso a editar.
 - Pestañas: Hoy, Diario, Reportes, Datos, Ajustes (se mantienen las nuestras; el "+" central es un botón flotante de vidrio en Hoy y Diario).
 
 Tarea: **T-11b** (después de T-12a).
 
+## Gestos de la curva (27-oct, zoom y desplazamiento)
+
+- **Deslizar** horizontalmente desplaza el tiempo con la física nativa de Swift Charts (`chartScrollableAxes(.horizontal)`, rebote en los extremos). No se puede pasar de ahora. Hacia el pasado no hay límite práctico: se cargan más lecturas al acercarse al borde.
+- **Pellizcar** cambia la longitud visible entre 1 h y 24 h de forma continua; el instante bajo los dedos queda fijo. Al soltar no se ajusta a un chip; al cruzar 3/6/12/24 h hay un haptic de selección. La longitud libre se recuerda al abrir (`today.visibleSeconds`).
+- **Chips 3 h / 6 h / 12 h / 24 h**: atajos de la longitud visible, conservando el fin de la ventana. Un chip solo aparece seleccionado si coincide (±1 min). Funcionan siempre, también en días anteriores.
+- **En vivo y "Ahora"**: si la ventana termina a menos de 60 s de ahora, la curva sigue cada lectura nueva. Al desplazarse al pasado aparece un botón de vidrio "Ahora" (esquina superior derecha) que vuelve al presente.
+- **‹ Hoy ▾ ›**: el título es el día del fin de la ventana visible; ‹ › la mueven un día conservando la longitud; el selector de fecha la deja terminando a la misma hora del reloj de ese día.
+- **Cursor**: un toque lo coloca en la lectura más cercana y otro lo quita; mantener pulsado y arrastrar lo desliza (selección nativa de la gráfica desplazable), con haptic al activarse. El cursor se queda donde se suelta.
+- Estadísticas ("Período visible (4 h 30 min)"), índices de pico y descriptor de VoiceOver se calculan sobre la ventana visible ~250 ms después del último movimiento. VoiceOver: acciones "Acercar"/"Alejar" sobre la gráfica y acción ajustable (±5 min) en el cursor.
+- Reduce Motion: chips, ‹ › y "Ahora" cambian sin animación.
+- Dibujo: con más de 900 puntos cargados la línea y las áreas se reducen a cubos de 2/5/10 min sin cruzar huecos; el cursor, las estadísticas y los picos usan las lecturas crudas.
+
 ## Pantallas de la v1
 
 | Pantalla | Contenido | Comportamiento |
 |---|---|---|
-| **Hoy** | Valor válido más reciente en grande (`.rounded`, `monospacedDigit`), tendencia con flecha SF Symbol, "hace N min", chip de calidad/estado del sensor; curva Swift Charts con selector 3 h / 6 h / 24 h; marcas de comidas y ejercicio; huecos visibles (sin interpolar) | Se actualiza al llegar cada lectura; `contentTransition(.numericText())` en el valor; haptic suave solo cuando cambia el estado del sensor, no cada minuto |
+| **Hoy** | Valor válido más reciente en grande (`.rounded`, `monospacedDigit`), tendencia con flecha SF Symbol, "hace N min", chip de calidad/estado del sensor; curva Swift Charts desplazable con zoom (chips 3 h / 6 h / 12 h / 24 h y pellizco); marcas de comidas y ejercicio; huecos visibles (sin interpolar) | Se actualiza al llegar cada lectura; `contentTransition(.numericText())` en el valor; haptic suave solo cuando cambia el estado del sensor, no cada minuto |
 | **Sensor** | Estado (máquina de estados), calentamiento restante, días restantes, última conexión, Receiver ID (parcial), botón "Leer sensor (solo NFC)" y, en pantalla aparte, "Activar sensor" con resumen de lo que se enviará y confirmación | El diagnóstico nunca activa. La activación muestra `productType`, `securityVersion`, Receiver ID y exige un toggle "entiendo que es irreversible" + botón `.glassProminent` |
 | **Diario** | Lista por día de comidas (gramos opcionales), ejercicio y notas; botón flotante "+" | Añadir en dos toques: tipo, hora (por defecto ahora), texto. Edición y borrado con tombstone |
 | **Reportes** | Tiempo en rango (rango por defecto 70–180 mg/dL, editable, marcado "no médico"), promedio, SD y CV, respuesta a comidas (pico, tiempo al pico, retorno a línea base), noche (00:00–06:00), comparación semana a semana | Período seleccionable (7/14/30 días); cada métrica con su definición en un popover |

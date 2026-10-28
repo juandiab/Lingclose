@@ -78,6 +78,8 @@ Criterios de salida: round-trip exportar→importar sin pérdida ni duplicados (
 
 Respuesta a comidas, noche, CV y comparación semanal, calibrados con lecturas reales; pulido de movimiento y Liquid Glass; rendimiento con 14 días de datos. No bloquea la Fase 3 ni la 4.
 
+**Estado 27-oct (v0.2.0, build 2):** hecho el pulido de Hoy: curva con pellizco (1–24 h) y desplazamiento nativo, botón "Ahora", cursor por toque y pulsación larga, marcas agrupadas, color por trozos y pérdidas BLE ≤ 15 min unidas (D-24), rediseño tras auditoría (cabecera compacta, curva al 42 %, leyenda en botón "i", estadísticas en fila). "Sugerir rango" (T-22, D-25) a partir de las lecturas propias. Pendiente de T-12b: reportes (respuesta a comidas, noche, CV, comparación semanal) con 14 días de datos reales.
+
 ### Fase 3 — Primer sensor (de sacrificio) — CERRADA el 27-oct-2026
 
 Sensor activado y autenticado a las 17:55 (a la tercera escritura NFC; las dos primeras fallaron antes de cambiar el estado del sensor). El sensor Lingo acepta el certificado de app de Juggluco. Pasos 1 a 7 hechos salvo las 24 h de observación, que pasan a Fase 4 (reconexión tras reinicio).

@@ -8,8 +8,8 @@ struct GlucoseChartCard: View {
     let onSelectPeriod: (TodayPeriod) -> Void
     @State private var selection = ChartSelection()
 
-    /// Alto de la gráfica respecto al contenedor desplazable (≈ 43 % del alto de la pantalla en un iPhone).
-    static let heightFraction = 0.63
+    /// Alto de la gráfica respecto al contenedor desplazable (≈ 38 % del alto de la pantalla en un iPhone; Juampa pidió un 10 % menos para ver estadísticas y Registro sin desplazar).
+    static let heightFraction = 0.56
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {

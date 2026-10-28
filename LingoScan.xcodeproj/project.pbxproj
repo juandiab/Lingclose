@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0033F2EA2FF5AE337983A683 /* ChartXGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813BF86A12C55755A807E48A /* ChartXGrouping.swift */; };
 		024E8F71D4ADBDAE36E08C3A /* SessionCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBE836585034704FB906BC3 /* SessionCoordinatorTests.swift */; };
 		02A748B5593F64B5A1F0F24A /* deepseek-401.json in Resources */ = {isa = PBXBuildFile; fileRef = E5783396F5C4282FC9593C50 /* deepseek-401.json */; };
 		02DD7C87DF0528C98E8EB848 /* anthropic-label.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E4B2896CF612FDC45ED57EB /* anthropic-label.json */; };
@@ -36,6 +37,7 @@
 		12F95F20727DBD5DF3812A55 /* CurrentValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C318A7C608BD1A9C297A73B7 /* CurrentValueView.swift */; };
 		1380BC1CE5F4E471B793C1E3 /* PackageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11396C60B02314CF2FE82398 /* PackageRow.swift */; };
 		14D3B2CCE5652CFA5AFBB417 /* PassphraseEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA15F941A1CA1E2A048AECA /* PassphraseEntrySheet.swift */; };
+		15132C5E8B21BFF13510D294 /* ChartMarkGroupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE49BDA4D5C14E5222FF373E /* ChartMarkGroupButton.swift */; };
 		1521A0EFEB6668D42F3FC6F3 /* gemini-broken.json in Resources */ = {isa = PBXBuildFile; fileRef = 2E02279BBCF3F32675BDFA81 /* gemini-broken.json */; };
 		1530CEBBC6C43AEF28E5291D /* EventLogRecoveryExportHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B1C82EFD365365B96090EB /* EventLogRecoveryExportHook.swift */; };
 		1589641578FD8A07E4FC7248 /* grok-broken.json in Resources */ = {isa = PBXBuildFile; fileRef = D96FBAA610B598052E92B5F8 /* grok-broken.json */; };
@@ -227,6 +229,7 @@
 		9E20385F64475254632C431A /* LingoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A1562D814639D9B58DA6050 /* LingoCore */; };
 		9FE6732000F28A4742BA665E /* DataViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2A806FCFCCD993AC371E59 /* DataViewModelTests.swift */; };
 		A0A3238612601F8390BD26DD /* QuickAddModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A428086C4FA58696E463F35 /* QuickAddModel.swift */; };
+		A103F4F089269D252E031BDF /* ChartMarkGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224B2C9DD714E58E3B815AD /* ChartMarkGroup.swift */; };
 		A32369F4903C18D2347B0F5A /* DiaryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A898ED52A3A01D1A729A7D03 /* DiaryStore.swift */; };
 		A3E0B1D78AC649C56FA7FD8F /* openai-food.json in Resources */ = {isa = PBXBuildFile; fileRef = DEE64D18672AFE25A089C021 /* openai-food.json */; };
 		A42A9CECC73CC78FBC759E44 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AE0E6D410CD0396814329E65 /* Localizable.xcstrings */; };
@@ -442,6 +445,7 @@
 		214EE3EF8C51A3497D832CD8 /* WorkoutImportTrigger+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WorkoutImportTrigger+Environment.swift"; sourceTree = "<group>"; };
 		218C4C6057EA12F5D7F6724A /* SyntheticLingoSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticLingoSensor.swift; sourceTree = "<group>"; };
 		21F872354BA301753AA7D071 /* openai-truncated.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "openai-truncated.json"; sourceTree = "<group>"; };
+		2224B2C9DD714E58E3B815AD /* ChartMarkGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartMarkGroup.swift; sourceTree = "<group>"; };
 		229198BC6257854D80BB3F53 /* ActivationRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationRecord.swift; sourceTree = "<group>"; };
 		257FC1504F4870BA7F0526A5 /* FoodAnalysisRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodAnalysisRequest.swift; sourceTree = "<group>"; };
 		26218F4ABE19FE533CF0C30D /* PortionSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortionSlider.swift; sourceTree = "<group>"; };
@@ -557,6 +561,7 @@
 		7C09CAED775AB79C5793E686 /* PairingCredentialsProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingCredentialsProviding.swift; sourceTree = "<group>"; };
 		7D4C4EA2B1687DF67A1880F3 /* HealthControlling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthControlling.swift; sourceTree = "<group>"; };
 		7FBC7B8F8AC90BE599FA7BFC /* ArchiveServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveServiceTests.swift; sourceTree = "<group>"; };
+		813BF86A12C55755A807E48A /* ChartXGrouping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartXGrouping.swift; sourceTree = "<group>"; };
 		8209AFC1DFF6BA16230221BF /* LLMSettingsExtraTransitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMSettingsExtraTransitionTests.swift; sourceTree = "<group>"; };
 		86227086A40EE789CE349889 /* RecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryViewModel.swift; sourceTree = "<group>"; };
 		86316F9A325E6EF16E19254F /* ChartInteractionOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInteractionOverlay.swift; sourceTree = "<group>"; };
@@ -648,6 +653,7 @@
 		BD5D780DB93FCBCFF1C460AF /* RecoveryExportHook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryExportHook.swift; sourceTree = "<group>"; };
 		BD9EFD71524F0CB4E5B59065 /* ActivationBlocker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationBlocker.swift; sourceTree = "<group>"; };
 		BDE23F61CFB3E8E21553503C /* LLMHTTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMHTTP.swift; sourceTree = "<group>"; };
+		BE49BDA4D5C14E5222FF373E /* ChartMarkGroupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartMarkGroupButton.swift; sourceTree = "<group>"; };
 		BF01056DA8B53ED343988A72 /* WorkoutBatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutBatch.swift; sourceTree = "<group>"; };
 		C04F546A6D9DA683A290EEF5 /* AppLaunchMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchMode.swift; sourceTree = "<group>"; };
 		C0E860D91E7A18B49456CBF1 /* GlucoseSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseSegment.swift; sourceTree = "<group>"; };
@@ -1120,8 +1126,11 @@
 				D757206B7B08C5DF35A7613F /* AgeText.swift */,
 				86316F9A325E6EF16E19254F /* ChartInteractionOverlay.swift */,
 				39928C187C5344838503B918 /* ChartLegend.swift */,
+				2224B2C9DD714E58E3B815AD /* ChartMarkGroup.swift */,
+				BE49BDA4D5C14E5222FF373E /* ChartMarkGroupButton.swift */,
 				65D8CBF435E0C84AB4212922 /* ChartNowButton.swift */,
 				5BE4CB3D07C76E1784C3214E /* ChartSelection.swift */,
+				813BF86A12C55755A807E48A /* ChartXGrouping.swift */,
 				C318A7C608BD1A9C297A73B7 /* CurrentValueView.swift */,
 				D97D89F515BC1627BD2B7FAF /* DayNavigator.swift */,
 				1BBD7683D1347B613B6B4690 /* DiaryMark.swift */,
@@ -1644,8 +1653,11 @@
 				062E2591E39E862810FD3178 /* CatalogSearch.swift in Sources */,
 				D46848C79ACE09F4526EF61C /* ChartInteractionOverlay.swift in Sources */,
 				E0BF90130DB46E65A967CC01 /* ChartLegend.swift in Sources */,
+				A103F4F089269D252E031BDF /* ChartMarkGroup.swift in Sources */,
+				15132C5E8B21BFF13510D294 /* ChartMarkGroupButton.swift in Sources */,
 				6F7CA3DE4FDC0639E811A49A /* ChartNowButton.swift in Sources */,
 				6599FFEF906F2BCA766024CE /* ChartSelection.swift in Sources */,
+				0033F2EA2FF5AE337983A683 /* ChartXGrouping.swift in Sources */,
 				BBE460150DD62F3A2E447677 /* ConnectActiveSensorView.swift in Sources */,
 				FD08061D9AE027473DDEB7FD /* CoreSensorFamily.swift in Sources */,
 				288E75E9C9883E8707335CBD /* CredentialImportError.swift in Sources */,

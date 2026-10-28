@@ -9187,6 +9187,23 @@
           }
         }
       }
+    },
+    "today.mark.group.a11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld marcas: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld entries: %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

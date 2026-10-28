@@ -2,7 +2,8 @@ import Charts
 import SwiftUI
 
 /// Capa sobre la curva: rótulos de las referencias, índices de pico, marcadores de comida y ejercicio con su
-/// popover, y el cursor de lectura. Los gestos del cursor viven en `GlucoseChart` (`chartGesture`), así que
+/// popover, y el cursor de lectura. Marcadores e índices cercanos en pantalla se agrupan (`ChartXGrouping`)
+/// con las posiciones actuales, así que la agrupación cambia con el zoom y el desplazamiento. Los gestos del cursor viven en `GlucoseChart` (`chartGesture`), así que
 /// esta capa no intercepta el desplazamiento salvo en los marcadores.
 ///
 /// En una gráfica desplazable `ChartProxy.position(forX:)` mide desde el inicio del contenido y `plotFrame`
@@ -46,26 +47,56 @@ struct ChartInteractionOverlay: View {
         }
     }
 
+    /// Separación mínima entre centros de marcadores (su área táctil) e índices de pico.
+    static let markerSpacing: CGFloat = 44
+    static let spikeLabelSpacing: CGFloat = 28
+
+    /// Índices de pico visibles; si dos rótulos quedan a menos de `spikeLabelSpacing`, solo el de mayor pico.
     private func spikeLabels(frame: CGRect, visible: CGRect) -> some View {
-        ForEach(viewModel.spikes.filter { $0.index > 0 }) { spike in
-            if let x = proxy.position(forX: spike.peakAt).map({ frame.minX + $0 }), (12...(visible.width - 12)).contains(x) {
-                Text(spike.index, format: .number.grouping(.never))
-                    .font(.caption.bold())
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-                    .position(x: x, y: frame.maxY - 62)
-                    .allowsHitTesting(false)
-                    .accessibilityLabel(String(localized: "today.spike.a11y", defaultValue: "Índice de pico \(spike.index), pico de \(spike.peakValue) miligramos por decilitro, no médico"))
-            }
+        ForEach(visibleSpikes(frame: frame, visible: visible), id: \.spike.id) { item in
+            Text(item.spike.index, format: .number.grouping(.never))
+                .font(.caption.bold())
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .position(x: item.x, y: frame.maxY - 62)
+                .allowsHitTesting(false)
+                .accessibilityLabel(String(localized: "today.spike.a11y", defaultValue: "Índice de pico \(item.spike.index), pico de \(item.spike.peakValue) miligramos por decilitro, no médico"))
         }
     }
 
+    private func visibleSpikes(frame: CGRect, visible: CGRect) -> [(spike: TodaySpike, x: CGFloat)] {
+        var positioned: [TodaySpike.ID: (spike: TodaySpike, x: CGFloat)] = [:]
+        for spike in viewModel.spikes where spike.index > 0 {
+            guard let x = proxy.position(forX: spike.peakAt).map({ frame.minX + $0 }),
+                  (12...(visible.width - 12)).contains(x) else { continue }
+            positioned[spike.id] = (spike, x)
+        }
+        let groups = ChartXGrouping.groups(positioned.values.map { (x: $0.x, id: $0.spike.id) }, minDistance: Self.spikeLabelSpacing)
+        return groups.compactMap { ids in
+            ids.compactMap { positioned[$0] }.max { $0.spike.peakValue < $1.spike.peakValue }
+        }
+    }
+
+    /// Marcadores visibles; los que quedan a menos de `markerSpacing` del anterior se fusionan en un grupo.
     private func markers(frame: CGRect, visible: CGRect) -> some View {
-        ForEach(viewModel.marks) { mark in
-            if let x = proxy.position(forX: mark.date).map({ frame.minX + $0 }), (0...visible.width).contains(x) {
-                ChartMarkButton(mark: mark)
-                    .position(x: min(max(x, 22), visible.width - 22), y: frame.maxY - 22)
-            }
+        ForEach(markGroups(frame: frame, visible: visible)) { group in
+            ChartMarkGroupButton(group: group)
+                .position(x: min(max(group.x, 22), visible.width - 22), y: frame.maxY - 22)
+        }
+    }
+
+    private func markGroups(frame: CGRect, visible: CGRect) -> [ChartMarkGroup] {
+        var positioned: [DiaryMark.ID: (mark: DiaryMark, x: CGFloat)] = [:]
+        for mark in viewModel.marks {
+            guard let x = proxy.position(forX: mark.date).map({ frame.minX + $0 }),
+                  (0...visible.width).contains(x) else { continue }
+            positioned[mark.id] = (mark, x)
+        }
+        let groups = ChartXGrouping.groups(positioned.values.map { (x: $0.x, id: $0.mark.id) }, minDistance: Self.markerSpacing)
+        return groups.compactMap { ids in
+            let members = ids.compactMap { positioned[$0] }
+            guard let first = members.first else { return nil }
+            return ChartMarkGroup(marks: members.map(\.mark), x: first.x)
         }
     }
 }
@@ -124,39 +155,6 @@ private struct ChartCursor: View {
             .allowsHitTesting(false)
             .accessibilityHidden(true)
             .sensoryFeedback(.selection, trigger: point?.id)
-        }
-    }
-}
-
-/// Icono de comida o ejercicio con la hora; al tocarlo muestra el detalle en un popover.
-private struct ChartMarkButton: View {
-    let mark: DiaryMark
-    @State private var isShowingDetail = false
-
-    var body: some View {
-        Button {
-            isShowingDetail = true
-        } label: {
-            VStack(spacing: 0) {
-                Image(systemName: mark.kind.systemImage)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .frame(width: 30, height: 30)
-                    .background(Color.accentColor, in: .circle)
-                Text(mark.date, format: .dateTime.hour().minute())
-                    .font(.system(size: 10).monospacedDigit())
-                    .foregroundStyle(.secondary)
-                    .fixedSize()
-            }
-            .frame(minWidth: 44, minHeight: 44)
-            .contentShape(.rect)
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel("\(mark.kind.title), \(mark.date.formatted(date: .omitted, time: .shortened))")
-        .accessibilityHint(String(localized: "today.mark.hint", defaultValue: "Muestra el detalle"))
-        .popover(isPresented: $isShowingDetail) {
-            DiaryMarkDetail(mark: mark)
-                .presentationCompactAdaptation(.popover)
         }
     }
 }

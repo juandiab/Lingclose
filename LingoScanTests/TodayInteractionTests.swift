@@ -123,6 +123,20 @@ struct TodayInteractionTests {
         #expect(model.spikes.count == before)
     }
 
+    // MARK: Agrupación de marcadores e índices de pico
+
+    @Test func groupingMergesItemsCloserThanTheMinimumToThePreviousOne() {
+        // Desordenados a propósito: se agrupan en orden de x.
+        let items: [(x: CGFloat, id: String)] = [(x: 140, id: "c"), (x: 10, id: "a"), (x: 50, id: "b"), (x: 300, id: "d"), (x: 183, id: "e")]
+        // a→b 40 < 44 (juntos); b→c 90 (nuevo); c→e 43 (juntos, encadenado); e→d 117 (nuevo).
+        #expect(ChartXGrouping.groups(items, minDistance: 44) == [["a", "b"], ["c", "e"], ["d"]])
+        // Exactamente a la distancia mínima no se fusiona.
+        #expect(ChartXGrouping.groups([(x: 0, id: 1), (x: 44, id: 2)], minDistance: 44) == [[1], [2]])
+        #expect(ChartXGrouping.groups([(x: CGFloat, id: Int)](), minDistance: 44).isEmpty)
+        // Con 28 pt (índices de pico) a→b ya no se fusionan.
+        #expect(ChartXGrouping.groups(items, minDistance: 28).count == 5)
+    }
+
     @Test func referenceLinesAreNormalized() {
         #expect(ReferenceLines.normalized(low: 70, high: 140) == (70, 140))
         #expect(ReferenceLines.normalized(low: 200, high: 100).high == 210)

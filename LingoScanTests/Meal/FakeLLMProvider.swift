@@ -16,11 +16,13 @@ final class FakeLLMProvider: LLMProvider, @unchecked Sendable {
     var analyzeError: LLMError?
     var catalog: [LLMModel]
     var listError: LLMError?
+    var rangeReply = LLMRangeReply(low: 75, high: 145, explanation: "Rango de prueba")
+    var rangeError: LLMError?
     var delay: Duration?
     /// Espera antes de devolver el catálogo (para observar el paso `comprobando`).
     var listDelay: Duration?
 
-    private let state = OSAllocatedUnfairLock(initialState: (analyze: [AnalyzeCall](), list: [String]()))
+    private let state = OSAllocatedUnfairLock(initialState: (analyze: [AnalyzeCall](), list: [String](), range: [RangeSuggestionRequest]()))
 
     init(id: LLMProviderID = .anthropic, analysis: FoodAnalysis = FakeLLMProvider.arepa,
          analyzeError: LLMError? = nil, catalog: [LLMModel] = [], listError: LLMError? = nil) {
@@ -33,6 +35,7 @@ final class FakeLLMProvider: LLMProvider, @unchecked Sendable {
 
     var analyzeCalls: [AnalyzeCall] { state.withLock { $0.analyze } }
     var listCalls: [String] { state.withLock { $0.list } }
+    var rangeCalls: [RangeSuggestionRequest] { state.withLock { $0.range } }
 
     func listModels(apiKey: String) async throws -> [LLMModel] {
         state.withLock { $0.list.append(apiKey) }
@@ -46,6 +49,12 @@ final class FakeLLMProvider: LLMProvider, @unchecked Sendable {
         if let delay { try await Task.sleep(for: delay) }
         if let analyzeError { throw analyzeError }
         return analysis
+    }
+
+    func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply {
+        state.withLock { $0.range.append(request) }
+        if let rangeError { throw rangeError }
+        return rangeReply
     }
 
     /// 200 kcal / 30 g de carbohidratos por porción estimada.

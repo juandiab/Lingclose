@@ -1,0 +1,24 @@
+{
+  "id": "msg_fixture",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-haiku-5-5",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "toolu_1",
+      "name": "propose_reference_range",
+      "input": {
+        "low_mgdl": 30,
+        "high_mgdl": 145,
+        "explanation": "La línea baja parte del percentil 5 y la alta del percentil 95 de tus lecturas, redondeados a múltiplos de 5. La edad, el sexo y el IMC no fijan un rango de glucosa validado: la personalización sale de tus propias lecturas. Son líneas para leer la curva, no objetivos clínicos."
+      }
+    }
+  ],
+  "stop_reason": "tool_use",
+  "stop_details": null,
+  "usage": {
+    "input_tokens": 700,
+    "output_tokens": 90
+  }
+}

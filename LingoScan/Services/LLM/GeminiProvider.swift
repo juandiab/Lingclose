@@ -59,29 +59,44 @@ struct GeminiProvider: LLMProvider {
 
     func analyze(_ request: FoodAnalysisRequest, model: LLMModel, apiKey: String) async throws -> FoodAnalysis {
         try LLMHTTP.validate(request, model: model, provider: id)
+        let data = try await send(Self.body(for: request), model: model, apiKey: apiKey)
+        return try LLMHTTP.parseAnalysis(text: try Self.structuredText(from: data, apiKey: apiKey))
+    }
+
+    func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply {
+        try LLMHTTP.validate(model: model, provider: id)
+        let prompt = RangeSuggestionPrompt.prompt(for: request)
+        let data = try await send(Self.body(prompt: prompt, parts: [["text": prompt.userText]]), model: model, apiKey: apiKey)
+        return try RangeSuggestionReplyParser.parse(text: try Self.structuredText(from: data, apiKey: apiKey))
+    }
+
+    private func send(_ body: [String: Any], model: LLMModel, apiKey: String) async throws -> Data {
         let url = Self.baseURL.appending(path: "models/\(model.id):generateContent")
-        let urlRequest = try LLMHTTP.request(url: url, method: "POST", headers: headers(apiKey: apiKey),
-                                             body: Self.body(for: request))
-        let data = try await LLMHTTP.perform(urlRequest, provider: id, operation: "POST generateContent", apiKey: apiKey,
-                                             transport: transport, log: log)
-        return try Self.parse(data, apiKey: apiKey)
+        let urlRequest = try LLMHTTP.request(url: url, method: "POST", headers: headers(apiKey: apiKey), body: body)
+        return try await LLMHTTP.perform(urlRequest, provider: id, operation: "POST generateContent", apiKey: apiKey,
+                                         transport: transport, log: log)
     }
 
     static func body(for request: FoodAnalysisRequest) -> [String: Any] {
-        var parts: [[String: Any]] = [
-            ["text": LLMPromptBuilder.userText(description: request.trimmedDescription, hasImage: request.hasImage)],
-        ]
+        let prompt = LLMPromptBuilder.foodPrompt(for: request)
+        var parts: [[String: Any]] = [["text": prompt.userText]]
         if let image = request.imageJPEG, request.hasImage {
             parts.append(["inlineData": ["mimeType": "image/jpeg", "data": image.base64EncodedString()]])
         }
-        return [
-            "systemInstruction": ["parts": [["text": LLMPromptBuilder.systemPrompt(locale: request.locale)]]],
+        return body(prompt: prompt, parts: parts)
+    }
+
+    /// `generateContent` con `responseMimeType: application/json` (el esquema va en las instrucciones).
+    static func body(prompt: StructuredPrompt, parts: [[String: Any]]) -> [String: Any] {
+        [
+            "systemInstruction": ["parts": [["text": prompt.system]]],
             "contents": [["role": "user", "parts": parts] as [String: Any]],
             "generationConfig": ["responseMimeType": "application/json", "maxOutputTokens": maxOutputTokens] as [String: Any],
         ]
     }
 
-    static func parse(_ data: Data, apiKey: String) throws -> FoodAnalysis {
+    /// Texto del primer candidato (sin partes de pensamiento), tras mapear bloqueos y truncados.
+    static func structuredText(from data: Data, apiKey: String) throws -> String {
         let object = try LLMHTTP.jsonObject(data)
         if let block = (object["promptFeedback"] as? [String: Any])?["blockReason"] as? String {
             throw LLMError.refused(LLMHTTP.sanitize(block, apiKey: apiKey))
@@ -97,6 +112,10 @@ struct GeminiProvider: LLMProvider {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw LLMError.invalidResponse(String(localized: "respuesta vacía"))
         }
-        return try LLMHTTP.parseAnalysis(text: text)
+        return text
+    }
+
+    static func parse(_ data: Data, apiKey: String) throws -> FoodAnalysis {
+        try LLMHTTP.parseAnalysis(text: try structuredText(from: data, apiKey: apiKey))
     }
 }

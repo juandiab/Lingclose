@@ -29,4 +29,8 @@ struct DeepSeekProvider: LLMProvider {
     func analyze(_ request: FoodAnalysisRequest, model: LLMModel, apiKey: String) async throws -> FoodAnalysis {
         try await client.analyze(request, model: model, apiKey: apiKey)
     }
+
+    func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply {
+        try await client.suggestRange(request, model: model, apiKey: apiKey)
+    }
 }

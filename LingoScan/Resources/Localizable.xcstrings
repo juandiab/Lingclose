@@ -6321,13 +6321,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se usa en la curva, el sombreado de picos y el tiempo en rango. Solo orienta la lectura; no es un objetivo médico ni un dispositivo médico."
+            "value" : "Se usa en la curva, el sombreado de picos y el tiempo en rango. Solo orienta la lectura; no es un objetivo médico ni un dispositivo médico. \"Sugerir rango\" propone las líneas a partir de tus lecturas de los últimos 14 días y tú decides si usarlas."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Used for the chart, spike shading and time in range. It only guides reading; it is not a medical target and this is not a medical device."
+            "value" : "Used in the curve, the spike shading and time in range. It only guides reading; it is not a medical target nor a medical device. \"Suggest range\" proposes the lines from your readings of the last 14 days and you decide whether to use them."
           }
         }
       }
@@ -9201,6 +9201,856 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld entries: %@"
+          }
+        }
+      }
+    },
+    "range.suggest.health.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud no está disponible en este dispositivo: la sugerencia no usa el perfil."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Health is not available on this device: the suggestion does not use the profile."
+          }
+        }
+      }
+    },
+    "range.suggest.health.failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo leer el perfil de Salud: la sugerencia no usa edad, sexo, peso ni altura."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Health profile could not be read: the suggestion does not use age, sex, weight or height."
+          }
+        }
+      }
+    },
+    "range.suggest.assistant.failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El asistente no respondió (%@). Se muestra solo la propuesta estadística; no se reintentó para no cobrar dos veces."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The assistant did not answer (%@). Only the statistical proposal is shown; it was not retried to avoid a second charge."
+          }
+        }
+      }
+    },
+    "range.suggest.explanation.statistics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La línea baja es el percentil 5 y la alta el percentil 95 de tus %lld lecturas válidas de los últimos %lld días (%@ días con datos), redondeados a múltiplos de 5. El 90 por ciento de tus lecturas quedó entre ambas. Son líneas para leer la curva, no objetivos clínicos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The low line is the 5th percentile and the high line the 95th percentile of your %lld valid readings from the last %lld days (%@ days with data), rounded to multiples of 5. 90 percent of your readings fell between them. They are lines for reading the curve, not clinical targets."
+          }
+        }
+      }
+    },
+    "range.suggest.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango sugerido"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggested range"
+          }
+        }
+      }
+    },
+    "range.suggest.discard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descartar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        }
+      }
+    },
+    "range.suggest.accept" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar rango"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use range"
+          }
+        }
+      }
+    },
+    "range.suggest.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculando con tus lecturas…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculating from your readings…"
+          }
+        }
+      }
+    },
+    "range.suggest.loading.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se leen tus lecturas de los últimos 14 días y, si lo permites, edad, sexo, peso y altura de Salud. Si hay un asistente configurado recibe solo cifras agregadas: nunca lecturas sueltas."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your readings from the last 14 days are read and, if you allow it, age, sex, weight and height from Health. A configured assistant only receives aggregate figures: never individual readings."
+          }
+        }
+      }
+    },
+    "common.close" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "range.suggest.disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta sugerencia no es consejo médico ni sustituye a un profesional de la salud. Las líneas solo ayudan a leer la curva; LingoScan no es un dispositivo médico. Nada cambia hasta que pulses \"Usar rango\"."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This suggestion is not medical advice and does not replace a health professional. The lines only help you read the curve; LingoScan is not a medical device. Nothing changes until you tap \"Use range\"."
+          }
+        }
+      }
+    },
+    "range.suggest.range.a11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango sugerido de %lld a %lld miligramos por decilitro"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggested range from %lld to %lld milligrams per deciliter"
+          }
+        }
+      }
+    },
+    "range.suggest.current" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango actual"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current range"
+          }
+        }
+      }
+    },
+    "range.suggest.pair" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld–%lld mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld–%lld mg/dL"
+          }
+        }
+      }
+    },
+    "range.suggest.origin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origin"
+          }
+        }
+      }
+    },
+    "range.suggest.statistical" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo estadística"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistics only"
+          }
+        }
+      }
+    },
+    "range.suggest.adjusted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se aplicará %lld–%lld mg/dL, lo que Ajustes permite editar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld–%lld mg/dL will be applied, which is what Settings allows editing."
+          }
+        }
+      }
+    },
+    "range.suggest.proposal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Propuesta"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proposal"
+          }
+        }
+      }
+    },
+    "range.suggest.explanation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explicación"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explanation"
+          }
+        }
+      }
+    },
+    "range.suggest.data.readings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecturas propias"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your readings"
+          }
+        }
+      }
+    },
+    "range.suggest.data.readings.value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld válidas · %@ h con datos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld valid · %@ h with data"
+          }
+        }
+      }
+    },
+    "range.suggest.data.percentiles" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Percentiles 5 y 95"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5th and 95th percentiles"
+          }
+        }
+      }
+    },
+    "range.suggest.data.percentiles.value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ y %@ mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ and %@ mg/dL"
+          }
+        }
+      }
+    },
+    "range.suggest.data.meanSD" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media y desviación"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mean and deviation"
+          }
+        }
+      }
+    },
+    "range.suggest.data.meanSD.value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ± %@ mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ± %@ mg/dL"
+          }
+        }
+      }
+    },
+    "range.suggest.data.age" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edad"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age"
+          }
+        }
+      }
+    },
+    "range.suggest.data.age.value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld años"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld years"
+          }
+        }
+      }
+    },
+    "range.suggest.data.sex" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sexo biológico"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biological sex"
+          }
+        }
+      }
+    },
+    "range.suggest.data.weight" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weight"
+          }
+        }
+      }
+    },
+    "range.suggest.data.weight.value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kg"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kg"
+          }
+        }
+      }
+    },
+    "range.suggest.data.height" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altura"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Height"
+          }
+        }
+      }
+    },
+    "range.suggest.data.height.value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ cm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ cm"
+          }
+        }
+      }
+    },
+    "range.suggest.data.bmi" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IMC"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BMI"
+          }
+        }
+      }
+    },
+    "range.suggest.source.computed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculado con peso y altura de Salud"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computed from Health weight and height"
+          }
+        }
+      }
+    },
+    "range.suggest.data" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos usados y su fuente"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data used and its source"
+          }
+        }
+      }
+    },
+    "range.suggest.data.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La edad, el sexo, el peso y la altura no determinan un rango de glucosa validado: la personalización sale de tus propias lecturas. Lo que falta en Salud se omite."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age, sex, weight and height do not determine a validated glucose range: personalization comes from your own readings. Whatever is missing in Health is left out."
+          }
+        }
+      }
+    },
+    "range.suggest.notes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avisos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notices"
+          }
+        }
+      }
+    },
+    "range.suggest.data.missing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No disponible en Salud"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not available in Health"
+          }
+        }
+      }
+    },
+    "range.suggest.source" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fuente: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source: %@"
+          }
+        }
+      }
+    },
+    "range.suggest.source.readings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecturas guardadas en este iPhone (últimos %lld días)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Readings stored on this iPhone (last %lld days)"
+          }
+        }
+      }
+    },
+    "range.suggest.source.health" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud, solo lectura"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Health, read-only"
+          }
+        }
+      }
+    },
+    "range.suggest.origin.statistics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Percentiles de tus lecturas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Percentiles of your readings"
+          }
+        }
+      }
+    },
+    "range.suggest.origin.assistant" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asistente: %@ · %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistant: %@ · %@"
+          }
+        }
+      }
+    },
+    "range.suggest.sex.female" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Femenino"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Female"
+          }
+        }
+      }
+    },
+    "range.suggest.sex.male" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masculino"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Male"
+          }
+        }
+      }
+    },
+    "range.suggest.sex.other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otro"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "range.suggest.error.noReadings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay lecturas válidas de los últimos 14 días. La sugerencia sale de tus propios datos; vuelve a intentarlo cuando el sensor lleve al menos un día."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no valid readings from the last 14 days. The suggestion comes from your own data; try again once the sensor has run for at least a day."
+          }
+        }
+      }
+    },
+    "range.suggest.error.coverage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo hay %@ h con lecturas válidas y hacen falta al menos %lld h. Vuelve a intentarlo cuando el sensor lleve más tiempo."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only %@ h have valid readings and at least %lld h are needed. Try again once the sensor has run longer."
+          }
+        }
+      }
+    },
+    "range.suggest.error.store" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron leer las lecturas guardadas (%@)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The stored readings could not be read (%@)."
+          }
+        }
+      }
+    },
+    "settings.range.suggest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugerir rango"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggest range"
           }
         }
       }

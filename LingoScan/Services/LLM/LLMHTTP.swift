@@ -121,6 +121,13 @@ enum LLMHTTP {
         }
     }
 
+    /// Comprobación previa de "Sugerir rango": solo texto, así que basta con que el modelo sea del proveedor.
+    static func validate(model: LLMModel, provider: LLMProviderID) throws {
+        guard model.provider == provider else {
+            throw LLMError.invalidResponse(String(localized: "el modelo es de otro proveedor"))
+        }
+    }
+
     /// Precio por token (cadena, USD) → USD por millón de tokens, redondeado a 6 decimales.
     static func perMillion(_ perToken: Any?) -> Double? {
         let value: Double?

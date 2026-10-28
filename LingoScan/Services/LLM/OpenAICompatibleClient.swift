@@ -28,29 +28,44 @@ struct OpenAICompatibleClient: Sendable {
 
     func analyze(_ request: FoodAnalysisRequest, model: LLMModel, apiKey: String) async throws -> FoodAnalysis {
         try LLMHTTP.validate(request, model: model, provider: config.provider)
-        let urlRequest = try LLMHTTP.request(url: config.chatURL, method: "POST", headers: headers(apiKey: apiKey),
-                                             body: body(for: request, model: model))
-        let data = try await LLMHTTP.perform(urlRequest, provider: config.provider, operation: "POST chat/completions",
-                                             apiKey: apiKey, transport: transport, log: log)
-        return try parse(data, apiKey: apiKey)
+        let data = try await send(body(for: request, model: model), apiKey: apiKey)
+        return try LLMHTTP.parseAnalysis(text: try structuredText(from: data, apiKey: apiKey))
+    }
+
+    func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply {
+        try LLMHTTP.validate(model: model, provider: config.provider)
+        let prompt = RangeSuggestionPrompt.prompt(for: request)
+        let data = try await send(body(prompt: prompt, userContent: prompt.userText, model: model), apiKey: apiKey)
+        return try RangeSuggestionReplyParser.parse(text: try structuredText(from: data, apiKey: apiKey))
+    }
+
+    private func send(_ body: [String: Any], apiKey: String) async throws -> Data {
+        let urlRequest = try LLMHTTP.request(url: config.chatURL, method: "POST", headers: headers(apiKey: apiKey), body: body)
+        return try await LLMHTTP.perform(urlRequest, provider: config.provider, operation: "POST chat/completions",
+                                         apiKey: apiKey, transport: transport, log: log)
     }
 
     func body(for request: FoodAnalysisRequest, model: LLMModel) -> [String: Any] {
-        let text = LLMPromptBuilder.userText(description: request.trimmedDescription, hasImage: request.hasImage)
+        let prompt = LLMPromptBuilder.foodPrompt(for: request)
         let userContent: Any
         if let image = request.imageJPEG, request.hasImage {
             userContent = [
-                ["type": "text", "text": text],
+                ["type": "text", "text": prompt.userText],
                 ["type": "image_url", "image_url": ["url": "data:image/jpeg;base64,\(image.base64EncodedString())"]],
             ] as [[String: Any]]
         } else {
-            userContent = text
+            userContent = prompt.userText
         }
+        return body(prompt: prompt, userContent: userContent, model: model)
+    }
+
+    /// Cuerpo de Chat Completions con la salida estructurada que admita el proveedor (`config.outputMode`).
+    func body(prompt: StructuredPrompt, userContent: Any, model: LLMModel) -> [String: Any] {
         let reasoning = config.sendsReasoningEffort && model.supportsReasoningControl
         var body: [String: Any] = [
             "model": model.id,
             "messages": [
-                ["role": "system", "content": LLMPromptBuilder.systemPrompt(locale: request.locale)],
+                ["role": "system", "content": prompt.system],
                 ["role": "user", "content": userContent],
             ] as [[String: Any]],
             config.maxTokensField: reasoning ? Self.reasoningMaxOutputTokens : Self.maxOutputTokens,
@@ -59,8 +74,7 @@ struct OpenAICompatibleClient: Sendable {
         case .jsonSchemaStrict:
             body["response_format"] = [
                 "type": "json_schema",
-                "json_schema": ["name": LLMPromptBuilder.schemaName, "strict": true,
-                                "schema": LLMPromptBuilder.strictSchema()] as [String: Any],
+                "json_schema": ["name": prompt.schemaName, "strict": true, "schema": prompt.schema] as [String: Any],
             ] as [String: Any]
         case .jsonObject:
             body["response_format"] = ["type": "json_object"]
@@ -69,7 +83,8 @@ struct OpenAICompatibleClient: Sendable {
         return body
     }
 
-    func parse(_ data: Data, apiKey: String) throws -> FoodAnalysis {
+    /// Texto del primer `choice`, tras mapear errores con HTTP 200 (OpenRouter), rechazos y truncados.
+    func structuredText(from data: Data, apiKey: String) throws -> String {
         let object = try LLMHTTP.jsonObject(data)
         // OpenRouter puede devolver un error del proveedor final con HTTP 200.
         if object["error"] != nil {
@@ -92,6 +107,10 @@ struct OpenAICompatibleClient: Sendable {
         guard let content = message["content"] as? String, !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw LLMError.invalidResponse(String(localized: "respuesta vacía"))
         }
-        return try LLMHTTP.parseAnalysis(text: content)
+        return content
+    }
+
+    func parse(_ data: Data, apiKey: String) throws -> FoodAnalysis {
+        try LLMHTTP.parseAnalysis(text: try structuredText(from: data, apiKey: apiKey))
     }
 }

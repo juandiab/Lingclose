@@ -45,6 +45,17 @@ enum LLMPromptBuilder {
         }
     }
 
+    /// La petición completa del análisis de comida, para los traductores genéricos de cada proveedor.
+    static func foodPrompt(for request: FoodAnalysisRequest) -> StructuredPrompt {
+        StructuredPrompt(
+            system: systemPrompt(locale: request.locale),
+            userText: userText(description: request.trimmedDescription, hasImage: request.hasImage),
+            toolName: toolName,
+            toolDescription: "Registra la propuesta de nutrientes de la foto o descripción, con el esquema exacto.",
+            schemaName: schemaName,
+            schema: strictSchema())
+    }
+
     /// JSON Schema estricto (todas las claves requeridas, sin propiedades extra, nulos con `null`).
     static func strictSchema() -> [String: Any] {
         let nullableNumber: [String: Any] = ["type": ["number", "null"]]

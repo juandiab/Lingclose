@@ -71,28 +71,51 @@ struct AnthropicProvider: LLMProvider {
 
     func analyze(_ request: FoodAnalysisRequest, model: LLMModel, apiKey: String) async throws -> FoodAnalysis {
         try LLMHTTP.validate(request, model: model, provider: id)
+        let data = try await send(Self.body(for: request, model: model), apiKey: apiKey)
+        switch try Self.structuredReply(from: data, toolName: LLMPromptBuilder.toolName, apiKey: apiKey) {
+        case .object(let input): return try LLMHTTP.parseAnalysis(object: input)
+        case .text(let text): return try LLMHTTP.parseAnalysis(text: text)
+        }
+    }
+
+    func suggestRange(_ request: RangeSuggestionRequest, model: LLMModel, apiKey: String) async throws -> LLMRangeReply {
+        try LLMHTTP.validate(model: model, provider: id)
+        let prompt = RangeSuggestionPrompt.prompt(for: request)
+        let data = try await send(Self.body(prompt: prompt, content: [["type": "text", "text": prompt.userText]], model: model),
+                                  apiKey: apiKey)
+        switch try Self.structuredReply(from: data, toolName: prompt.toolName, apiKey: apiKey) {
+        case .object(let input): return try RangeSuggestionReplyParser.parse(object: input)
+        case .text(let text): return try RangeSuggestionReplyParser.parse(text: text)
+        }
+    }
+
+    private func send(_ body: [String: Any], apiKey: String) async throws -> Data {
         let urlRequest = try LLMHTTP.request(url: Self.baseURL.appending(path: "messages"), method: "POST",
-                                             headers: headers(apiKey: apiKey), body: Self.body(for: request, model: model))
-        let data = try await LLMHTTP.perform(urlRequest, provider: id, operation: "POST messages", apiKey: apiKey,
-                                             transport: transport, log: log)
-        return try Self.parse(data, apiKey: apiKey)
+                                             headers: headers(apiKey: apiKey), body: body)
+        return try await LLMHTTP.perform(urlRequest, provider: id, operation: "POST messages", apiKey: apiKey,
+                                         transport: transport, log: log)
     }
 
     static func body(for request: FoodAnalysisRequest, model: LLMModel) -> [String: Any] {
+        let prompt = LLMPromptBuilder.foodPrompt(for: request)
         var content: [[String: Any]] = []
         if let image = request.imageJPEG, request.hasImage {
             content.append(["type": "image",
                             "source": ["type": "base64", "media_type": "image/jpeg", "data": image.base64EncodedString()]])
         }
-        content.append(["type": "text",
-                        "text": LLMPromptBuilder.userText(description: request.trimmedDescription, hasImage: request.hasImage)])
+        content.append(["type": "text", "text": prompt.userText])
+        return body(prompt: prompt, content: content, model: model)
+    }
+
+    /// Cuerpo de `POST /v1/messages` con salida estructurada por herramienta (ver cabecera del tipo).
+    static func body(prompt: StructuredPrompt, content: [[String: Any]], model: LLMModel) -> [String: Any] {
         let alwaysThinking = alwaysThinkingModels.contains(model.id)
         var tool: [String: Any] = [
-            "name": LLMPromptBuilder.toolName,
-            "description": "Registra la propuesta de nutrientes de la foto o descripción, con el esquema exacto.",
-            "input_schema": LLMPromptBuilder.strictSchema(),
+            "name": prompt.toolName,
+            "description": prompt.toolDescription,
+            "input_schema": prompt.schema,
         ]
-        var system = LLMPromptBuilder.systemPrompt(locale: request.locale)
+        var system = prompt.system
         var body: [String: Any] = [
             "model": model.id,
             "max_tokens": maxTokens,
@@ -100,11 +123,11 @@ struct AnthropicProvider: LLMProvider {
         ]
         if alwaysThinking {
             tool["strict"] = true
-            system += "\n\nEntrega el JSON llamando a la herramienta \(LLMPromptBuilder.toolName); no escribas texto aparte."
+            system += "\n\nEntrega el JSON llamando a la herramienta \(prompt.toolName); no escribas texto aparte."
             body["tool_choice"] = ["type": "auto", "disable_parallel_tool_use": true] as [String: Any]
             body["output_config"] = ["effort": "low"]
         } else {
-            body["tool_choice"] = ["type": "tool", "name": LLMPromptBuilder.toolName]
+            body["tool_choice"] = ["type": "tool", "name": prompt.toolName]
             body["thinking"] = ["type": "disabled"]
         }
         body["system"] = system
@@ -112,7 +135,13 @@ struct AnthropicProvider: LLMProvider {
         return body
     }
 
-    static func parse(_ data: Data, apiKey: String) throws -> FoodAnalysis {
+    enum StructuredReply {
+        case object([String: Any])
+        case text(String)
+    }
+
+    /// Datos de la herramienta `toolName` o, si el modelo escribió texto, ese texto. Mapea `stop_reason`.
+    static func structuredReply(from data: Data, toolName: String, apiKey: String) throws -> StructuredReply {
         let object = try LLMHTTP.jsonObject(data)
         let stopReason = object["stop_reason"] as? String
         switch stopReason {
@@ -126,16 +155,24 @@ struct AnthropicProvider: LLMProvider {
             break
         }
         let blocks = object["content"] as? [[String: Any]] ?? []
-        if let toolUse = blocks.first(where: { $0["type"] as? String == "tool_use" && $0["name"] as? String == LLMPromptBuilder.toolName }) {
+        if let toolUse = blocks.first(where: { $0["type"] as? String == "tool_use" && $0["name"] as? String == toolName }) {
             guard let input = toolUse["input"] as? [String: Any] else {
                 throw LLMError.invalidResponse(String(localized: "herramienta sin datos"))
             }
-            return try LLMHTTP.parseAnalysis(object: input)
+            return .object(input)
         }
         let text = blocks.filter { $0["type"] as? String == "text" }.compactMap { $0["text"] as? String }.joined(separator: "\n")
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw LLMError.invalidResponse(String(localized: "respuesta vacía"))
         }
-        return try LLMHTTP.parseAnalysis(text: text)
+        return .text(text)
+    }
+
+    /// Compatibilidad con las pruebas del análisis: `tool_use` de `record_food_analysis` o texto.
+    static func parse(_ data: Data, apiKey: String) throws -> FoodAnalysis {
+        switch try structuredReply(from: data, toolName: LLMPromptBuilder.toolName, apiKey: apiKey) {
+        case .object(let input): return try LLMHTTP.parseAnalysis(object: input)
+        case .text(let text): return try LLMHTTP.parseAnalysis(text: text)
+        }
     }
 }

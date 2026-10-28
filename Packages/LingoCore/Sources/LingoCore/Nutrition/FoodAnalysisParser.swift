@@ -110,7 +110,7 @@ public enum FoodAnalysisParser {
     }
 
     /// Primer objeto `{…}` balanceado, respetando cadenas y escapes.
-    static func firstJSONObject(in text: String) -> String? {
+    public static func firstJSONObject(in text: String) -> String? {
         guard let start = text.firstIndex(of: "{") else { return nil }
         var depth = 0
         var inString = false

@@ -343,6 +343,7 @@
 		ED4BCF07C4213D2649A9540D /* openrouter-401.json in Resources */ = {isa = PBXBuildFile; fileRef = CE5CC739F77B33B550452BB1 /* openrouter-401.json */; };
 		ED8AC3C5D13AD8E509D6E14A /* deepseek-food.json in Resources */ = {isa = PBXBuildFile; fileRef = 3662B91672E873010140B36D /* deepseek-food.json */; };
 		EDB0251FAC6169839644130E /* AboutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05A20799F76757C42F9DAB /* AboutInfo.swift */; };
+		EDB3BE1F0C4081B7ED4FCD78 /* GlucoseColorRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B8ECA70B309DDB77D775B0 /* GlucoseColorRun.swift */; };
 		EEF24518A6C656E6B588FBFA /* DiaryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDE93C95DC13D4DF9337279 /* DiaryEditorView.swift */; };
 		EF19202BFAB1FC49F9C30B5D /* FixtureTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAB10670D17167D70AAD718 /* FixtureTransport.swift */; };
 		EF8AF194E44FDDC0BF4B3937 /* ActivationTicketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1055F9736A284FAEF3F3E056 /* ActivationTicketTests.swift */; };
@@ -681,6 +682,7 @@
 		D1AB10BE9B178BD3918D8581 /* anthropic-broken.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anthropic-broken.json"; sourceTree = "<group>"; };
 		D21BBC7AAE456D5F4E521CF3 /* openai-429.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "openai-429.json"; sourceTree = "<group>"; };
 		D29FF7AEC62C3175EA73B19B /* WorkoutImportStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutImportStatus.swift; sourceTree = "<group>"; };
+		D2B8ECA70B309DDB77D775B0 /* GlucoseColorRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseColorRun.swift; sourceTree = "<group>"; };
 		D2E4664AAF3C63A7369FD630 /* openrouter-food.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "openrouter-food.json"; sourceTree = "<group>"; };
 		D3627A25BDE406A8C84501C5 /* GlucoseChartDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseChartDescriptor.swift; sourceTree = "<group>"; };
 		D3C2A912D6B15622120BD0E1 /* MealTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealTestSupport.swift; sourceTree = "<group>"; };
@@ -1138,6 +1140,7 @@
 				8C567F74880BEBE128776180 /* GlucoseChart.swift */,
 				E04A772BDBC9424A6424B53E /* GlucoseChartCard.swift */,
 				D3627A25BDE406A8C84501C5 /* GlucoseChartDescriptor.swift */,
+				D2B8ECA70B309DDB77D775B0 /* GlucoseColorRun.swift */,
 				86FEBCBFA70A830FE2864E0A /* GlucoseDownsampler.swift */,
 				2854D3C0EF813634A80BECF3 /* GlucoseGap.swift */,
 				94E47A2BA4BDB5F95DC7DF34 /* GlucosePoint.swift */,
@@ -1693,6 +1696,7 @@
 				8A1743B4917ABCEED7AC6C1B /* GlucoseChart.swift in Sources */,
 				845A01ACDEF2D71F7F82FC9F /* GlucoseChartCard.swift in Sources */,
 				464CB23F9CF81E3550EA17CD /* GlucoseChartDescriptor.swift in Sources */,
+				EDB3BE1F0C4081B7ED4FCD78 /* GlucoseColorRun.swift in Sources */,
 				26F884DDF47657F632C3E914 /* GlucoseDownsampler.swift in Sources */,
 				6E1C97857318C935E5BED7A8 /* GlucoseGap.swift in Sources */,
 				86364B771843BDB86CCFAF2A /* GlucosePoint.swift in Sources */,

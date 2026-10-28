@@ -67,32 +67,36 @@ struct TodayViewModelTests {
         #expect(!allPoints.contains { $0.date > gap.start && $0.date < gap.end })
     }
 
-    @Test func twentyFourHourWindowAlsoShowsTheQualityFlagGap() async {
+    @Test func twentyFourHourWindowJoinsTheShortQualityFlagGap() async {
+        // Las 4 lecturas con bandera de calidad dejan 5 min sin puntos: menos de 15 min, se une con línea (D-24).
+        // Solo la desconexión de 25 min sigue siendo un hueco.
         let (model, _) = makeModel()
         model.setVisibleLength(TodayPeriod.twentyFourHours.duration)
         await model.refresh()
         let visibleGaps = model.gaps.filter { $0.start >= model.windowStart && $0.end <= model.windowEnd }
-        #expect(visibleGaps.count == 2)
-        let durations = visibleGaps.map(\.duration).sorted()
-        #expect(durations == [Double(PreviewData.qualityFlagCount + 1) * 60, Double(PreviewData.disconnectionMinutes + 1) * 60])
+        #expect(visibleGaps.map(\.duration) == [Double(PreviewData.disconnectionMinutes + 1) * 60])
     }
 
-    @Test func segmenterBreaksOnNonConsecutiveLifeCount() {
+    @Test func segmenterJoinsShortBluetoothLosses() {
+        // Minutos perdidos (life_count 12 y 15–17 ausentes) pero menos de 15 min: un solo trazo (D-24).
         let points = [
             point(lifeCount: 10, seconds: 0),
             point(lifeCount: 11, seconds: 60),
             point(lifeCount: 13, seconds: 180),
             point(lifeCount: 14, seconds: 240),
+            point(lifeCount: 18, seconds: 480),
         ]
         let segments = GlucoseSegmenter.segments(from: points)
-        #expect(segments.map(\.points.count) == [2, 2])
-        #expect(GlucoseSegmenter.gaps(in: segments).map(\.duration) == [120])
+        #expect(segments.map(\.points.count) == [5])
+        #expect(GlucoseSegmenter.gaps(in: segments).isEmpty)
     }
 
-    @Test func segmenterBreaksWhenIntervalExceedsTwoMinutes() {
-        // `life_count` consecutivo pero con 150 s de diferencia (reloj atrasado): también es hueco.
-        let points = [point(lifeCount: 1, seconds: 0), point(lifeCount: 2, seconds: 150)]
-        #expect(GlucoseSegmenter.segments(from: points).count == 2)
+    @Test func segmenterBreaksWhenIntervalExceedsFifteenMinutes() {
+        let points = [point(lifeCount: 1, seconds: 0), point(lifeCount: 2, seconds: 15 * 60 + 1)]
+        let segments = GlucoseSegmenter.segments(from: points)
+        #expect(segments.count == 2)
+        #expect(GlucoseSegmenter.gaps(in: segments).map(\.duration) == [15 * 60 + 1])
+        #expect(GlucoseSegmenter.segments(from: [point(lifeCount: 1, seconds: 0), point(lifeCount: 2, seconds: 15 * 60)]).count == 1)
     }
 
     @Test func segmenterKeepsConsecutivePointsTogetherAndBreaksOnSessionChange() {

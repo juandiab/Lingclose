@@ -3,9 +3,9 @@ import SwiftUI
 
 /// Curva de glucosa con Swift Charts: un `LineMark` por tramo (los huecos quedan abiertos, sin interpolar),
 /// líneas de referencia, área sombreada sobre la línea alta (rojo) y bajo la baja (azul), y huecos sombreados.
-/// La línea lleva un degradado por valor: rojo por encima de la referencia alta, neutro en el rango y azul
-/// por debajo de la baja. En la gráfica desplazable el degradado se aplica sobre el rectángulo de cada tramo
-/// (no sobre el área del trazado), así que las paradas se calculan con el mínimo y el máximo del tramo.
+/// La línea cambia de color por valor: rojo por encima de la referencia alta, neutro en el rango y azul por
+/// debajo de la baja (`GlucoseColorRun`: trozos por color con cruces interpolados; sin degradado, que en una
+/// gráfica desplazable se aplica sobre un rectángulo distinto según el dispositivo).
 ///
 /// Gestos: deslizar desplaza el tiempo (física nativa de `chartScrollableAxes`), pellizcar cambia la longitud
 /// visible manteniendo fijo el instante bajo el pellizco, tocar coloca el cursor en la lectura más cercana y
@@ -39,27 +39,26 @@ struct GlucoseChart: View {
                 RectangleMark(
                     xStart: .value("Inicio del hueco", gap.start),
                     xEnd: .value("Fin del hueco", gap.end),
-                    yStart: .value("Mínimo", domain.lowerBound),
-                    yEnd: .value("Máximo", domain.upperBound)
+                    yStart: .value("Mínimo", Double(domain.lowerBound)),
+                    yEnd: .value("Máximo", Double(domain.upperBound))
                 )
                 .foregroundStyle(Tokens.Palette.gap.opacity(0.22))
             }
 
-            RuleMark(y: .value("Referencia alta", high))
+            RuleMark(y: .value("Referencia alta", Double(high)))
                 .foregroundStyle(.secondary)
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
-            RuleMark(y: .value("Referencia baja", low))
+            RuleMark(y: .value("Referencia baja", Double(low)))
                 .foregroundStyle(.secondary)
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
 
             ForEach(viewModel.drawSegments) { segment in
-                let lineGradient = Self.segmentGradient(segment, low: low, high: high)
                 // Área sobre la línea alta: cada punto se recorta a `max(valor, referencia alta)`.
                 ForEach(segment.points) { point in
                     AreaMark(
                         x: .value("Hora", point.date),
-                        yStart: .value("Referencia alta", high),
-                        yEnd: .value("Exceso", max(point.value, high)),
+                        yStart: .value("Referencia alta", Double(high)),
+                        yEnd: .value("Exceso", Double(max(point.value, high))),
                         series: .value("Pico", "alta-\(segment.id)")
                     )
                     .foregroundStyle(Tokens.Palette.high.opacity(0.18))
@@ -68,30 +67,33 @@ struct GlucoseChart: View {
                 ForEach(segment.points) { point in
                     AreaMark(
                         x: .value("Hora", point.date),
-                        yStart: .value("Defecto", min(point.value, low)),
-                        yEnd: .value("Referencia baja", low),
+                        yStart: .value("Defecto", Double(min(point.value, low))),
+                        yEnd: .value("Referencia baja", Double(low)),
                         series: .value("Bajo", "baja-\(segment.id)")
                     )
                     .foregroundStyle(Tokens.Palette.low.opacity(0.18))
                 }
-                ForEach(segment.points) { point in
-                    LineMark(
-                        x: .value("Hora", point.date),
-                        y: .value("mg/dL", point.value),
-                        series: .value("Tramo", "linea-\(segment.id)")
-                    )
-                    .foregroundStyle(lineGradient)
-                    .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                // Un `LineMark` por trozo de color; los cruces con las referencias se interpolan.
+                ForEach(GlucoseColorRun.runs(for: segment, low: low, high: high)) { run in
+                    ForEach(run.vertices) { vertex in
+                        LineMark(
+                            x: .value("Hora", vertex.date),
+                            y: .value("mg/dL", vertex.value),
+                            series: .value("Tramo", "linea-\(run.id)")
+                        )
+                        .foregroundStyle(run.color)
+                        .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                    }
                 }
                 if segment.points.count == 1, let only = segment.points.first {
-                    PointMark(x: .value("Hora", only.date), y: .value("mg/dL", only.value))
+                    PointMark(x: .value("Hora", only.date), y: .value("mg/dL", Double(only.value)))
                         .foregroundStyle(Self.color(for: only.value, low: low, high: high))
                         .symbolSize(24)
                 }
             }
         }
         .chartXScale(domain: viewModel.loadedStart...viewModel.loadedEnd)
-        .chartYScale(domain: domain)
+        .chartYScale(domain: Double(domain.lowerBound)...Double(domain.upperBound))
         .chartScrollableAxes(.horizontal)
         .chartXVisibleDomain(length: viewModel.visibleLength)
         .chartScrollPosition(x: $viewModel.scrollPosition)
@@ -235,39 +237,5 @@ struct GlucoseChart: View {
         if value > high { return Tokens.Palette.high }
         if value < low { return Tokens.Palette.low }
         return .primary
-    }
-
-    /// Degradado de un tramo: las paradas van sobre su propio rango de valores (su rectángulo).
-    static func segmentGradient(_ segment: GlucoseSegment, low: Int, high: Int) -> LinearGradient {
-        LinearGradient(stops: segmentStops(segment, low: low, high: high), startPoint: .bottom, endPoint: .top)
-    }
-
-    /// Paradas de un tramo. Las recortadas al borde (una referencia que el tramo no alcanza) se quitan para
-    /// que el borde no tome su color; un tramo plano o de un punto lleva un color único.
-    static func segmentStops(_ segment: GlucoseSegment, low: Int, high: Int) -> [Gradient.Stop] {
-        let values = segment.points.map(\.value)
-        guard let minimum = values.min(), let maximum = values.max(), minimum < maximum else {
-            let color = color(for: values.first ?? low, low: low, high: high)
-            return [.init(color: color, location: 0), .init(color: color, location: 1)]
-        }
-        var stops = gradientStops(domain: minimum...maximum, low: low, high: high)
-        while stops.count > 1, stops[0].location == stops[1].location { stops.removeFirst() }
-        while stops.count > 1, stops[stops.count - 1].location == stops[stops.count - 2].location { stops.removeLast() }
-        return stops
-    }
-
-    /// Paradas (fracción 0 = mínimo del dominio, 1 = máximo). Se recortan al dominio y quedan ordenadas.
-    static func gradientStops(domain: ClosedRange<Int>, low: Int, high: Int, band: Double = 3) -> [Gradient.Stop] {
-        let span = Double(max(1, domain.upperBound - domain.lowerBound))
-        func fraction(_ value: Double) -> Double { min(1, max(0, (value - Double(domain.lowerBound)) / span)) }
-        let neutral = Color.primary
-        return [
-            .init(color: Tokens.Palette.low, location: 0),
-            .init(color: Tokens.Palette.low, location: fraction(Double(low) - band)),
-            .init(color: neutral, location: fraction(Double(low) + band)),
-            .init(color: neutral, location: fraction(Double(high) - band)),
-            .init(color: Tokens.Palette.high, location: fraction(Double(high) + band)),
-            .init(color: Tokens.Palette.high, location: 1),
-        ]
     }
 }

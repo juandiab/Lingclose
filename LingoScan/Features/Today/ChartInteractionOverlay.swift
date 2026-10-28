@@ -34,7 +34,7 @@ struct ChartInteractionOverlay: View {
     /// Rótulos "140 mg/dL" fijos en el borde derecho visible (las anotaciones del chart se irían con el contenido).
     private func referenceLabels(visible frame: CGRect) -> some View {
         ForEach([viewModel.referenceHigh, viewModel.referenceLow], id: \.self) { value in
-            if let y = proxy.position(forY: value) {
+            if let y = proxy.position(forY: Double(value)) {
                 Text(String(localized: "today.reference.value", defaultValue: "\(value) mg/dL"))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -144,7 +144,7 @@ private struct ChartCursor: View {
                         .position(x: x, y: frame.midY)
                 }
                 if let point, let pointX = proxy.position(forX: point.date).map({ frame.minX + $0 }),
-                   (0...visible.width).contains(pointX), let pointY = proxy.position(forY: point.value) {
+                   (0...visible.width).contains(pointX), let pointY = proxy.position(forY: Double(point.value)) {
                     Circle()
                         .fill(Color.accentColor)
                         .stroke(.background, lineWidth: 2)

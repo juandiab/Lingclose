@@ -1,12 +1,13 @@
 import Foundation
 
-/// Parte la serie en tramos continuos. Nunca interpola.
+/// Parte la serie en tramos continuos.
 ///
-/// Se corta cuando cambia la sesión, cuando `life_count` no es consecutivo o cuando pasan
-/// más de `maxInterval` segundos entre dos puntos.
+/// Se corta cuando cambia la sesión o cuando pasan más de `maxInterval` segundos entre dos puntos.
+/// Un minuto perdido por Bluetooth (`life_count` no consecutivo pero poco tiempo) no corta el trazo: la
+/// línea une los dos puntos (D-24). Solo una ausencia larga queda como hueco abierto, sin interpolar.
 enum GlucoseSegmenter {
-    /// Dos minutos: un `life_count` por minuto más un margen.
-    static let maxInterval: TimeInterval = 120
+    /// Quince minutos: pérdidas cortas de paquetes BLE se unen; más allá es un hueco real.
+    static let maxInterval: TimeInterval = 15 * 60
 
     static func segments(from points: [GlucosePoint], maxInterval: TimeInterval = maxInterval) -> [GlucoseSegment] {
         let sorted = points.sorted { $0.date < $1.date }
@@ -35,7 +36,6 @@ enum GlucoseSegmenter {
 
     private static func isBreak(from previous: GlucosePoint, to next: GlucosePoint, maxInterval: TimeInterval) -> Bool {
         previous.sessionID != next.sessionID
-            || next.lifeCount != previous.lifeCount + 1
             || next.date.timeIntervalSince(previous.date) > maxInterval
     }
 }

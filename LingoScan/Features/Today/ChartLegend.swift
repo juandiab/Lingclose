@@ -34,7 +34,7 @@ struct ChartLegend: View {
                     .accessibilityHidden(true)
                 Text(String(
                     localized: "today.legend.gap",
-                    defaultValue: "Hueco: sin lecturas válidas, no se interpola"
+                    defaultValue: "Hueco: más de 15 min sin lecturas válidas, no se interpola"
                 ))
             }
         }

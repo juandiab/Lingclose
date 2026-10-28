@@ -2,20 +2,12 @@ import SwiftUI
 import Testing
 @testable import LingoScan
 
-/// Degradado por valor de la curva: azul bajo la referencia baja, neutro en el rango, rojo sobre la alta.
+/// Color de la curva por valor: azul bajo la referencia baja, neutro en el rango, rojo sobre la alta.
 struct GlucoseChartGradientTests {
-    @Test func stopsFollowTheReferencesWithinTheDomain() {
-        let stops = GlucoseChart.gradientStops(domain: 0...200, low: 70, high: 140)
-        #expect(stops.count == 6)
-        #expect(stops.map(\.location) == [0, 0.335, 0.365, 0.685, 0.715, 1])
-        #expect(stops.map(\.location) == stops.map(\.location).sorted(), "siempre ordenadas")
-        #expect(stops[0].color == Tokens.Palette.low && stops[5].color == Tokens.Palette.high)
-    }
-
-    @Test func stopsAreClampedWhenAReferenceFallsOutsideTheDomain() {
-        let stops = GlucoseChart.gradientStops(domain: 100...200, low: 70, high: 140)
-        #expect(stops[1].location == 0 && stops[2].location == 0, "la baja queda fuera: sin tramo azul")
-        #expect(stops.allSatisfy { (0...1).contains($0.location) })
+    private func segment(_ values: [Int]) -> GlucoseSegment {
+        GlucoseSegment(id: 0, points: values.enumerated().map { index, value in
+            GlucosePoint(id: "p\(index)", sessionID: "s", lifeCount: index, date: Date(timeIntervalSince1970: Double(index) * 60), value: value)
+        })
     }
 
     @Test func isolatedPointColorMatchesTheReferences() {
@@ -24,21 +16,35 @@ struct GlucoseChartGradientTests {
         #expect(GlucoseChart.color(for: 100, low: 70, high: 140) == .primary)
     }
 
-    @Test func segmentStopsUseTheSegmentRangeAndDropClampedEdges() {
-        func segment(_ values: [Int]) -> GlucoseSegment {
-            GlucoseSegment(id: 0, points: values.enumerated().map { index, value in
-                GlucosePoint(id: "p\(index)", sessionID: "s", lifeCount: index, date: Date(timeIntervalSince1970: Double(index) * 60), value: value)
-            })
+    @Test func runsSplitAtInterpolatedCrossings() {
+        // 100 → 160 cruza la alta (140) a los 40 s; 160 → 60 cruza la alta y la baja.
+        let runs = GlucoseColorRun.runs(for: segment([100, 160, 60]), low: 70, high: 140)
+        #expect(runs.map(\.band) == [.inRange, .high, .inRange, .low])
+        #expect(runs[0].vertices.map(\.value) == [100, 140])
+        #expect(runs[0].vertices.last?.date == Date(timeIntervalSince1970: 40))
+        #expect(runs[1].vertices.map(\.value) == [140, 160, 140])
+        #expect(runs[2].vertices.map(\.value) == [140, 70])
+        #expect(runs[3].vertices.map(\.value) == [70, 60])
+        // Cada cruce pertenece a los dos trozos: la línea no se corta.
+        for (before, after) in zip(runs, runs.dropFirst()) {
+            #expect(before.vertices.last == after.vertices.first)
         }
-        // 100…160: la baja (70) queda fuera; el borde inferior es neutro, no azul.
-        let stops = GlucoseChart.segmentStops(segment([100, 160]), low: 70, high: 140)
-        #expect(stops.first?.color == .primary)
-        #expect(stops.last?.color == Tokens.Palette.high)
-        #expect(stops.map(\.location) == stops.map(\.location).sorted())
-        // Todo en rango: sin rojo ni azul.
-        let inRange = GlucoseChart.segmentStops(segment([90, 120]), low: 70, high: 140)
-        #expect(inRange.allSatisfy { $0.color == .primary })
-        // Un solo punto: color único según su valor.
-        #expect(GlucoseChart.segmentStops(segment([60]), low: 70, high: 140).allSatisfy { $0.color == Tokens.Palette.low })
+        #expect(Set(runs.map(\.id)).count == runs.count)
+    }
+
+    @Test func runsKeepASingleColorWhenNothingCrosses() {
+        let inRange = GlucoseColorRun.runs(for: segment([90, 120, 100]), low: 70, high: 140)
+        #expect(inRange.count == 1 && inRange[0].band == .inRange && inRange[0].vertices.count == 3)
+        let high = GlucoseColorRun.runs(for: segment([150, 180]), low: 70, high: 140)
+        #expect(high.count == 1 && high[0].band == .high)
+        #expect(GlucoseColorRun.runs(for: segment([60]), low: 70, high: 140).first?.band == .low)
+        #expect(GlucoseColorRun.runs(for: GlucoseSegment(id: 1, points: []), low: 70, high: 140).isEmpty)
+    }
+
+    @Test func aValueExactlyOnAReferenceChangesColorAtThatPoint() {
+        let runs = GlucoseColorRun.runs(for: segment([120, 140, 150]), low: 70, high: 140)
+        #expect(runs.map(\.band) == [.inRange, .high])
+        #expect(runs[0].vertices.map(\.value) == [120, 140])
+        #expect(runs[1].vertices.map(\.value) == [140, 150])
     }
 }

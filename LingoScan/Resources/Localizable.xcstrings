@@ -364,13 +364,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hueco: sin lecturas válidas, no se interpola"
+            "value" : "Hueco: más de 15 min sin lecturas válidas, no se interpola"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gap: no valid readings, not interpolated"
+            "value" : "Gap: over 15 min without valid readings, not interpolated"
           }
         }
       }

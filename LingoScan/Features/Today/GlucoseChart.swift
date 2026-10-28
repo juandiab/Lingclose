@@ -22,6 +22,7 @@ struct GlucoseChart: View {
     @State private var cursorHaptic = 0
     @State private var isSliding = false
     @State private var chartWidth: CGFloat = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Estado al empezar el pellizco: longitud y el instante bajo los dedos.
     private struct PinchStart {
@@ -112,6 +113,8 @@ struct GlucoseChart: View {
         // Margen final para que el halo de la última lectura no se corte en el borde.
         .chartXScale(domain: viewModel.loadedStart...viewModel.loadedEnd, range: .plotDimension(endPadding: 16))
         .chartYScale(domain: Double(domain.lowerBound)...Double(domain.upperBound))
+        // El eje vertical sigue a la ventana asentada; el cambio se anima salvo con Reduce Motion.
+        .animation(reduceMotion ? nil : .snappy, value: domain)
         .chartScrollableAxes(.horizontal)
         .chartXVisibleDomain(length: viewModel.visibleLength)
         .chartScrollPosition(x: $viewModel.scrollPosition)

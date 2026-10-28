@@ -181,13 +181,44 @@ final class TodayViewModel {
         )
     }
 
-    /// Rango vertical de la curva (sobre lo cargado, para que no salte al desplazarse): incluye las líneas
-    /// de referencia y deja bajo la línea baja el espacio de los marcadores (los índices de pico van sobre cada pico).
+    /// Rango vertical de la curva, adaptado a la ventana asentada (sigue al zoom y al desplazamiento ~250 ms
+    /// después del último movimiento). Ver `valueDomain(values:low:high:hasMarks:)`.
     var chartValueDomain: ClosedRange<Int> {
-        let values = points.map(\.value)
-        let low = min(values.min() ?? referenceLow, referenceLow)
-        let high = max(values.max() ?? referenceHigh, referenceHigh, 220)
-        return max(0, (low - 45) / 10 * 10)...((high + 10 + 9) / 10 * 10)
+        let window = windowStart...windowEnd
+        return Self.valueDomain(
+            values: visiblePoints.map(\.value),
+            low: referenceLow,
+            high: referenceHigh,
+            hasMarks: marks.contains { window.contains($0.date) }
+        )
+    }
+
+    /// Alto mínimo del dominio vertical: una noche plana no se amplía hasta parecer una montaña rusa.
+    static let minimumDomainSpan = 90
+    /// Margen extra bajo la curva para los marcadores de comida y ejercicio, solo si hay alguno visible.
+    static let markerRoom = 25
+    /// Límite inferior absoluto del dominio.
+    static let domainFloor = 40
+
+    /// Dominio vertical: de `min(mínimo, referencia baja) − 20` (decena inferior; − 25 más con marcas; nunca
+    /// < 40) a `max(máximo, referencia alta) + 15` (decena superior), con un alto mínimo de 90 mg/dL repartido
+    /// arriba y abajo. Sin valores, se usan solo las referencias.
+    static func valueDomain(values: [Int], low: Int, high: Int, hasMarks: Bool) -> ClosedRange<Int> {
+        func floorToTen(_ value: Int) -> Int { Int((Double(value) / 10).rounded(.down)) * 10 }
+        func ceilToTen(_ value: Int) -> Int { Int((Double(value) / 10).rounded(.up)) * 10 }
+
+        var lower = min(values.min() ?? low, low) - 20
+        if hasMarks { lower -= markerRoom }
+        lower = max(domainFloor, floorToTen(lower))
+        var upper = ceilToTen(max(values.max() ?? high, high) + 15)
+
+        let deficit = minimumDomainSpan - (upper - lower)
+        if deficit > 0 {
+            let below = min(floorToTen(deficit / 2), lower - domainFloor)
+            lower -= below
+            upper = ceilToTen(lower + minimumDomainSpan)
+        }
+        return lower...upper
     }
 
     /// Lectura elegible más cercana en tiempo a `date`; `nil` si cae en un hueco o fuera de los datos.

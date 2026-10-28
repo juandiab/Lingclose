@@ -31,10 +31,15 @@ struct PeriodStatsCard: View {
                 HStack(alignment: .top, spacing: Tokens.Spacing.sm) { tir; mean; sd }
                 VStack(alignment: .leading, spacing: Tokens.Spacing.xs) { tir; mean; sd }
             }
+            // La fila termina antes del "+" flotante (56 pt + margen), que queda encima al final del scroll.
+            .padding(.trailing, Self.addButtonClearance)
         }
         .padding(.vertical, Tokens.Spacing.xxs)
         .accessibilityElement(children: .contain)
     }
+
+    /// Hueco a la derecha de las métricas para no quedar bajo el "+" de `TodayAddMenu`.
+    static let addButtonClearance = Tokens.Spacing.xl + Tokens.Spacing.sm
 
     /// "Período visible (6 h) · datos el 98 %".
     private var caption: String {

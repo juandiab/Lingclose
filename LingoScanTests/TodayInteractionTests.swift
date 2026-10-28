@@ -143,11 +143,43 @@ struct TodayInteractionTests {
         #expect(ReferenceLines.normalized(low: 0, high: 9_999) == (40, 400))
     }
 
-    @Test func chartDomainKeepsRoomBelowTheLowLine() async {
+    @Test func chartDomainFollowsTheVisibleValues() {
+        // Lecturas reales típicas (70–120) con referencia alta 120: sin el antiguo mínimo de 220.
+        #expect(TodayViewModel.valueDomain(values: [70, 95, 120], low: 70, high: 120, hasMarks: false) == 50...140)
+        // Un pico amplía solo hacia arriba.
+        #expect(TodayViewModel.valueDomain(values: [90, 215], low: 70, high: 140, hasMarks: false) == 50...230)
+        // Sin lecturas: solo las referencias.
+        #expect(TodayViewModel.valueDomain(values: [], low: 70, high: 140, hasMarks: false) == 50...160)
+    }
+
+    @Test func chartDomainKeepsAMinimumSpan() {
+        // Noche plana con referencias juntas: 70…120 (50) se amplía a 90 repartiendo arriba y abajo.
+        let domain = TodayViewModel.valueDomain(values: [100, 102, 105], low: 90, high: 100, hasMarks: false)
+        #expect(domain.upperBound - domain.lowerBound >= TodayViewModel.minimumDomainSpan)
+        #expect(domain.lowerBound < 70 && domain.upperBound > 120)
+        #expect(domain.lowerBound % 10 == 0 && domain.upperBound % 10 == 0)
+    }
+
+    @Test func chartDomainMakesRoomForMarkersAndHasAFloor() {
+        let without = TodayViewModel.valueDomain(values: [100, 130], low: 90, high: 140, hasMarks: false)
+        let with = TodayViewModel.valueDomain(values: [100, 130], low: 90, high: 140, hasMarks: true)
+        #expect(without == 70...160)
+        #expect(with == 40...160)
+        // Nunca por debajo de 40 mg/dL.
+        #expect(TodayViewModel.valueDomain(values: [45], low: 70, high: 140, hasMarks: true).lowerBound == 40)
+    }
+
+    @Test func chartDomainUsesTheSettledWindow() async {
         let (model, _) = makeModel()
         await model.refresh()
-        #expect(model.chartValueDomain.lowerBound <= model.referenceLow - 45)
-        #expect(model.chartValueDomain.upperBound >= 220)
+        let window = model.windowStart...model.windowEnd
+        let expected = TodayViewModel.valueDomain(
+            values: model.visiblePoints.map(\.value),
+            low: model.referenceLow,
+            high: model.referenceHigh,
+            hasMarks: model.marks.contains { window.contains($0.date) }
+        )
+        #expect(model.chartValueDomain == expected)
     }
 }
 

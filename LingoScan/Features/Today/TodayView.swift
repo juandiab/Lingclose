@@ -19,40 +19,31 @@ struct TodayView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: Tokens.Spacing.md) {
-                    SensorStatusChip(state: viewModel.sensor.state)
+                VStack(alignment: .leading, spacing: Tokens.Spacing.sm) {
                     if viewModel.hasNoData {
+                        SensorStatusChip(state: viewModel.sensor.state)
                         TodayEmptyView(sensor: viewModel.sensor)
                     } else {
-                        // El último valor es independiente de la ventana visible: se ve también al mirar otro día.
-                        TimelineView(.periodic(from: .now, by: 30)) { context in
-                            CurrentValueView(viewModel: viewModel, now: context.date)
-                        }
+                        TodayHeader(viewModel: viewModel)
                         if viewModel.failure != nil {
                             Label(
                                 String(localized: "today.failure", defaultValue: "No se pudieron leer los datos guardados."),
                                 systemImage: "exclamationmark.triangle"
                             )
+                            .font(.footnote)
                             .foregroundStyle(Tokens.Palette.error)
                         }
-                        PeriodPicker(viewModel: viewModel) { selectPeriod($0) }
-                        GlucoseChartCard(viewModel: viewModel)
-                        TodayEntriesRow(count: viewModel.dayEntryCount, isToday: viewModel.isToday)
+                        GlucoseChartCard(viewModel: viewModel) { selectPeriod($0) }
                         PeriodStatsCard(
                             stats: viewModel.stats,
                             lengthTitle: GlucoseChart.lengthTitle(viewModel.windowEnd.timeIntervalSince(viewModel.windowStart))
                         )
+                        TodayEntriesRow(count: viewModel.dayEntryCount, isToday: viewModel.isToday)
                     }
-                    if viewModel.isSynthetic {
-                        Label(
-                            String(localized: "today.synthetic", defaultValue: "Datos de ejemplo (sintéticos). No son de un sensor real."),
-                            systemImage: "testtube.2"
-                        )
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    }
+                    TodayFooter(range: viewModel.hasNoData ? nil : viewModel.stats.range, isSynthetic: viewModel.isSynthetic)
                 }
                 .padding(.horizontal, Tokens.Spacing.sm)
+                .padding(.top, Tokens.Spacing.xs)
             }
             // Barra inferior propia: el contenido termina sobre el "+" y el último elemento siempre queda visible.
             .safeAreaInset(edge: .bottom, spacing: 0) {

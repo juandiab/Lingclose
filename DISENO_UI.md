@@ -84,3 +84,13 @@ Skill `apple-design` (principios, no CSS): respuesta inmediata al toque, animaci
 ## "+" de Hoy (27-oct, petición de Juampa)
 
 El "+" se despliega con animación (morfología Liquid Glass, `glassEffectID`) en Comida / Ejercicio / Nota. Comida va directo a "Analizar con IA" con la cámara abierta; la foto tomada ahí lanza el análisis sin otro toque (un análisis = una llamada; cancelable). Sobre la cámara hay un botón "Entrada manual" que cierra el análisis y abre el registro de comida a mano. Ejercicio y Nota abren el registro rápido con el tipo ya elegido. Reducir movimiento: fundido sin resorte.
+
+## Rediseño del layout de Hoy (27-oct, "espacio muerto" y gráfica)
+
+Auditoría con `ios-design-agent-skill` y `dataviz` sobre capturas del simulador. Cambios:
+
+- **Cabecera compacta** (`TodayHeader`): valor grande, "tendencia · hace N min" y estado de rango a la izquierda; chip del sensor arriba a la derecha (debajo con tamaños de accesibilidad). Sin huecos de 24 pt entre bloques.
+- **Curva protagonista** (`GlucoseChartCard`): sin tarjeta, sobre el fondo; ≈ 43 % del alto de la pantalla (`heightFraction`). Encima, chips de período y una línea pequeña con el período visible o la lectura del cursor (alto fijo, la curva no salta) y un botón "i" con la leyenda en popover (`ChartLegendButton`).
+- **Marcas** (`GlucoseChart`): línea 2,5 pt `lineJoin .round`; áreas roja/azul con lavado degradado hacia la referencia; referencias finas (0,75 pt, discontinuas, gris) con rótulos cortos ("140") sobre fondo de superficie; rejilla vertical en línea continua de 0,5 pt muy tenue; eje en `caption2`; huecos al 12 %; en vivo, punto final con halo del color del rango (verde en rango). Índice de pico encima de cada pico (antes pisaba la línea de 70). Dominio vertical con 45 mg/dL bajo la referencia baja (solo para marcadores).
+- **Estadísticas** (`PeriodStatsCard` + `PeriodStatMetric`): fila de tres métricas sin tarjeta, cobertura en la línea de título. "Registro" en fila delgada. Aviso "no médico" en una línea `caption2` al pie (`TodayFooter`).
+- Sin cambios de comportamiento (zoom, desplazamiento, cursor, marcas agrupadas, estadísticas sobre lo visible). `Card` queda en `DesignSystem` sin uso en Hoy.

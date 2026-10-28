@@ -182,12 +182,12 @@ final class TodayViewModel {
     }
 
     /// Rango vertical de la curva (sobre lo cargado, para que no salte al desplazarse): incluye las líneas
-    /// de referencia y deja bajo la línea baja el espacio de los índices de pico y los marcadores.
+    /// de referencia y deja bajo la línea baja el espacio de los marcadores (los índices de pico van sobre cada pico).
     var chartValueDomain: ClosedRange<Int> {
         let values = points.map(\.value)
         let low = min(values.min() ?? referenceLow, referenceLow)
         let high = max(values.max() ?? referenceHigh, referenceHigh, 220)
-        return max(0, (low - 75) / 10 * 10)...((high + 10 + 9) / 10 * 10)
+        return max(0, (low - 45) / 10 * 10)...((high + 10 + 9) / 10 * 10)
     }
 
     /// Lectura elegible más cercana en tiempo a `date`; `nil` si cae en un hueco o fuera de los datos.

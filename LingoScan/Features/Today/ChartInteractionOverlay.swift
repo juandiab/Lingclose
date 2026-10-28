@@ -31,16 +31,20 @@ struct ChartInteractionOverlay: View {
         }
     }
 
-    /// Rótulos "140 mg/dL" fijos en el borde derecho visible (las anotaciones del chart se irían con el contenido).
+    /// Rótulos cortos ("140") pegados al borde derecho visible, sobre su línea y con fondo de la superficie
+    /// para que la curva no los tape (las anotaciones del chart se irían con el contenido).
     private func referenceLabels(visible frame: CGRect) -> some View {
         ForEach([viewModel.referenceHigh, viewModel.referenceLow], id: \.self) { value in
             if let y = proxy.position(forY: Double(value)) {
-                Text(String(localized: "today.reference.value", defaultValue: "\(value) mg/dL"))
+                Text(value, format: .number.grouping(.never))
                     .font(.caption2)
+                    .monospacedDigit()
                     .foregroundStyle(.secondary)
+                    .padding(.horizontal, 3)
+                    .background(.background.opacity(0.85), in: .capsule)
                     .fixedSize()
                     .frame(width: frame.width, alignment: .trailing)
-                    .position(x: frame.midX, y: frame.minY + y - 8)
+                    .position(x: frame.midX, y: frame.minY + y - 7)
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
             }
@@ -51,14 +55,16 @@ struct ChartInteractionOverlay: View {
     static let markerSpacing: CGFloat = 44
     static let spikeLabelSpacing: CGFloat = 28
 
-    /// Índices de pico visibles; si dos rótulos quedan a menos de `spikeLabelSpacing`, solo el de mayor pico.
+    /// Índices de pico visibles, justo encima de cada pico; si dos rótulos quedan a menos de
+    /// `spikeLabelSpacing`, solo el de mayor pico.
     private func spikeLabels(frame: CGRect, visible: CGRect) -> some View {
         ForEach(visibleSpikes(frame: frame, visible: visible), id: \.spike.id) { item in
+            let peakY = proxy.position(forY: Double(item.spike.peakValue)).map { frame.minY + $0 } ?? frame.minY
             Text(item.spike.index, format: .number.grouping(.never))
-                .font(.caption.bold())
+                .font(.caption2.bold())
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
-                .position(x: item.x, y: frame.maxY - 62)
+                .position(x: item.x, y: max(peakY - 12, frame.minY + 8))
                 .allowsHitTesting(false)
                 .accessibilityLabel(String(localized: "today.spike.a11y", defaultValue: "Índice de pico \(item.spike.index), pico de \(item.spike.peakValue) miligramos por decilitro, no médico"))
         }
@@ -139,8 +145,8 @@ private struct ChartCursor: View {
             ZStack(alignment: .topLeading) {
                 if (0...visible.width).contains(x) {
                     Rectangle()
-                        .fill(.primary)
-                        .frame(width: 1.5, height: frame.height)
+                        .fill(.secondary)
+                        .frame(width: 1, height: frame.height)
                         .position(x: x, y: frame.midY)
                 }
                 if let point, let pointX = proxy.position(forX: point.date).map({ frame.minX + $0 }),

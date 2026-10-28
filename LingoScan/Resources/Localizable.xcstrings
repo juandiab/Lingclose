@@ -10054,6 +10054,57 @@
           }
         }
       }
+    },
+    "today.legend.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leyenda de la curva"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chart legend"
+          }
+        }
+      }
+    },
+    "today.footer.note" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informativo, no es un dispositivo médico · referencia %1$lld–%2$lld mg/dL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informational, not a medical device · reference %1$lld–%2$lld mg/dL"
+          }
+        }
+      }
+    },
+    "today.stats.coverage.short" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "datos el %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "data for %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

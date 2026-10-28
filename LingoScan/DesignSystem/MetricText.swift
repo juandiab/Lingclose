@@ -5,12 +5,15 @@ struct MetricText: View {
     enum Size {
         case hero
         case large
+        /// Lectura del cursor y métricas compactas.
+        case medium
         case regular
 
         var valueFont: Font {
             switch self {
             case .hero: .system(.largeTitle, design: .rounded, weight: .bold).scaled(by: 2.2)
             case .large: .system(.title, design: .rounded, weight: .semibold)
+            case .medium: .system(.title3, design: .rounded, weight: .semibold)
             case .regular: .system(.body, design: .rounded, weight: .medium)
             }
         }
@@ -19,6 +22,7 @@ struct MetricText: View {
             switch self {
             case .hero: .title3
             case .large: .subheadline
+            case .medium: .caption
             case .regular: .footnote
             }
         }

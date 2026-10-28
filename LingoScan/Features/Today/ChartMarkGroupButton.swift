@@ -10,10 +10,11 @@ struct ChartMarkGroupButton: View {
         Button(action: showDetail) {
             VStack(spacing: 0) {
                 Image(systemName: group.first.kind.systemImage)
-                    .font(.footnote.weight(.semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(.white)
-                    .frame(width: 30, height: 30)
+                    .frame(width: 26, height: 26)
                     .background(Color.accentColor, in: .circle)
+                    .overlay { Circle().stroke(.background, lineWidth: 2) }
                     .overlay(alignment: .topTrailing) {
                         if group.marks.count > 1 {
                             Text(group.marks.count, format: .number)
@@ -27,9 +28,11 @@ struct ChartMarkGroupButton: View {
                         }
                     }
                 Text(group.first.date, format: .dateTime.hour().minute())
-                    .font(.system(size: 10).monospacedDigit())
+                    .font(.caption2.monospacedDigit())
                     .foregroundStyle(.secondary)
                     .fixedSize()
+                    // Dentro de la gráfica el rótulo no puede crecer sin pisar el eje.
+                    .dynamicTypeSize(...DynamicTypeSize.large)
             }
             .frame(minWidth: 44, minHeight: 44)
             .contentShape(.rect)

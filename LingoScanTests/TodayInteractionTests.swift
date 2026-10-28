@@ -146,7 +146,7 @@ struct TodayInteractionTests {
     @Test func chartDomainKeepsRoomBelowTheLowLine() async {
         let (model, _) = makeModel()
         await model.refresh()
-        #expect(model.chartValueDomain.lowerBound <= model.referenceLow - 60)
+        #expect(model.chartValueDomain.lowerBound <= model.referenceLow - 45)
         #expect(model.chartValueDomain.upperBound >= 220)
     }
 }

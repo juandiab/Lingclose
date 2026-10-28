@@ -2,7 +2,8 @@ import Charts
 import SwiftUI
 
 /// Curva de glucosa con Swift Charts: un `LineMark` por tramo (los huecos quedan abiertos, sin interpolar),
-/// líneas de referencia, área sombreada sobre la línea alta (rojo) y bajo la baja (azul), y huecos sombreados.
+/// líneas de referencia finas, área sobre la línea alta (rojo) y bajo la baja (azul) con un lavado que se
+/// desvanece hacia la referencia, huecos sombreados y, en vivo, la última lectura con un halo.
 /// La línea cambia de color por valor: rojo por encima de la referencia alta, neutro en el rango y azul por
 /// debajo de la baja (`GlucoseColorRun`: trozos por color con cruces interpolados; sin degradado, que en una
 /// gráfica desplazable se aplica sobre un rectángulo distinto según el dispositivo).
@@ -42,15 +43,16 @@ struct GlucoseChart: View {
                     yStart: .value("Mínimo", Double(domain.lowerBound)),
                     yEnd: .value("Máximo", Double(domain.upperBound))
                 )
-                .foregroundStyle(Tokens.Palette.gap.opacity(0.22))
+                .foregroundStyle(Tokens.Palette.gap.opacity(0.12))
             }
 
+            // Umbrales finos en gris (`Color.secondary` explícito: el estilo jerárquico dentro de Charts hereda el tinte).
             RuleMark(y: .value("Referencia alta", Double(high)))
-                .foregroundStyle(.secondary)
-                .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                .foregroundStyle(Color.secondary.opacity(0.7))
+                .lineStyle(Self.referenceStroke)
             RuleMark(y: .value("Referencia baja", Double(low)))
-                .foregroundStyle(.secondary)
-                .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                .foregroundStyle(Color.secondary.opacity(0.7))
+                .lineStyle(Self.referenceStroke)
 
             ForEach(viewModel.drawSegments) { segment in
                 // Área sobre la línea alta: cada punto se recorta a `max(valor, referencia alta)`.
@@ -61,7 +63,7 @@ struct GlucoseChart: View {
                         yEnd: .value("Exceso", Double(max(point.value, high))),
                         series: .value("Pico", "alta-\(segment.id)")
                     )
-                    .foregroundStyle(Tokens.Palette.high.opacity(0.18))
+                    .foregroundStyle(Self.highWash)
                 }
                 // Área bajo la línea baja: simétrica a la de los picos, en frío.
                 ForEach(segment.points) { point in
@@ -71,7 +73,7 @@ struct GlucoseChart: View {
                         yEnd: .value("Referencia baja", Double(low)),
                         series: .value("Bajo", "baja-\(segment.id)")
                     )
-                    .foregroundStyle(Tokens.Palette.low.opacity(0.18))
+                    .foregroundStyle(Self.lowWash)
                 }
                 // Un `LineMark` por trozo de color; los cruces con las referencias se interpolan.
                 ForEach(GlucoseColorRun.runs(for: segment, low: low, high: high)) { run in
@@ -82,7 +84,7 @@ struct GlucoseChart: View {
                             series: .value("Tramo", "linea-\(run.id)")
                         )
                         .foregroundStyle(run.color)
-                        .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                        .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                     }
                 }
                 if segment.points.count == 1, let only = segment.points.first {
@@ -91,8 +93,24 @@ struct GlucoseChart: View {
                         .symbolSize(24)
                 }
             }
+
+            // En vivo: el final de la curva con un halo del color de su rango. Se usa el último punto dibujado
+            // (con la reducción por cubos puede diferir un poco de la lectura cruda) para que caiga sobre la línea.
+            if viewModel.isLive, let last = viewModel.drawSegments.last?.points.last {
+                let color = Self.endColor(for: last.value, low: low, high: high)
+                PointMark(x: .value("Hora", last.date), y: .value("mg/dL", Double(last.value)))
+                    .foregroundStyle(color.opacity(0.22))
+                    .symbolSize(220)
+                PointMark(x: .value("Hora", last.date), y: .value("mg/dL", Double(last.value)))
+                    .foregroundStyle(.background)
+                    .symbolSize(90)
+                PointMark(x: .value("Hora", last.date), y: .value("mg/dL", Double(last.value)))
+                    .foregroundStyle(color)
+                    .symbolSize(50)
+            }
         }
-        .chartXScale(domain: viewModel.loadedStart...viewModel.loadedEnd)
+        // Margen final para que el halo de la última lectura no se corte en el borde.
+        .chartXScale(domain: viewModel.loadedStart...viewModel.loadedEnd, range: .plotDimension(endPadding: 16))
         .chartYScale(domain: Double(domain.lowerBound)...Double(domain.upperBound))
         .chartScrollableAxes(.horizontal)
         .chartXVisibleDomain(length: viewModel.visibleLength)
@@ -102,8 +120,11 @@ struct GlucoseChart: View {
         .chartYAxis(.hidden)
         .chartXAxis {
             AxisMarks(values: Self.axisDates(from: viewModel.loadedStart, to: viewModel.loadedEnd, stride: stride, calendar: viewModel.calendar)) {
-                AxisGridLine()
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
+                    .foregroundStyle(Color.secondary.opacity(0.25))
                 AxisValueLabel(format: stride.component == .minute ? .dateTime.hour().minute() : .dateTime.hour())
+                    .font(.caption2)
+                    .foregroundStyle(Color.secondary)
             }
         }
         .chartXSelection(value: selectionBinding)
@@ -132,7 +153,7 @@ struct GlucoseChart: View {
         .accessibilityAction(named: String(localized: "today.chart.zoomOut", defaultValue: "Alejar")) {
             zoom(by: 2)
         }
-        .containerRelativeFrame(.vertical) { height, _ in height * 0.36 }
+        .containerRelativeFrame(.vertical) { height, _ in height * GlucoseChartCard.heightFraction }
     }
 
     // MARK: Desplazamiento y zoom
@@ -230,6 +251,26 @@ struct GlucoseChart: View {
     static func lengthTitle(_ length: TimeInterval) -> String {
         Duration.seconds(Int((length / 60).rounded()) * 60)
             .formatted(.units(allowed: [.hours, .minutes], width: .narrow))
+    }
+
+    /// Referencias: discontinuas (son umbrales, no rejilla) y finas.
+    static let referenceStroke = StrokeStyle(lineWidth: 0.75, dash: [3, 3])
+
+    /// Áreas fuera del rango: lavado que se desvanece hacia la referencia (rojo de arriba abajo, azul al revés).
+    static let highWash = LinearGradient(
+        colors: [Tokens.Palette.high.opacity(0.34), Tokens.Palette.high.opacity(0.04)],
+        startPoint: .top, endPoint: .bottom
+    )
+    static let lowWash = LinearGradient(
+        colors: [Tokens.Palette.low.opacity(0.34), Tokens.Palette.low.opacity(0.04)],
+        startPoint: .bottom, endPoint: .top
+    )
+
+    /// Punto final en vivo: verde de "en rango" dentro de las referencias; rojo o azul fuera.
+    static func endColor(for value: Int, low: Int, high: Int) -> Color {
+        if value > high { return Tokens.Palette.high }
+        if value < low { return Tokens.Palette.low }
+        return Tokens.Palette.inRange
     }
 
     /// Color de un valor aislado: azul bajo la referencia baja, rojo sobre la alta, neutro en el rango.

@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Leyenda de la curva: líneas de referencia (no médicas), índice de pico y huecos.
+/// Leyenda de la curva: líneas de referencia (no médicas), índice de pico y huecos. Se muestra en el popover
+/// de `ChartLegendButton`.
 struct ChartLegend: View {
     let low: Int
     let high: Int
@@ -10,7 +11,7 @@ struct ChartLegend: View {
             HStack(spacing: Tokens.Spacing.xs) {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Tokens.Palette.high.opacity(0.3))
-                    .frame(width: 20, height: 12)
+                    .frame(width: 16, height: 10)
                     .accessibilityHidden(true)
                 Text(String(
                     localized: "today.legend.spike",
@@ -20,7 +21,7 @@ struct ChartLegend: View {
             HStack(spacing: Tokens.Spacing.xs) {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Tokens.Palette.low.opacity(0.3))
-                    .frame(width: 20, height: 12)
+                    .frame(width: 16, height: 10)
                     .accessibilityHidden(true)
                 Text(String(
                     localized: "today.legend.low",
@@ -30,7 +31,7 @@ struct ChartLegend: View {
             HStack(spacing: Tokens.Spacing.xs) {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Tokens.Palette.gap.opacity(0.35))
-                    .frame(width: 20, height: 12)
+                    .frame(width: 16, height: 10)
                     .accessibilityHidden(true)
                 Text(String(
                     localized: "today.legend.gap",
@@ -40,5 +41,6 @@ struct ChartLegend: View {
         }
         .font(.footnote)
         .foregroundStyle(.secondary)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }

@@ -13,6 +13,7 @@ struct TodayView: View {
     @AppStorage(ReferenceLines.highKey) private var referenceHigh = ReferenceLines.defaultHigh
     @State private var quickAdd: QuickAddModel?
     @State private var mealAnalysis: MealAnalysisViewModel?
+    @State private var isShowingInsights = false
     @Environment(\.mealAssistant) private var mealServices
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -38,6 +39,9 @@ struct TodayView: View {
                             stats: viewModel.stats,
                             lengthTitle: GlucoseChart.lengthTitle(viewModel.windowEnd.timeIntervalSince(viewModel.windowStart))
                         )
+                        if let insights = viewModel.insights {
+                            TodayInsightsRow(insights: insights) { isShowingInsights = true }
+                        }
                         TodayEntriesRow(count: viewModel.dayEntryCount, isToday: viewModel.isToday)
                     }
                     TodayFooter(range: viewModel.hasNoData ? nil : viewModel.stats.range, isSynthetic: viewModel.isSynthetic)
@@ -69,6 +73,9 @@ struct TodayView: View {
                 QuickAddSheet(model: model) {
                     Task { await viewModel.refresh() }
                 }
+            }
+            .sheet(isPresented: $isShowingInsights) {
+                TodayInsightsSheet(viewModel: viewModel)
             }
             .sheet(item: $mealAnalysis) { analysis in
                 MealAnalysisView(model: analysis, onSaved: {

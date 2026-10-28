@@ -1,8 +1,14 @@
+import LingoCore
 import SwiftUI
 
-/// Contenido del popover de un marcador: tipo, hora, gramos o duración y texto.
+/// Contenido del popover de un marcador: tipo, hora, gramos o duración, texto y, si hay datos, la respuesta
+/// de la glucosa a la comida o el efecto del ejercicio (T-23, informativos).
 struct DiaryMarkDetail: View {
     let mark: DiaryMark
+    var mealResponse: MealResponse?
+    var exerciseEffect: ExerciseEffect?
+    /// Instante de referencia para decidir si una comida sin respuesta es "todavía" reciente.
+    var now: Date = .now
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {
@@ -18,6 +24,8 @@ struct DiaryMarkDetail: View {
             if let text = mark.text {
                 Text(text)
             }
+            DiaryMarkInsight(mark: mark, mealResponse: mealResponse, exerciseEffect: exerciseEffect, now: now)
+                .font(.subheadline)
             if mark.synthetic {
                 Text(String(localized: "today.mark.synthetic", defaultValue: "Ejemplo (sintético)"))
                     .font(.footnote)
@@ -25,6 +33,8 @@ struct DiaryMarkDetail: View {
             }
         }
         .padding(Tokens.Spacing.sm)
-        .frame(minWidth: 220, alignment: .leading)
+        // Ancho estable y alto propio: con la frase del insight el popover medía mal el texto envuelto y lo cortaba.
+        .frame(minWidth: 220, idealWidth: 300, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }

@@ -4,6 +4,8 @@ import SwiftUI
 /// una insignia con el número de marcas y la hora de la primera; el popover las lista todas.
 struct ChartMarkGroupButton: View {
     let group: ChartMarkGroup
+    /// Para calcular, al abrir el popover, la respuesta a cada comida o el efecto de cada ejercicio (T-23).
+    let viewModel: TodayViewModel
     @State private var isShowingDetail = false
 
     var body: some View {
@@ -45,7 +47,12 @@ struct ChartMarkGroupButton: View {
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach(group.marks) { mark in
                         if mark.id != group.first.id { Divider() }
-                        DiaryMarkDetail(mark: mark)
+                        DiaryMarkDetail(
+                            mark: mark,
+                            mealResponse: viewModel.mealResponse(for: mark),
+                            exerciseEffect: viewModel.exerciseEffect(for: mark),
+                            now: viewModel.now
+                        )
                     }
                 }
             }

@@ -10,6 +10,8 @@ struct RootTabView: View {
     private let mealAssistant: MealAssistantServices
     private let rangeSuggester: any RangeSuggesting
     private let workoutImport: WorkoutImportTrigger?
+    private let alerts: AlertsController?
+    @Environment(\.scenePhase) private var scenePhase
 
     /// Fuentes reales: `SQLiteStore` y `SensorSessionCoordinator`.
     init(environment: AppEnvironment) {
@@ -25,6 +27,7 @@ struct RootTabView: View {
         mealAssistant = assistant
         rangeSuggester = RangeSuggestionService.live(readings: environment.store, assistant: assistant)
         workoutImport = environment.workoutImport
+        alerts = environment.alerts
     }
 
     /// `PreviewData` (sintético y señalado como tal): `#Preview` y `-previewSensorState`.
@@ -37,6 +40,7 @@ struct RootTabView: View {
         mealAssistant = .preview
         rangeSuggester = PreviewRangeSuggester()
         workoutImport = nil
+        alerts = nil
     }
 
     var body: some View {
@@ -54,13 +58,20 @@ struct RootTabView: View {
                 DataView(viewModel: ui.data)
             }
             Tab(String(localized: "tab.settings", defaultValue: "Ajustes"), systemImage: "gearshape", value: AppTab.settings) {
-                SettingsView(viewModel: ui.settings, identity: identityImport, alarms: ui.alarmModel)
+                SettingsView(viewModel: ui.settings, identity: identityImport)
             }
         }
         .environment(\.tabSelector, TabSelector { selection = $0 })
         .environment(\.mealAssistant, mealAssistant)
         .environment(\.rangeSuggester, rangeSuggester)
         .environment(\.workoutImport, workoutImport)
+        .environment(\.alerts, alerts)
+        .onReceive(NotificationCenter.default.publisher(for: AlertNotificationDelegate.openToday)) { _ in
+            selection = .today
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { alerts?.sceneDidBecomeActive() }
+        }
         .modifier(IdentityImportAlert(model: identityImport))
     }
 }

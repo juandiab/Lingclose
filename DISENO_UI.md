@@ -27,6 +27,13 @@ Tarea: **T-11b** (después de T-12a).
 - Reduce Motion: chips, ‹ › y "Ahora" cambian sin animación.
 - Dibujo: con más de 900 puntos cargados la línea y las áreas se reducen a cubos de 2/5/10 min sin cruzar huecos; el cursor, las estadísticas y los picos usan las lecturas crudas.
 
+## Marcas e insights de la curva (28-oct, T-23)
+
+- Cada marca de comida o ejercicio tiene una línea vertical discontinua fina (1 pt, gris secundario al 45 %) de abajo arriba de la gráfica, que acompaña al desplazamiento y al zoom; en un grupo de botones, una línea por marca. El cursor queda encima.
+- Episodios de subida o bajada rápida (≥ 2 mg/dL/min durante ≥ 10 min) sombreados muy tenues (rojo/azul al 6 %); se desactivan en la hoja de insights (`today.showRateEpisodes`).
+- Popover de una comida: "Subió +N mg/dL, pico a los X min, volvió a los Y min" y una barra de puntuación 0–100 (informativa); de un ejercicio: "Bajó N mg/dL en 60 min". Sin datos suficientes, se dice ("todavía" si la marca es reciente).
+- Fila "Insights · informativo" bajo En rango/Media/SD, con la misma estética: cambios rápidos ↑N ↓M y mejor/peor comida de la ventana visible. Si no hay nada, no aparece. Tocarla abre una hoja con la lista, el interruptor del sombreado y la nota no médica. Definiciones y fórmulas en `docs/T-23.md`.
+
 ## Pantallas de la v1
 
 | Pantalla | Contenido | Comportamiento |

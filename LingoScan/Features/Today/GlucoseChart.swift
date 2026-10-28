@@ -11,12 +11,15 @@ import SwiftUI
 /// Gestos: deslizar desplaza el tiempo (física nativa de `chartScrollableAxes`), pellizcar cambia la longitud
 /// visible manteniendo fijo el instante bajo el pellizco, tocar coloca el cursor en la lectura más cercana y
 /// mantener pulsado (0,35 s) y arrastrar lo desliza. Se dibujan los tramos reducidos de `drawSegments`.
-/// Marcas, índices de pico y cursor se dibujan en `ChartInteractionOverlay`.
+/// Las marcas de comida y ejercicio tienen una línea vertical discontinua en la gráfica (`RuleMark`) y los
+/// episodios de cambio rápido (T-23) un sombreado tenue opcional (`today.showRateEpisodes`). Los botones de
+/// las marcas, los índices de pico y el cursor se dibujan en `ChartInteractionOverlay`.
 struct GlucoseChart: View {
     @Bindable var viewModel: TodayViewModel
     let selection: ChartSelection
 
     @AppStorage(TodayViewModel.visibleSecondsKey) private var storedSeconds = 0.0
+    @AppStorage(TodayViewModel.showRateEpisodesKey) private var showRateEpisodes = true
     @State private var pinch: PinchStart?
     @State private var pinchHaptic = 0
     @State private var cursorHaptic = 0
@@ -45,6 +48,26 @@ struct GlucoseChart: View {
                     yEnd: .value("Máximo", Double(domain.upperBound))
                 )
                 .foregroundStyle(Tokens.Palette.gap.opacity(0.12))
+            }
+
+            // Episodios de subida o bajada rápida (T-23): sombreado muy tenue, opcional (hoja de insights).
+            if showRateEpisodes {
+                ForEach(viewModel.rateEvents) { event in
+                    RectangleMark(
+                        xStart: .value("Inicio del episodio", event.start.date),
+                        xEnd: .value("Fin del episodio", event.end.date),
+                        yStart: .value("Mínimo", Double(domain.lowerBound)),
+                        yEnd: .value("Máximo", Double(domain.upperBound))
+                    )
+                    .foregroundStyle(event.direction == .rising ? Self.risingWash : Self.fallingWash)
+                }
+            }
+
+            // Una línea vertical fina por marca de comida o ejercicio, de abajo arriba (también dentro de un grupo).
+            ForEach(viewModel.marks) { mark in
+                RuleMark(x: .value("Marca", mark.date))
+                    .foregroundStyle(Self.markRuleColor)
+                    .lineStyle(Self.markRuleStroke)
             }
 
             // Umbrales finos en gris (`Color.secondary` explícito: el estilo jerárquico dentro de Charts hereda el tinte).
@@ -258,6 +281,14 @@ struct GlucoseChart: View {
 
     /// Referencias: discontinuas (son umbrales, no rejilla) y finas.
     static let referenceStroke = StrokeStyle(lineWidth: 0.75, dash: [3, 3])
+
+    /// Líneas verticales de las marcas: iguales para comida y ejercicio (el icono las distingue).
+    static let markRuleStroke = StrokeStyle(lineWidth: 1, dash: [3, 3])
+    static let markRuleColor = Color.secondary.opacity(0.45)
+
+    /// Sombreado de los episodios rápidos.
+    static let risingWash = Tokens.Palette.high.opacity(0.06)
+    static let fallingWash = Tokens.Palette.low.opacity(0.06)
 
     /// Áreas fuera del rango: lavado que se desvanece hacia la referencia (rojo de arriba abajo, azul al revés).
     static let highWash = LinearGradient(

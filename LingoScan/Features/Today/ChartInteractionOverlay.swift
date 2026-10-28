@@ -2,7 +2,8 @@ import Charts
 import SwiftUI
 
 /// Capa sobre la curva: rótulos de las referencias, índices de pico, marcadores de comida y ejercicio con su
-/// popover, y el cursor de lectura. Marcadores e índices cercanos en pantalla se agrupan (`ChartXGrouping`)
+/// popover (con la respuesta a la comida o el efecto del ejercicio, T-23), y el cursor de lectura. Las líneas
+/// verticales de las marcas son `RuleMark` de la propia gráfica (`GlucoseChart`), bajo esta capa. Marcadores e índices cercanos en pantalla se agrupan (`ChartXGrouping`)
 /// con las posiciones actuales, así que la agrupación cambia con el zoom y el desplazamiento. Los gestos del cursor viven en `GlucoseChart` (`chartGesture`), así que
 /// esta capa no intercepta el desplazamiento salvo en los marcadores.
 ///
@@ -86,7 +87,7 @@ struct ChartInteractionOverlay: View {
     /// Marcadores visibles; los que quedan a menos de `markerSpacing` del anterior se fusionan en un grupo.
     private func markers(frame: CGRect, visible: CGRect) -> some View {
         ForEach(markGroups(frame: frame, visible: visible)) { group in
-            ChartMarkGroupButton(group: group)
+            ChartMarkGroupButton(group: group, viewModel: viewModel)
                 .position(x: min(max(group.x, 22), visible.width - 22), y: frame.maxY - 22)
         }
     }

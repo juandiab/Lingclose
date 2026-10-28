@@ -1,12 +1,10 @@
 import SwiftUI
 
-/// Ajustes: unidad, alarmas, identidad de app, permisos, apariencia, diagnóstico privado y "Acerca de".
+/// Ajustes: unidad, alertas, identidad de app, permisos, apariencia, diagnóstico privado y "Acerca de".
 struct SettingsView: View {
     @Bindable var viewModel: SettingsViewModel
     /// `nil` en previsualización (`PreviewData`): no hay credenciales reales.
     let identity: IdentityImportModel?
-    /// `nil` mientras se crea el servicio de alarmas (arranque) y en previsualización.
-    let alarms: AlarmSettingsModel?
 
     @Environment(\.openURL) private var openURL
     @Environment(\.mealAssistant) private var mealAssistant
@@ -16,7 +14,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 unitSection
-                alarmsSection
+                AlertsSection()
                 mealAssistantSection
                 ReferenceRangeSection()
                 if let identity {
@@ -38,24 +36,6 @@ struct SettingsView: View {
             LabeledContent(String(localized: "settings.unit", defaultValue: "Unidad de glucosa"), value: viewModel.glucoseUnit)
         } footer: {
             Text(String(localized: "settings.unit.footer", defaultValue: "Fija en mg/dL por ahora."))
-        }
-    }
-
-    @ViewBuilder
-    private var alarmsSection: some View {
-        Section {
-            if let alarms {
-                NavigationLink {
-                    AlarmsSettingsView(model: alarms)
-                } label: {
-                    Label(String(localized: "settings.alarms", defaultValue: "Alarmas"), systemImage: "bell")
-                }
-            } else {
-                Label(String(localized: "settings.alarms.loading", defaultValue: "Alarmas (preparando…)"), systemImage: "bell")
-                    .foregroundStyle(.secondary)
-            }
-        } footer: {
-            Text(String(localized: "settings.alarms.footer", defaultValue: "Informativas; LingoScan no es un dispositivo médico."))
         }
     }
 

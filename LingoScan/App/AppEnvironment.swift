@@ -18,6 +18,8 @@ final class AppEnvironment {
     let identityImport: IdentityImportModel
     /// Entrenamientos de Salud (T-21 §5, solo lectura).
     let workoutImport: WorkoutImportTrigger
+    /// Alertas de glucosa (T-24): escuchan al coordinador también en segundo plano.
+    let alerts: AlertsController
 
     private var startTask: Task<Void, Never>?
 
@@ -46,6 +48,7 @@ final class AppEnvironment {
         self.identityImport = IdentityImportModel(credentials: credentials)
         self.workoutImport = Self.makeWorkoutImport(store: store)
         workoutImport.install()
+        self.alerts = Self.makeAlerts(store: store, coordinator: coordinator)
         installRecovery()
         // T-10: servicio de archivo portable, tarea diaria (BGAppRefreshTask) y limpieza de `.partial`.
         configureArchive(databaseURL: databaseURL)

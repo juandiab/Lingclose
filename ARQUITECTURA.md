@@ -14,7 +14,7 @@ LingoScan_Claude/
 │   │   ├── Reports/                # TIR, promedio, CV, comidas, noche, semanal
 │   │   ├── Data/                   # Health, exportar/importar, backup, recuperación
 │   │   └── Settings/               # unidades, alarmas, permisos, apariencia, diagnósticos
-│   ├── Services/                   # NFCService, SessionCoordinator, HealthExporter, ArchiveService, AlarmService, CredentialStore
+│   ├── Services/                   # NFCService, SessionCoordinator, HealthExporter, ArchiveService, AlertService, CredentialStore
 │   ├── DesignSystem/               # tokens, GlassCard, MetricText, estilos
 │   └── Resources/                  # Assets, Localizable.xcstrings (es, en)
 ├── LingoScanTests/                 # tests del target de app (simulador)
@@ -49,7 +49,7 @@ LingoScan_Claude/
 | `EligibilityPolicy` | Decide si una lectura es apta para Health y para la gráfica, con motivo | función pura (LingoCore) | Opus |
 | `HealthExporter` | Autorización, outbox con reintentos, `HKQuantitySample` de glucosa y carbohidratos, lectura de entrenamientos | actor (app) | Sonnet |
 | `ArchiveService` | Exporta e importa `.lingoscan`; carpeta elegida por el usuario; cadencia | actor (app) + LingoCore | Sonnet |
-| `AlarmService` | Alarmas alta, baja y sin datos con `UNUserNotificationCenter` | actor (app) | Sonnet |
+| `AlertService` | Alertas informativas alta, baja, subida/bajada rápida y sin datos (T-24, `docs/T-24.md`): `AlertEvaluator` puro en LingoCore, notificaciones locales con `UNUserNotificationCenter` | actor (app) | Opus |
 | `ReportsEngine` | Métricas sobre lecturas elegibles y eventos | struct pura (LingoCore) | Sonnet |
 | View models | `@MainActor @Observable`, uno por feature, sin lógica de protocolo | app | Sonnet |
 
@@ -90,7 +90,7 @@ flowchart LR
   STORE --> UI[Today / Reports]
   STORE --> HK[HealthExporter]
   STORE --> ARCH[ArchiveService<br/>.lingoscan]
-  STORE --> ALARM[AlarmService]
+  STORE --> ALARM[AlertService]
 ```
 
 Reglas:

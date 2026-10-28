@@ -29,6 +29,11 @@ struct DiaryMark: Sendable, Hashable, Identifiable {
     let detail: String?
     let text: String?
     let synthetic: Bool
+    /// Duración del ejercicio en minutos (fin = `date + duración`); `nil` en comidas o sin duración.
+    let durationMinutes: Int?
+
+    /// Fin del ejercicio si tiene duración.
+    var endDate: Date? { durationMinutes.map { date.addingTimeInterval(Double($0) * 60) } }
 
     /// Solo comidas y ejercicio, y no las borradas; las notas no se marcan en la curva.
     init?(_ event: DiaryEvent) {
@@ -43,5 +48,6 @@ struct DiaryMark: Sendable, Hashable, Identifiable {
         detail = event.detailText
         text = event.text
         synthetic = event.synthetic
+        durationMinutes = event.durationMin
     }
 }

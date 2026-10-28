@@ -25,6 +25,8 @@ final class TodayViewModel {
     static let defaultVisibleLength = TodayPeriod.sixHours.duration
     /// Clave de `AppStorage` con la longitud visible libre (segundos), restaurada al abrir.
     static let visibleSecondsKey = "today.visibleSeconds"
+    /// Clave de `AppStorage`: sombrear en la curva los episodios de subida o bajada rápida (por defecto sí).
+    static let showRateEpisodesKey = "today.showRateEpisodes"
     /// La ventana está "en vivo" si termina a menos de este margen de ahora.
     static let liveTolerance: TimeInterval = 60
     /// Espera tras el último movimiento antes de recalcular o recargar.
@@ -68,7 +70,11 @@ final class TodayViewModel {
         didSet { if referenceLow != oldValue { recomputeVisible() } }
     }
     var referenceHigh = ReferenceLines.defaultHigh {
-        didSet { if referenceHigh != oldValue { recomputeVisible() } }
+        didSet {
+            guard referenceHigh != oldValue else { return }
+            mealResponseCache.removeAll()
+            recomputeVisible()
+        }
     }
 
     // MARK: Datos
@@ -83,6 +89,8 @@ final class TodayViewModel {
     /// Puntos crudos de la ventana asentada (estadísticas, picos, VoiceOver).
     private(set) var visiblePoints: [GlucosePoint] = []
     private(set) var spikes: [TodaySpike] = []
+    /// Episodios de subida o bajada rápida del rango cargado (T-23, informativos). La gráfica los sombrea.
+    private(set) var rateEvents: [RateEvent] = []
     /// Eventos del día de `entriesDay` (comidas, ejercicio y notas), para la fila "Registro".
     private(set) var dayEntryCount = 0
     /// Día al que corresponde `dayEntryCount`.
@@ -107,6 +115,10 @@ final class TodayViewModel {
     /// Ventana visible y longitud con las que se hizo la última carga (su tercio central).
     @ObservationIgnored private var loadAnchor: (start: Date, end: Date, length: TimeInterval)?
     @ObservationIgnored private var settleTask: Task<Void, Never>?
+    /// Respuestas a comida y efectos de ejercicio ya calculados por id de marca; se vacían en cada carga
+    /// (y al cambiar la referencia alta, que entra en `timeAboveHigh`).
+    @ObservationIgnored private var mealResponseCache: [DiaryMark.ID: MealResponse?] = [:]
+    @ObservationIgnored private var exerciseEffectCache: [DiaryMark.ID: ExerciseEffect?] = [:]
     @ObservationIgnored private var loadGeneration = 0
 
     init(
@@ -238,6 +250,63 @@ final class TodayViewModel {
             return String(localized: "today.readout.value", defaultValue: "\(point.value) mg/dL a las \(point.date.formatted(date: .omitted, time: .shortened))")
         }
         return String(localized: "today.readout.none", defaultValue: "Sin lectura a las \(time)")
+    }
+
+    // MARK: Insights (T-23)
+
+    /// Respuesta de la glucosa a una comida con las lecturas cargadas; `nil` si no es comida o no hay datos
+    /// suficientes (comida de hace menos de 1 h, hueco > 20 min en la primera hora). Ver `MealResponse`.
+    /// Limitación: solo usa el rango cargado; una comida a menos de 3 h de su borde derecho (que no sea
+    /// ahora) se evalúa con menos datos.
+    func mealResponse(for mark: DiaryMark) -> MealResponse? {
+        guard mark.kind == .meal else { return nil }
+        if let cached = mealResponseCache[mark.id] { return cached }
+        let start = mark.date.addingTimeInterval(-Double(MealResponse.baselineWindow) * 2)
+        let end = mark.date.addingTimeInterval(Double(MealResponse.horizon))
+        let response = MealResponse(mealAt: UTCInstant(mark.date), samples: samples(from: start, to: end), highReference: referenceHigh)
+        mealResponseCache[mark.id] = .some(response)
+        return response
+    }
+
+    /// Efecto de un ejercicio (fin = duración de la marca o 30 min) con las lecturas cargadas. Ver `ExerciseEffect`.
+    func exerciseEffect(for mark: DiaryMark) -> ExerciseEffect? {
+        guard mark.kind == .exercise else { return nil }
+        if let cached = exerciseEffectCache[mark.id] { return cached }
+        let end = mark.endDate ?? mark.date.addingTimeInterval(Double(ExerciseEffect.defaultDuration))
+        let from = mark.date.addingTimeInterval(-Double(ExerciseEffect.beforeWindow))
+        let to = end.addingTimeInterval(Double(ExerciseEffect.afterWindow))
+        let effect = ExerciseEffect(start: UTCInstant(mark.date), end: UTCInstant(end), samples: samples(from: from, to: to))
+        exerciseEffectCache[mark.id] = .some(effect)
+        return effect
+    }
+
+    /// Episodios rápidos que se solapan con la ventana asentada.
+    var visibleRateEvents: [RateEvent] {
+        let start = UTCInstant(windowStart), end = UTCInstant(windowEnd)
+        return rateEvents.filter { $0.end >= start && $0.start <= end }
+    }
+
+    /// Resumen de la ventana asentada para la fila "Insights": subidas y bajadas rápidas y la mejor y la peor
+    /// respuesta a comida. `nil` si no hay nada que mostrar.
+    var insights: TodayInsights? {
+        let window = windowStart...windowEnd
+        let meals = marks
+            .filter { $0.kind == .meal && window.contains($0.date) }
+            .compactMap { mark in mealResponse(for: mark).map { TodayMealInsight(mark: mark, response: $0) } }
+        let insights = TodayInsights(rateEvents: visibleRateEvents, meals: meals)
+        return insights.isEmpty ? nil : insights
+    }
+
+    /// Lecturas crudas cargadas en `[start, end]` como muestras de `LingoCore`.
+    private func samples(from start: Date, to end: Date) -> [BasicStats.Sample] {
+        let lower = Self.firstIndex(in: points, notBefore: start)
+        let upper = Self.firstIndex(in: points, after: end)
+        guard lower < upper else { return [] }
+        return points[lower..<upper].map(Self.sample)
+    }
+
+    private static func sample(_ point: GlucosePoint) -> BasicStats.Sample {
+        BasicStats.Sample(measuredAt: UTCInstant(point.date), valueMgdl: point.value)
     }
 
     // MARK: Zoom
@@ -437,6 +506,9 @@ final class TodayViewModel {
             points = newSegments.flatMap(\.points)
             gaps = GlucoseSegmenter.gaps(in: newSegments)
             marks = newEvents.compactMap(DiaryMark.init).sorted { $0.date < $1.date }
+            mealResponseCache.removeAll()
+            exerciseEffectCache.removeAll()
+            rateEvents = RateOfChange.events(in: points.map(Self.sample))
             dayEntryCount = newDayEvents.filter { !$0.deleted }.count
             entriesDay = day
             let newStart = min(start, visibleStart)

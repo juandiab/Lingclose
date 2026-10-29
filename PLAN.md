@@ -82,7 +82,7 @@ Respuesta a comidas, noche, CV y comparación semanal, calibrados con lecturas r
 
 **Estado 28-oct (v0.3.0, build 3):** T-23 líneas verticales por marca e insights locales (subidas/bajadas rápidas, respuesta a comidas, efecto del ejercicio); T-24 alertas y notificaciones locales (sustituyen a las alarmas de T-13, D-26); T-25 consejos por reglas en la notificación y tarjeta "Qué hacer", asistente opcional bajo demanda (D-27); T-26 portugués (pt-BR) y repaso del inglés. Repo en GitHub `juandiab/LingoScan` (privado).
 
-**Estado 28-oct noche (v0.3.1, build 4):** corrección de estabilidad (D-28): seis cierres al tocar una alerta (`completionHandler` de `didReceive` fuera del hilo principal) y dos huecos de ~1 h por reconexión BLE con tope de 120 s que dejaba la app suspendida; ahora la reconexión es indefinida (la petición pendiente despierta a la app) y el tope entre reintentos baja a 30 s.
+**Estado 28-oct noche (v0.3.1, build 4):** corrección de estabilidad (D-28): seis cierres al tocar una alerta (`completionHandler` de `didReceive` fuera del hilo principal) y dos huecos de ~1 h por reconexión BLE con tope de 120 s que dejaba la app suspendida; ahora la reconexión es indefinida (la petición pendiente despierta a la app) y el tope entre reintentos baja a 30 s. **Estado 29-oct (D-29):** licencia GPL-3, `NOTICE.md` y README público; nombre público Lingclose, nombre interno sin cambios.
 
 ### Fase 3 — Primer sensor (de sacrificio) — CERRADA el 27-oct-2026
 

@@ -10,7 +10,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>es</string>
 	<key>CFBundleDisplayName</key>
-	<string>LingoScan</string>
+	<string>Lingclose</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

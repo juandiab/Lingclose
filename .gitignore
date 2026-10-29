@@ -24,3 +24,8 @@ Package.resolved.bak
 
 # macOS
 .DS_Store
+
+# Capturas del iPhone con el sensor real (muestran glucosa real): quedan en el disco, no en el repo
+docs/capturas/T-23-*
+docs/capturas/T-24-*
+docs/capturas/T-25-*

@@ -433,7 +433,9 @@ actor SensorSessionCoordinator {
             let peripheralID: UUID
             do {
                 peripheralID = try await link.connect(
-                    peripheralID: saved.peripheralUUID, timeout: timeouts.connect, scanWindow: timeouts.scanWindow
+                    peripheralID: saved.peripheralUUID,
+                    timeout: mode == .firstPair ? timeouts.connect : timeouts.reconnect,
+                    scanWindow: timeouts.scanWindow
                 )
             } catch {
                 guard isLive else { return }

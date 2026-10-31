@@ -39,6 +39,11 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-12c | 2b | Sonnet | Pulido de Hoy, Datos y Ajustes: apariencia, rango de referencia, Registro de hoy → Diario; Datos y Recuperación con destino claro, confirmación de exportar y compartir siempre visible | T-12a | hecha (`80dc798`, `46f8ded`, `db9a3ec`, `4b24678`; curva con zoom/pan `63fa6a7`, `f5dc830`, `7d9e792`; rediseño de Hoy `08d36cb`) |
 | T-25 | 2b | Opus | Recomendaciones al disparar una alerta: consejos por reglas (LingoCore), consejo en la notificación, tarjeta "Qué hacer" en Hoy y asistente LLM opcional bajo demanda | T-24, T-21 | hecha en código, sin commit (pendiente revisión de Fable) |
 | T-26 | 2b | Sonnet | Localización: portugués de Brasil (pt-BR) en todo el catálogo y repaso del inglés | T-25 | hecha en código, sin commit (pendiente revisión de Fable) |
+| T-27a | 2b | Opus | Reportes: motor en LingoCore (siete reportes, `ReportSnapshot`, tabla `report_analyses`) | — | en curso |
+| T-27b | 2b | Opus | Sistema visual "Studio" (port de JPLights): fondo Hex Vault, paleta de glucosa, ajuste de apariencia | — | en curso |
+| T-27c | 2b | Opus | Reportes: UI (cards Studio, AGP, compartir) | T-27a, T-27b | pendiente |
+| T-27d | 2b | Sonnet | Reportes: análisis con IA (guía analítica, historial) | T-27a | pendiente |
+| T-27e | 2b | Sonnet | Reportes: localización en/pt-BR, cierre de docs y README | T-27c, T-27d | pendiente |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |
@@ -252,6 +257,16 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 **Comportamiento:** todas las traducciones pt-BR con `state: translated`, mismos especificadores que `en`, plural de `sensor.days.remaining` incluido; los consejos de `Coaching` y los nombres de alerta se resuelven por clave del catálogo (ninguna clave faltaba salvo las 3 anteriores). Inglés: Title Case en títulos y botones de barra, comillas y apóstrofos tipográficos, sin contracciones.
 **Verificación 28-oct:** build en verde; `LocalizationCatalogTests` (3 tests: es/en/pt-BR completas, especificadores iguales, títulos de aviso ≤ 40 caracteres). Capturas en simulador con `-AppleLanguages "(pt-BR)"`: Hoje, Diário y Ajustes → Alertas, sin cortes ni textos sin traducir.
 **Limitaciones:** traducción sin revisión de un hablante nativo; la hora y la fecha usan el formato del sistema.
+
+## T-27 — Reportes, análisis con IA y sistema visual Studio (Fase 2b)
+
+Especificación completa, contratos, archivos permitidos y criterios en `docs/T-27.md`; decisiones D-30 y D-31.
+
+- **T-27a (Opus):** motor de reportes en LingoCore (`Reports/**`, `report_analyses`). Verifica: `swift test` real.
+- **T-27b (Opus):** sistema visual Studio (`Rendering/**`, `DesignSystem/**`, `Features/Settings/Appearance/**`). Verifica: `xcodebuild test`, build de dispositivo y capturas.
+- **T-27c (Opus):** UI de Reportes (`Features/Reports/**`), después de a y b.
+- **T-27d (Sonnet):** análisis con IA (`Services/LLM/ReportAnalysis*`, `Services/ReportAnalysis/**`, `Features/Reports/Analysis/**`), después de a.
+- **T-27e (Sonnet):** localización y docs, al final.
 
 ## T-17 — Nightscout uploader (Fase 4, opcional)
 

@@ -17,13 +17,19 @@ extension AppEnvironment {
         return service
     }
 
-    /// Crea el servicio, registra la tarea diaria y borra las `.partial` abandonadas.
+    /// Crea el servicio, registra la tarea diaria, arranca el disparador en proceso y borra las `.partial` abandonadas.
+    /// La tarea diaria se programa desde la última copia propia: llamar en cada arranque ya no la aplaza.
     @discardableResult
     func configureArchive(databaseURL: URL) -> ArchiveService {
         let service = archiveService(databaseURL: databaseURL)
-        ArchiveBackgroundTask.register { await service.exportIfDue() }
-        ArchiveBackgroundTask.schedule()
-        Task { await service.removeAbandonedPartials() }
+        ArchiveBackgroundTask.register(
+            work: { await service.exportIfDue() },
+            lastExport: { await service.lastOwnExportDate() })
+        ArchiveExportTrigger(service: service, store: store).install()
+        Task {
+            await service.removeAbandonedPartials()
+            await ArchiveBackgroundTask.schedule(lastExport: await service.lastOwnExportDate())
+        }
         return service
     }
 }

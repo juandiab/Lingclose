@@ -78,7 +78,9 @@ struct RootTabView: View {
             Task { await coaching?.refresh() }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { alerts?.sceneDidBecomeActive() }
+            guard phase == .active else { return }
+            alerts?.sceneDidBecomeActive()
+            ArchiveExportTrigger.current?.sceneDidBecomeActive()
         }
         .modifier(IdentityImportAlert(model: identityImport))
     }

@@ -175,9 +175,23 @@ final class ArchiveService {
         await refresh()
         guard destination.url != nil else { return false }
         let current = UTCInstant(now())
-        if let last = packages.filter(\.isOwn).map(\.createdAt).max(),
+        if let last = lastOwnPackageInstant,
            Double(current.epochSeconds - last.epochSeconds) < minimumInterval { return true }
         return await exportNow()?.verified ?? false
+    }
+
+    /// Intervalo mínimo entre copias propias que aplica `exportIfDue` (20 h en producción).
+    var exportInterval: TimeInterval { minimumInterval }
+
+    /// Fecha del último paquete propio en el destino actual (vuelve a listar la carpeta). `nil` si no hay ninguno o
+    /// no hay destino utilizable. Alimenta la fecha de la tarea diaria y el disparador en proceso.
+    func lastOwnExportDate() async -> Date? {
+        await refresh()
+        return lastOwnPackageInstant?.date
+    }
+
+    private var lastOwnPackageInstant: UTCInstant? {
+        packages.filter(\.isOwn).map(\.createdAt).max()
     }
 
     // MARK: Importar

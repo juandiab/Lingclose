@@ -7,7 +7,7 @@ struct URLSessionTransport: HTTPTransport {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.urlCache = nil
         configuration.httpCookieStorage = nil
-        configuration.timeoutIntervalForRequest = 60
+        configuration.timeoutIntervalForRequest = 180
         return URLSession(configuration: configuration)
     }()
 

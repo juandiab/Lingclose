@@ -39,11 +39,11 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-12c | 2b | Sonnet | Pulido de Hoy, Datos y Ajustes: apariencia, rango de referencia, Registro de hoy → Diario; Datos y Recuperación con destino claro, confirmación de exportar y compartir siempre visible | T-12a | hecha (`80dc798`, `46f8ded`, `db9a3ec`, `4b24678`; curva con zoom/pan `63fa6a7`, `f5dc830`, `7d9e792`; rediseño de Hoy `08d36cb`) |
 | T-25 | 2b | Opus | Recomendaciones al disparar una alerta: consejos por reglas (LingoCore), consejo en la notificación, tarjeta "Qué hacer" en Hoy y asistente LLM opcional bajo demanda | T-24, T-21 | hecha en código, sin commit (pendiente revisión de Fable) |
 | T-26 | 2b | Sonnet | Localización: portugués de Brasil (pt-BR) en todo el catálogo y repaso del inglés | T-25 | hecha en código, sin commit (pendiente revisión de Fable) |
-| T-27a | 2b | Opus | Reportes: motor en LingoCore (siete reportes, `ReportSnapshot`, tabla `report_analyses`) | — | en curso |
-| T-27b | 2b | Opus | Sistema visual "Studio" (port de JPLights): fondo Hex Vault, paleta de glucosa, ajuste de apariencia | — | en curso |
-| T-27c | 2b | Opus | Reportes: UI (cards Studio, AGP, compartir) | T-27a, T-27b | pendiente |
-| T-27d | 2b | Sonnet | Reportes: análisis con IA (guía analítica, historial) | T-27a | pendiente |
-| T-27e | 2b | Sonnet | Reportes: localización en/pt-BR, cierre de docs y README | T-27c, T-27d | pendiente |
+| T-27a | 2b | Opus | Reportes: motor en LingoCore (siete reportes, `ReportSnapshot`, tabla `report_analyses`) | — | cerrada |
+| T-27b | 2b | Opus | Sistema visual "Studio" (port de JPLights): fondo Hex Vault, paleta de glucosa, ajuste de apariencia | — | cerrada |
+| T-27c | 2b | Opus | Reportes: UI (cards Studio, AGP, compartir) | T-27a, T-27b | cerrada |
+| T-27d | 2b | Sonnet | Reportes: análisis con IA (guía analítica, historial) | T-27a | cerrada |
+| T-27e | 2b | Sonnet | Reportes: localización en/pt-BR, cierre de docs y README | T-27c, T-27d | cerrada |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |

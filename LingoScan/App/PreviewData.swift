@@ -400,3 +400,132 @@ extension PreviewData {
         ]
     }
 }
+
+// MARK: - Historial sintético para Reportes (T-27c)
+
+/// Once días sintéticos de un sensor anterior (también `synthetic: true`), para que Reportes tenga 14 días con comidas,
+/// ejercicio, noches con alguna bajada y un hueco largo. Solo lo usa `PreviewReportsDataSource`; Hoy no lo ve.
+extension PreviewData {
+    static let reportHistoryDays = 11
+    /// Hueco de 3 h en el día 7 del historial (huecos del resumen).
+    static let reportHistoryGapDay = 7
+
+    /// Lecturas y eventos del historial: terminan una hora antes de que empiece la sesión actual.
+    func reportHistory() -> (readings: [GlucoseReading], events: [DiaryEvent]) {
+        let days = Self.reportHistoryDays
+        let totalMinutes = days * 24 * 60
+        let activation = session.activationTimeEpochS - 3_600 - Int64(totalMinutes * 60)
+        let history = Self.makeSession(
+            id: "synthetic-report-history",
+            activation: activation,
+            warmupMinutes: Self.warmupMinutes,
+            wearMinutes: Self.wearMinutes,
+            lastLifeCount: totalMinutes - 1
+        )
+        let events = Self.historyEvents(activation: activation, end: activation + Int64(totalMinutes * 60))
+        let minuteOf: (DiaryEvent) -> Int = { Int(($0.at.epochSeconds - activation) / 60) }
+        let meals = events.filter { $0.kind == .meal }.map { (minute: minuteOf($0), carbs: $0.carbsG ?? 0) }
+        let exercise = events.filter { $0.kind == .exercise }.map { (minute: minuteOf($0), duration: $0.durationMin ?? 30) }
+        let lows = Self.historyLowMinutes(activation: activation, days: days)
+        let gapStart = Self.reportHistoryGapDay * 1_440 + 10 * 60
+        let gap = gapStart..<(gapStart + 180)
+
+        var readings: [GlucoseReading] = []
+        readings.reserveCapacity(totalMinutes)
+        var previous = 100
+        for minute in 0..<totalMinutes where !gap.contains(minute) {
+            let raw: RawReading
+            if minute < Self.warmupMinutes {
+                raw = RawReading(trend: 0, qualityFlag: true, channel: 1)
+            } else {
+                let value = Self.historyValue(minute: minute, meals: meals, exercise: exercise, lows: lows)
+                raw = RawReading(
+                    capped: value, uncapped: value, rateCenti: (value - previous) * 100,
+                    trend: Self.trend(forRatePerMinute: Double(value - previous)), actionable: false,
+                    temperatureCenti: 3_200, rangeBits: 0x4000, qualityFlag: false, channel: 1)
+                previous = value
+            }
+            readings.append(Self.reading(session: history, lifeCount: minute, raw: raw))
+        }
+        return (readings, events)
+    }
+}
+
+private extension PreviewData {
+    /// Glucosa simulada del historial: ritmo diurno, deriva por día, comidas proporcionales a los carbohidratos,
+    /// bajada durante y después del ejercicio y alguna bajada nocturna. Determinista.
+    static func historyValue(
+        minute: Int,
+        meals: [(minute: Int, carbs: Double)],
+        exercise: [(minute: Int, duration: Int)],
+        lows: [Int]
+    ) -> Int {
+        let hours = Double(minute) / 60
+        let day = Double(minute / 1_440)
+        var value = 104 + 8 * sin(hours / 24 * 2 * .pi + 0.6) + 7 * sin(day * 1.7)
+        for meal in meals where minute > meal.minute && minute < meal.minute + 300 {
+            let x = Double(minute - meal.minute) / 48
+            value += (18 + meal.carbs * 0.95) * x * exp(1 - x)
+        }
+        for session in exercise where minute >= session.minute && minute < session.minute + session.duration + 150 {
+            let elapsed = Double(minute - session.minute)
+            let duration = Double(session.duration)
+            let depth = 14 + duration * 0.3
+            value -= elapsed <= duration ? depth * elapsed / duration : depth * exp(-(elapsed - duration) / 55)
+        }
+        for low in lows {
+            let d = Double(minute - low) / 35
+            value -= 46 * exp(-d * d)
+        }
+        value += 3 * sin(Double(minute) * 0.7) + 2 * sin(Double(minute) * 0.23 + 1)
+        return min(max(Int(value.rounded()), 48), 280)
+    }
+
+    /// Bajadas nocturnas (≈ 03:10 local) en los días 2 y 8 del historial.
+    static func historyLowMinutes(activation: Int64, days: Int) -> [Int] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: timeZone) ?? .current
+        let first = calendar.startOfDay(for: Date(timeIntervalSince1970: TimeInterval(activation)))
+        return [2, 8].filter { $0 < days }.compactMap { offset in
+            guard let day = calendar.date(byAdding: .day, value: offset + 1, to: first),
+                  let date = calendar.date(bySettingHour: 3, minute: 10, second: 0, of: day) else { return nil }
+            return Int((date.timeIntervalSince1970 - Double(activation)) / 60)
+        }
+    }
+
+    /// Comidas a hora variable con carbohidratos distintos, merienda algunos días y ejercicio en días alternos.
+    static func historyEvents(activation: Int64, end: Int64) -> [DiaryEvent] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: timeZone) ?? .current
+        let first = Date(timeIntervalSince1970: TimeInterval(activation + Int64(warmupMinutes * 60)))
+        let last = Date(timeIntervalSince1970: TimeInterval(end))
+        let plan: [(hour: Int, minute: Int, carbs: [Double])] = [
+            (7, 20, [35, 50, 28, 62]), (12, 50, [70, 55, 85, 40]), (16, 10, [15, 0, 22, 0]), (19, 30, [48, 90, 38, 65]),
+        ]
+        let workouts: [(hour: Int, minute: Int, duration: Int)] = [(17, 30, 45), (6, 40, 30), (18, 0, 75), (17, 45, 20)]
+        var events: [DiaryEvent] = []
+        var day = calendar.startOfDay(for: first)
+        var index = 0
+        while day <= last {
+            for (slot, meal) in plan.enumerated() {
+                let carbs = meal.carbs[(index + slot) % meal.carbs.count]
+                guard carbs > 0,
+                      let base = calendar.date(bySettingHour: meal.hour, minute: meal.minute, second: 0, of: day) else { continue }
+                let date = base.addingTimeInterval(Double((index * 7) % 25) * 60)
+                guard date >= first, date <= last else { continue }
+                events.append(event(id: "synthetic-history-meal-\(index)-\(slot)", kind: .meal, at: date, durationMin: nil, carbs: carbs))
+            }
+            let workout = workouts[(index / 2) % workouts.count]
+            if index % 2 == 1,
+               let date = calendar.date(bySettingHour: workout.hour, minute: workout.minute, second: 0, of: day),
+               date >= first, date <= last {
+                events.append(event(id: "synthetic-history-exercise-\(index)", kind: .exercise, at: date,
+                                    durationMin: workout.duration, carbs: nil))
+            }
+            guard let next = calendar.date(byAdding: .day, value: 1, to: day) else { break }
+            day = next
+            index += 1
+        }
+        return events
+    }
+}

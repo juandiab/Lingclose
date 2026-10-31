@@ -31,6 +31,9 @@ compatibilidad con la instalación ya activa; el proyecto público se llama Ling
   como dudosas por el sensor, fuera de rango ni de calentamiento.
 - **Pantalla Hoy** con gráfica, estadísticas, diario de comidas y ejercicio, insights locales
   (subidas y bajadas rápidas, respuesta a comidas), alertas configurables y consejos por reglas.
+- **Reportes** con siete vistas de tus lecturas (resumen del período, perfil por hora, días superpuestos,
+  semana a semana, comidas, noche y ejercicio, patrones por franja) y un **análisis opcional con IA**
+  (ver más abajo). Fondo animado que toma el color de tu última lectura, desactivable en Ajustes.
 - Español, inglés y portugués (pt-BR). iOS 26, Liquid Glass, Swift 6.2 con concurrencia estricta.
 
 ## Qué no hace
@@ -38,9 +41,39 @@ compatibilidad con la instalación ya activa; el proyecto público se llama Ling
 - No incluye credenciales de app, certificados ni claves. Sin ellas no empareja con un sensor;
   ver [`Credentials/README.md`](Credentials/README.md).
 - No se distribuye: cada persona compila e instala su copia con su propio Apple ID.
-- No sugiere medicación ni dosis. El asistente opcional rechaza cualquier respuesta sobre
-  insulina o fármacos.
+- No sugiere medicación ni dosis. El asistente opcional y el análisis de reportes rechazan
+  cualquier respuesta sobre insulina o fármacos.
 - No ha sido probado con más de un sensor ni con más de un iPhone.
+
+## Reportes y análisis con IA
+
+La pestaña Reportes calcula en el iPhone, a partir de tus lecturas y del diario, siete reportes para un período de
+7, 14, 30 o 90 días:
+
+1. Resumen del período: tiempo por banda (bajo, en rango, alto, muy alto), media, desviación, variabilidad,
+   cobertura y huecos.
+2. Perfil por hora del día (tipo AGP): mediana y bandas de percentiles por cada media hora.
+3. Días superpuestos sobre un mismo reloj de 24 horas.
+4. Semana a semana: últimos 7 días frente a los 7 anteriores.
+5. Respuesta a comidas: subida, pico y tiempo hasta volver al nivel previo.
+6. Noche: mediana, mínimo y bajadas dentro de la ventana nocturna.
+7. Efecto del ejercicio y patrones por franja del día.
+
+Cada reporte dice qué mínimo de datos necesita y queda vacío hasta tenerlo. Puedes compartir los datos del reporte
+(JSON) o un resumen como imagen.
+
+**Análisis con IA (opcional).** Si configuras un proveedor, su clave y un modelo en Ajustes (son los mismos del
+asistente de comidas), el botón "Analizar con IA" envía el reporte completo y devuelve una guía con panorama general,
+secciones (qué muestran los datos, por qué puede ocurrir, qué probar, qué observar), avisos y preguntas para explorar.
+
+- **Qué recibe la IA:** solo cifras del reporte: estadísticas, series de glucosa y la hora, los carbohidratos o la
+  duración de comidas y ejercicios. **No recibe** nombres, notas, fotos ni identificadores.
+- **Una llamada por toque**, sin reintentos automáticos. Antes de enviar ves el modelo, el tamaño y un coste estimado;
+  el proveedor puede cobrarte.
+- **Es guía, no diagnóstico.** La app descarta por completo cualquier respuesta que mencione enfermedades, insulina,
+  fármacos o dosis. No es un dispositivo médico ni consejo médico.
+- **La clave es tuya** y se guarda solo en el Llavero de tu iPhone; el repositorio no contiene ninguna.
+- Los análisis se guardan en la base local y puedes borrarlos desde el historial.
 
 ## Requisitos
 

@@ -39,7 +39,8 @@ struct ReportAnalysisServiceTests {
         await env.service.run(bundle)
         let data = try #require(env.transport.requests.first?.httpBody)
         let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
-        #expect(json["max_tokens"] as? Int == 4000)
+        #expect(json["max_tokens"] as? Int == ReportAnalysisPrompt.maxOutputTokens)
+        #expect(ReportAnalysisPrompt.maxOutputTokens == 12000)
         let body = try #require(String(data: data, encoding: .utf8))
         #expect(body.contains("give_report_analysis"))
         #expect(body.contains("questions_to_explore"))
@@ -59,11 +60,11 @@ struct ReportAnalysisServiceTests {
         let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         switch provider {
         case .gemini:
-            #expect((json["generationConfig"] as? [String: Any])?["maxOutputTokens"] as? Int == 8000)
+            #expect((json["generationConfig"] as? [String: Any])?["maxOutputTokens"] as? Int == ReportAnalysisPrompt.reasoningMaxOutputTokens)
         case .openai:
-            #expect(json["max_completion_tokens"] as? Int == 4000)
+            #expect(json["max_completion_tokens"] as? Int == ReportAnalysisPrompt.maxOutputTokens)
         default:
-            #expect(json["max_tokens"] as? Int == 4000)
+            #expect(json["max_tokens"] as? Int == ReportAnalysisPrompt.maxOutputTokens)
         }
     }
 
@@ -175,7 +176,50 @@ struct ReportAnalysisServiceTests {
         let estimate = ReportAnalysisCostEstimate(request: request, model: priced)
         let expected = (Double(estimate.inputTokens) * 1 + Double(estimate.outputTokens) * 5) / 1_000_000
         #expect(estimate.usd == expected)
-        #expect(estimate.outputTokens == 4000)
         #expect(estimate.inputTokens > 1000)
+    }
+
+    @Test func costEstimateUsesExpectedOutputWhileRequestUsesTheCap() async throws {
+        let request = try ReportAnalysisRequest(bundle: bundle, locale: "es-CO")
+        let estimate = ReportAnalysisCostEstimate(request: request, model: LLMFixtures.model(for: .anthropic))
+        #expect(estimate.outputTokens == ReportAnalysisPrompt.expectedOutputTokens)
+        #expect(ReportAnalysisPrompt.expectedOutputTokens == 6000)
+        #expect(ReportAnalysisPrompt.expectedOutputTokens < ReportAnalysisPrompt.maxOutputTokens)
+
+        let env = try await ReportAnalysisFixtures.makeService(
+            replies: [ReportAnalysisFixtures.reply(for: .anthropic, text: ReportAnalysisFixtures.replyText())])
+        await env.service.run(bundle)
+        let data = try #require(env.transport.requests.first?.httpBody)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+        #expect(json["max_tokens"] as? Int == ReportAnalysisPrompt.maxOutputTokens)
+    }
+
+    @Test func requestNeverExceedsTheCatalogOutputLimit() async throws {
+        var model = LLMFixtures.model(for: .anthropic)
+        model.maxOutputTokens = 8192
+        let env = try await ReportAnalysisFixtures.makeService(
+            replies: [ReportAnalysisFixtures.reply(for: .anthropic, text: ReportAnalysisFixtures.replyText())], model: model)
+        await env.service.run(bundle)
+        let data = try #require(env.transport.requests.first?.httpBody)
+        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+        #expect(json["max_tokens"] as? Int == 8192)
+
+        var roomy = model
+        roomy.maxOutputTokens = 128_000
+        #expect(ReportAnalysisPrompt.outputLimit(ReportAnalysisPrompt.maxOutputTokens, for: roomy) == 12000)
+        roomy.maxOutputTokens = nil
+        #expect(ReportAnalysisPrompt.outputLimit(ReportAnalysisPrompt.reasoningMaxOutputTokens, for: roomy) == 16000)
+    }
+
+    @Test func systemPromptAsksForConciseness() {
+        let system = ReportAnalysisPrompt.systemPrompt(locale: "es-CO")
+        #expect(system.contains("6000 tokens"))
+        #expect(system.contains("entre 2 y 5 frases"))
+    }
+
+    @Test func truncatedErrorUsesTheCatalogKey() {
+        let text = LLMError.incomplete("stop_reason: max_tokens").description
+        #expect(text.contains("stop_reason: max_tokens"))
+        #expect(!text.contains("llm.error"), "la clave no debe verse como texto")
     }
 }

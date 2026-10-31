@@ -94,7 +94,10 @@ struct LLMPrivacyTests {
         for error in errors {
             #expect(!error.description.isEmpty)
             #expect(error.localizedDescription == error.description)
+            #expect(!error.description.hasPrefix("llm.error."), "la clave del catálogo no debe verse como texto")
         }
-        #expect(LLMError.unauthorized.description.contains("clave"))
+        // T-28: los textos salen del catálogo (es, en, pt-BR) según el idioma del sistema, no del español fijo.
+        #expect(LLMError.server(status: 503, message: "m").description.contains("503"))
+        #expect(LLMError.incomplete("stop_reason: max_tokens").description.contains("stop_reason: max_tokens"))
     }
 }

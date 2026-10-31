@@ -71,6 +71,6 @@ struct ReportAnalysisIntroView: View {
             return String(localized: "reports.analysis.intro.costUnpublished", defaultValue: "No publicado")
         }
         let amount = usd.formatted(.currency(code: "USD").precision(.fractionLength(3)))
-        return String(localized: "reports.analysis.intro.costValue", defaultValue: "hasta ≈ \(amount)")
+        return String(localized: "reports.analysis.intro.costEstimate", defaultValue: "≈ \(amount) (estimado)")
     }
 }

@@ -17057,29 +17057,6 @@
         }
       }
     },
-    "reports.analysis.intro.costValue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hasta ≈ %@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "up to ≈ %@"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "até ≈ %@"
-          }
-        }
-      }
-    },
     "reports.analysis.intro.days" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -21446,6 +21423,236 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Semana a semana"
+          }
+        }
+      }
+    },
+    "llm.error.unauthorized" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La clave no es válida o no tiene permiso para este servicio."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key is not valid or lacks permission for this service."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A chave não é válida ou não tem permissão para este serviço."
+          }
+        }
+      }
+    },
+    "llm.error.quotaExceeded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cuenta no tiene saldo o cuota disponible para analizar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The account has no balance or quota left to analyze."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A conta não tem saldo ou cota disponível para analisar."
+          }
+        }
+      }
+    },
+    "llm.error.rateLimited" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demasiadas peticiones seguidas. Espera un momento antes de volver a intentarlo."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too many requests in a row. Wait a moment before trying again."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muitas solicitações seguidas. Aguarde um momento antes de tentar novamente."
+          }
+        }
+      }
+    },
+    "llm.error.refused" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El modelo se negó a analizar el contenido (%@)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The model declined to analyze the content (%@)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O modelo se recusou a analisar o conteúdo (%@)."
+          }
+        }
+      }
+    },
+    "llm.error.truncated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La respuesta llegó incompleta (%@). No se reintentó para no cobrar dos veces."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The response arrived incomplete (%@). It was not retried to avoid charging you twice."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A resposta chegou incompleta (%@). Não foi repetida para não cobrar duas vezes."
+          }
+        }
+      }
+    },
+    "llm.error.modelLacksVision" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este modelo no tiene lectura de imágenes confirmada. Elige otro modelo o describe la comida con texto."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This model has no confirmed image reading. Choose another model or describe the meal in text."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este modelo não tem leitura de imagens confirmada. Escolha outro modelo ou descreva a refeição em texto."
+          }
+        }
+      }
+    },
+    "llm.error.network" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo conectar con el proveedor (%@)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not connect to the provider (%@)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível conectar ao provedor (%@)."
+          }
+        }
+      }
+    },
+    "llm.error.server" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El proveedor respondió con el error %1$lld: %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The provider responded with error %1$lld: %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O provedor respondeu com o erro %1$lld: %2$@"
+          }
+        }
+      }
+    },
+    "llm.error.invalidResponse" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La respuesta del modelo no tiene el formato esperado (%@)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The model’s response does not have the expected format (%@)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A resposta do modelo não tem o formato esperado (%@)."
+          }
+        }
+      }
+    },
+    "reports.analysis.intro.costEstimate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "≈ %@ (estimado)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "≈ %@ (estimated)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "≈ %@ (estimado)"
           }
         }
       }

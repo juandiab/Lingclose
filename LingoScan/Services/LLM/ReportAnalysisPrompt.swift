@@ -7,9 +7,19 @@ import Foundation
 enum ReportAnalysisPrompt {
     static let toolName = "give_report_analysis"
     static let schemaName = "report_analysis"
-    /// Guía larga: una sección por reporte con datos. Los modelos con razonamiento necesitan holgura extra.
-    static let maxOutputTokens = 4000
-    static let reasoningMaxOutputTokens = 8000
+    /// Tope de salida de la guía larga (hasta siete secciones de cuatro campos en JSON). Con 4000 se cortaba por
+    /// `max_tokens` en un reporte real de 14 días (T-28). Los modelos con razonamiento necesitan holgura extra.
+    static let maxOutputTokens = 12000
+    static let reasoningMaxOutputTokens = 16000
+    /// Tamaño esperado de una respuesta completa: el que pide la regla de concisión del prompt. Solo para estimar el
+    /// coste antes de enviar; el tope de la petición sigue siendo `maxOutputTokens`.
+    static let expectedOutputTokens = 6000
+
+    /// El tope que se pide, sin superar el `maxOutputTokens` que declare el catálogo del modelo (si lo declara).
+    static func outputLimit(_ base: Int, for model: LLMModel) -> Int {
+        guard let declared = model.maxOutputTokens, declared > 0 else { return base }
+        return min(base, declared)
+    }
 
     static let jsonSchemaLiteral = """
     {
@@ -41,7 +51,8 @@ enum ReportAnalysisPrompt {
         4. Prohibido diagnosticar, nombrar enfermedades, trastornos o síndromes, y usar etiquetas clínicas. Prohibido mencionar insulina, fármacos, medicamentos, suplementos con fines terapéuticos o dosis. No des consejo médico ni digas que debe ver a un médico por algo concreto; la única referencia a salud es la nota genérica del punto 3.
         5. Lenguaje llano, tono sereno y sin alarmismo; los valores se describen como "dentro", "por encima" o "por debajo" del rango de referencia del reporte. Nunca juzgues a la persona.
         6. Escribe en el idioma del locale \(locale).
-        7. Responde solo con el JSON, sin texto alrededor, con esta forma exacta:
+        7. Sé conciso: cada campo de sección tiene entre 2 y 5 frases y no repite cifras ya citadas en otra parte; "overview" tiene de 3 a 6 frases; "caveats" y "questions_to_explore" tienen de 2 a 5 elementos cada uno. El JSON completo debe caber con holgura en unos 6000 tokens.
+        8. Responde solo con el JSON, sin texto alrededor, con esta forma exacta:
         \(jsonSchemaLiteral)
         """
     }

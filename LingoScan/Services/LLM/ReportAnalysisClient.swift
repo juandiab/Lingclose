@@ -2,8 +2,9 @@ import Foundation
 
 /// Envía **una** petición de análisis de reporte al proveedor elegido y devuelve la respuesta ya con forma
 /// (`ReportAnalysisParser`); el contenido lo juzga después `ReportAnalysisValidator`. Reutiliza los cuerpos y
-/// lectores de respuesta de cada proveedor, pero con `max_tokens` de guía larga (≈ 4000) en vez del tope de 1024-2048
-/// de las respuestas cortas, y con un tiempo de espera de 180 s. Sin reintentos: cada toque cuesta una llamada.
+/// lectores de respuesta de cada proveedor, pero con `max_tokens` de guía larga (12000, 16000 con razonamiento; nunca por
+/// encima del tope que declare el catálogo del modelo) en vez del tope de 1024-2048 de las respuestas cortas, y con un
+/// tiempo de espera de 180 s. Sin reintentos: cada toque cuesta una llamada.
 struct ReportAnalysisClient: Sendable {
     static let timeout: TimeInterval = 180
 
@@ -31,8 +32,10 @@ struct ReportAnalysisClient: Sendable {
 
     private func anthropic(_ prompt: StructuredPrompt, model: LLMModel, apiKey: String) async throws -> ReportAnalysisReply {
         var body = AnthropicProvider.body(prompt: prompt, content: [["type": "text", "text": prompt.userText]], model: model)
-        body["max_tokens"] = AnthropicProvider.alwaysThinkingModels.contains(model.id)
-            ? ReportAnalysisPrompt.reasoningMaxOutputTokens : ReportAnalysisPrompt.maxOutputTokens
+        body["max_tokens"] = ReportAnalysisPrompt.outputLimit(
+            AnthropicProvider.alwaysThinkingModels.contains(model.id)
+                ? ReportAnalysisPrompt.reasoningMaxOutputTokens : ReportAnalysisPrompt.maxOutputTokens,
+            for: model)
         let headers = ["x-api-key": apiKey, "anthropic-version": AnthropicProvider.apiVersion, "Accept": "application/json"]
         let data = try await send(url: AnthropicProvider.baseURL.appending(path: "messages"), headers: headers, body: body,
                                   provider: .anthropic, operation: "POST messages", apiKey: apiKey)
@@ -47,7 +50,7 @@ struct ReportAnalysisClient: Sendable {
     private func gemini(_ prompt: StructuredPrompt, model: LLMModel, apiKey: String) async throws -> ReportAnalysisReply {
         var body = GeminiProvider.body(prompt: prompt, parts: [["text": prompt.userText]])
         var generation = body["generationConfig"] as? [String: Any] ?? [:]
-        generation["maxOutputTokens"] = ReportAnalysisPrompt.reasoningMaxOutputTokens
+        generation["maxOutputTokens"] = ReportAnalysisPrompt.outputLimit(ReportAnalysisPrompt.reasoningMaxOutputTokens, for: model)
         body["generationConfig"] = generation
         let url = GeminiProvider.baseURL.appending(path: "models/\(model.id):generateContent")
         let data = try await send(url: url, headers: ["x-goog-api-key": apiKey, "Accept": "application/json"], body: body,
@@ -61,7 +64,8 @@ struct ReportAnalysisClient: Sendable {
                             apiKey: String) async throws -> ReportAnalysisReply {
         var body = client.body(prompt: prompt, userContent: prompt.userText, model: model)
         let reasoning = client.config.sendsReasoningEffort && model.supportsReasoningControl
-        body[client.config.maxTokensField] = reasoning ? ReportAnalysisPrompt.reasoningMaxOutputTokens : ReportAnalysisPrompt.maxOutputTokens
+        body[client.config.maxTokensField] = ReportAnalysisPrompt.outputLimit(
+            reasoning ? ReportAnalysisPrompt.reasoningMaxOutputTokens : ReportAnalysisPrompt.maxOutputTokens, for: model)
         let headers = client.config.extraHeaders.merging(["Authorization": "Bearer \(apiKey)", "Accept": "application/json"]) { _, new in new }
         let data = try await send(url: client.config.chatURL, headers: headers, body: body, provider: client.config.provider,
                                   operation: "POST chat/completions", apiKey: apiKey)

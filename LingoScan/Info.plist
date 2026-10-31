@@ -55,7 +55,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>LingoScan usa la cámara solo si tú lo pides, para fotografiar una comida o una etiqueta y proponerte sus nutrientes. La foto no se guarda.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Lingclose lee de Apple Salud tus entrenamientos para mostrarlos junto a la curva de glucosa; tu edad, sexo, peso y altura para sugerir el rango; y, solo si lo activas para el análisis con IA de los reportes, tu sueño, tus pasos y tu composición corporal (peso, grasa corporal, masa magra, IMC y cintura). Nunca escribe esos datos.</string>
+	<string>Lingclose lee de Apple Salud tus entrenamientos para mostrarlos junto a la curva de glucosa; tu edad, sexo, peso y altura para sugerir el rango; y, solo si lo activas para el análisis con IA de los reportes, tu sueño, tus pasos y tu composición corporal (peso, grasa corporal, masa magra, IMC y cintura). Si generas el reporte en PDF para tu médico, también lee tu fecha de nacimiento, sexo, grupo sanguíneo, altura, peso, composición corporal y, si lo incluyes, sueño y pasos. Nunca escribe esos datos.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>LingoScan guarda en Apple Salud tus lecturas de glucosa y, de cada comida, los carbohidratos, las calorías, las proteínas y las grasas.</string>
 	<key>UIApplicationSceneManifest</key>

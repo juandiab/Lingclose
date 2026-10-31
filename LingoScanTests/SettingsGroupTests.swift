@@ -5,7 +5,7 @@ import Testing
 /// T-31 (D-34): Ajustes se ordena por lo que importa al usuario y cada grupo tiene header y pie.
 struct SettingsGroupTests {
     @Test func groupsFollowTheAgreedOrder() {
-        #expect(SettingsGroup.allCases == [.readings, .personalization, .connections, .advanced, .about])
+        #expect(SettingsGroup.allCases == [.readings, .personalization, .medicalReport, .connections, .advanced, .about])
     }
 
     @Test func everyGroupHasAShortHeaderAndAPlainFooter() {

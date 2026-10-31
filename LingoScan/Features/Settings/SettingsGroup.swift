@@ -5,6 +5,7 @@ import Foundation
 enum SettingsGroup: String, CaseIterable, Identifiable, Sendable {
     case readings
     case personalization
+    case medicalReport
     case connections
     case advanced
     case about
@@ -15,6 +16,7 @@ enum SettingsGroup: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .readings: String(localized: "settings.group.readings", defaultValue: "Lecturas")
         case .personalization: String(localized: "settings.group.personalization", defaultValue: "Personalización")
+        case .medicalReport: String(localized: "settings.group.medicalReport", defaultValue: "Reporte médico")
         case .connections: String(localized: "settings.group.connections", defaultValue: "Conexiones")
         case .advanced: String(localized: "settings.group.advanced", defaultValue: "Avanzado")
         case .about: String(localized: "settings.about", defaultValue: "Acerca de")
@@ -30,6 +32,9 @@ enum SettingsGroup: String, CaseIterable, Identifiable, Sendable {
         case .personalization:
             String(localized: "settings.group.personalization.footer",
                    defaultValue: "Cambia solo el aspecto de Lingclose, nunca tus datos. El idioma se aplica al volver a abrir la app.")
+        case .medicalReport:
+            String(localized: "settings.group.medicalReport.footer",
+                   defaultValue: "El nombre aparece solo en el PDF para el médico que generas desde Reportes › Compartir. Se guarda en este iPhone y nunca sale en los datos compartidos ni en el análisis con IA.")
         case .connections:
             String(localized: "settings.group.connections.footer",
                    defaultValue: "Apple Salud guarda tus lecturas y aporta tus entrenamientos. El asistente con IA es opcional: usa tu propia clave y el proveedor te cobra cada consulta.")

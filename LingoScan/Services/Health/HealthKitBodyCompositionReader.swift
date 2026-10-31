@@ -48,4 +48,23 @@ struct HealthKitBodyCompositionReader: BodyCompositionReading {
         }
         return BodyComposition.make(latest: latest, inPeriod: inPeriod, timeZone: timeZone)
     }
+
+    /// Cada muestra de cada medida dentro de `[from, to)`, para la tabla del reporte en PDF (T-34). Solo lectura.
+    func bodyMeasurementSeries(from: Date, to: Date) async -> BodyMeasurementSeries {
+        guard isAvailable, to > from else { return .empty }
+        let store = HKHealthStore()
+        var series = BodyMeasurementSeries()
+        for metric in BodyMetric.allCases {
+            guard let spec = Self.types[metric] else { continue }
+            let descriptor = HKSampleQueryDescriptor(
+                predicates: [.quantitySample(type: spec.type, predicate: HKQuery.predicateForSamples(withStart: from, end: to))],
+                sortDescriptors: [SortDescriptor(\.endDate)])
+            if let found = try? await descriptor.result(for: store) {
+                series.samples[metric] = found.map {
+                    BodyMeasurement(date: $0.endDate, value: $0.quantity.doubleValue(for: spec.unit) * spec.scale)
+                }
+            }
+        }
+        return series
+    }
 }

@@ -62,6 +62,8 @@ struct SettingsView: View {
             LanguageRow()
             AppearanceRow()
             BackgroundStyleRow()
+        case .medicalReport:
+            MedicalReportNameRow()
         case .connections:
             HealthRow(isAuthorized: viewModel.healthAuthorized)
             AssistantRow(services: mealAssistant)

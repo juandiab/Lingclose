@@ -8,6 +8,10 @@ struct HealthProfile: Sendable, Equatable {
     var biologicalSex: BiologicalSexSummary?
     var weightKg: Double?
     var heightCm: Double?
+    /// Solo para el reporte en PDF para el médico (T-34): fecha de nacimiento y grupo sanguíneo. No cuentan en
+    /// `missingFields` ni en `isEmpty` (lo de "Sugerir rango" y el análisis con IA sigue igual).
+    var birthDate: Date?
+    var bloodType: BloodTypeSummary?
 
     static let empty = HealthProfile()
 

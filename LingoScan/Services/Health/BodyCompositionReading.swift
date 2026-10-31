@@ -8,4 +8,11 @@ protocol BodyCompositionReading: Sendable {
     func requestAuthorization() async
     /// Valor más reciente de cada medida hasta `to` y tendencia dentro de `[from, to)`.
     func bodyComposition(from: Date, to: Date, timeZone: TimeZone) async -> BodyComposition
+    /// Todas las muestras de cada medida dentro de `[from, to)` (T-34, reporte en PDF para el médico). Los lectores que
+    /// no la implementan devuelven una serie vacía.
+    func bodyMeasurementSeries(from: Date, to: Date) async -> BodyMeasurementSeries
+}
+
+extension BodyCompositionReading {
+    func bodyMeasurementSeries(from: Date, to: Date) async -> BodyMeasurementSeries { .empty }
 }

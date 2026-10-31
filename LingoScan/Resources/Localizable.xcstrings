@@ -16580,19 +16580,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hex Vault es un fondo animado que toma el color de tu última lectura: verde en rango, ámbar por encima, azul por debajo y gris sin dato reciente. Con fondo animado la app usa el modo oscuro; con Ninguno sigue la apariencia elegida arriba."
+            "value" : "Hex Vault es un fondo animado que toma el color de tu última lectura: verde en rango, ámbar por encima, azul por debajo y gris sin dato reciente. El fondo sigue la apariencia elegida arriba, en claro o en oscuro."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hex Vault is an animated background that takes the color of your latest reading: green in range, amber above, blue below and gray without a recent value. With an animated background the app uses dark mode; with None it follows the appearance chosen above."
+            "value" : "Hex Vault is an animated background that takes the color of your latest reading: green in range, amber above, blue below and gray without a recent value. The background follows the appearance chosen above, light or dark."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hex Vault é um fundo animado que assume a cor da sua última leitura: verde no intervalo, âmbar acima, azul abaixo e cinza sem dado recente. Com fundo animado o app usa o modo escuro; com Nenhum segue a aparência escolhida acima."
+            "value" : "Hex Vault é um fundo animado que assume a cor da sua última leitura: verde no intervalo, âmbar acima, azul abaixo e cinza sem dado recente. O fundo segue a aparência escolhida acima, clara ou escura."
           }
         }
       }

@@ -14,7 +14,7 @@ struct BackgroundStyleOption: View {
                 BackgroundThumbnail(style: style)
                     .frame(height: 72)
                     .clipShape(shape)
-                    .overlay { shape.strokeBorder(.white.opacity(0.10), lineWidth: 1) }
+                    .overlay { shape.strokeBorder(Tokens.Studio.edge, lineWidth: 1) }
                     .overlay {
                         if isSelected {
                             shape.strokeBorder(Color.accentColor, lineWidth: 2)

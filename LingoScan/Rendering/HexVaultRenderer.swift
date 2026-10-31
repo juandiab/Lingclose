@@ -27,6 +27,8 @@ private struct VaultCompositeUniforms {
     var pulse1 = SIMD4<Float>.zero
     var pulse2 = SIMD4<Float>.zero
     var pulse3 = SIMD4<Float>.zero
+    var scheme = SIMD4<Float>.zero
+    var lightBase = SIMD4<Float>.zero
 }
 
 @MainActor
@@ -50,7 +52,9 @@ final class HexVaultRenderer: BackgroundRenderer {
         var pulseSpeed: Float = 1
         /// Intensidad global de la emisión (JPLights = 1). App de salud: legibilidad primero.
         var intensity: Float = 0.55
-        static let background = VaultPalette.linear(SIMD3(repeating: 10.0 / 255))
+        static let background = VaultPalette.linear(BackgroundScheme.dark.studioColor)
+        /// Base de la variante clara (T-30), en lineal.
+        static let lightBackground = VaultPalette.linear(BackgroundPalette.Light.base)
     }
 
     private let gpu: BackgroundGPU
@@ -245,6 +249,9 @@ final class HexVaultRenderer: BackgroundRenderer {
         cu.background = SIMD4(Look.background, 1)
         let px = pulses.map { SIMD4($0.x * scale, $0.y * scale, $0.z, $0.w) }
         cu.pulse0 = px[0]; cu.pulse1 = px[1]; cu.pulse2 = px[2]; cu.pulse3 = px[3]
+        cu.scheme = SIMD4(frame.lightness, BackgroundPalette.Light.latticeShade,
+                          BackgroundPalette.Light.veil * BackgroundPalette.intensity(for: .light) * frame.quality.intensity, 0)
+        cu.lightBase = SIMD4(Look.lightBackground, 1)
 
         pass.colorAttachments[0].loadAction = .dontCare
         pass.colorAttachments[0].storeAction = .store

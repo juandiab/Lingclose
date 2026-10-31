@@ -26,7 +26,7 @@ struct BackgroundStyleSection: View {
         } footer: {
             Text(String(
                 localized: "settings.background.footer",
-                defaultValue: "Hex Vault es un fondo animado que toma el color de tu última lectura: verde en rango, ámbar por encima, azul por debajo y gris sin dato reciente. Con fondo animado la app usa el modo oscuro; con Ninguno sigue la apariencia elegida arriba."
+                defaultValue: "Hex Vault es un fondo animado que toma el color de tu última lectura: verde en rango, ámbar por encima, azul por debajo y gris sin dato reciente. El fondo sigue la apariencia elegida arriba, en claro o en oscuro."
             ))
         }
     }

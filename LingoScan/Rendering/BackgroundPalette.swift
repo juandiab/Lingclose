@@ -19,6 +19,32 @@ struct BackgroundPalette: Equatable, Sendable {
         static let neutralDim: Float = 0.6
     }
 
+    /// Variante clara de Hex Vault (T-30). Mismos colores de tono que en oscuro, pero como veladura sobre una base
+    /// casi blanca: la luz no puede sumarse al blanco, así que tiñe la base hacia el color del tono.
+    enum Light {
+        /// Base sRGB: gris cálido muy suave (≈ 0,97).
+        static let base = SIMD3<Float>(0.972, 0.966, 0.954)
+        /// Cuánto oscurecen las líneas de la rejilla la base en reposo (fracción, antes del shimmer).
+        static let latticeShade: Float = 0.12
+        /// Opacidad máxima de la veladura del tono sobre una arista encendida.
+        static let veil: Float = 0.42
+    }
+
+    /// Intensidad relativa de la luz del tono por variante: en claro es menor que en oscuro para que la gráfica
+    /// y los números manden sobre el fondo.
+    static func intensity(for scheme: BackgroundScheme) -> Float {
+        switch scheme {
+        case .dark: 1
+        case .light: 0.6
+        }
+    }
+
+    /// Color sRGB efectivo de una arista a plena luz en la variante clara: la base teñida por la veladura del tono.
+    static func lightVeilColor(for tone: GlucoseBackgroundTone) -> SIMD3<Float> {
+        let k = Light.veil * intensity(for: .light)
+        return simd_mix(Light.base, emission(for: tone), SIMD3(repeating: k))
+    }
+
     /// Color sRGB emitido para un tono.
     static func emission(for tone: GlucoseBackgroundTone) -> SIMD3<Float> {
         switch tone {

@@ -12,4 +12,6 @@ struct BackgroundFrame {
     var motion: Float
     var frameIndex: UInt32
     var quality: RenderQuality
+    /// Variante del fondo: 0 = oscuro, 1 = claro; valores intermedios durante el fundido de apariencia.
+    var lightness: Float = 0
 }

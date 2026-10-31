@@ -4,10 +4,13 @@
 //  · Calidad: tier del dispositivo × `thermalState` × Low Power → fps, escala del drawable y densidad.
 //  · Reduce Motion: sin display link; un redibujo bajo demanda (máx. 1 por segundo) cuando cambia la paleta.
 //  · Cambio de fondo: fundido al color de estudio (0,28 s) → nuevo renderer → fundido de entrada (0,4 s).
+//  · Apariencia (T-30): variante clara u oscura; el cambio se interpola en el shader (0,35 s; inmediato con
+//    Reduce Motion o antes del primer frame).
 
 import MetalKit
 import UIKit
 import os
+import simd
 
 @MainActor
 final class BackgroundEngine: NSObject, MTKViewDelegate {
@@ -17,9 +20,12 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
     private(set) var style: BackgroundStyle
     private var renderer: BackgroundRenderer?
     private var pendingStyle: BackgroundStyle?
-    /// 0 = negro, 1 = renderer a plena vista.
+    /// 0 = color de estudio, 1 = renderer a plena vista.
     private var visibility: Float = 0
     private var palette = BackgroundPalette.idle
+    private var scheme = BackgroundScheme.dark
+    /// 0 = oscuro, 1 = claro; persigue a `scheme.lightness`.
+    private var lightness: Float = 0
 
     private var reduceMotion = false
     private var isActive = true
@@ -86,9 +92,8 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
         view.device = gpu.device
         view.colorPixelFormat = gpu.pixelFormat
         view.framebufferOnly = true
-        view.clearColor = MTLClearColor(red: 0.0392, green: 0.0392, blue: 0.0392, alpha: 1)
         view.isOpaque = true
-        view.backgroundColor = UIColor(red: 0.0392, green: 0.0392, blue: 0.0392, alpha: 1)
+        applyStudioColor()
         view.autoResizeDrawable = true
         view.presentsWithTransaction = false
         view.delegate = self
@@ -123,6 +128,14 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
         guard new != palette else { return }
         palette = new
         renderer?.setPalette(new, immediate: reduceMotion)
+        requestStaticRedraw()
+    }
+
+    func setScheme(_ new: BackgroundScheme) {
+        guard new != scheme else { return }
+        scheme = new
+        if reduceMotion || frameIndex == 0 { lightness = new.lightness }
+        applyStudioColor()
         requestStaticRedraw()
     }
 
@@ -203,6 +216,19 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
         }
     }
 
+    /// Color de estudio actual (sRGB), mezcla de las dos variantes según `lightness`.
+    private var studioColor: SIMD3<Float> {
+        simd_mix(BackgroundScheme.dark.studioColor, BackgroundScheme.light.studioColor, SIMD3(repeating: lightness))
+    }
+
+    /// Color de borrado y de fondo del `MTKView`: el de la variante de destino (se ve antes del primer frame).
+    private func applyStudioColor() {
+        guard let view else { return }
+        let c = scheme.studioColor
+        view.clearColor = MTLClearColor(red: Double(c.x), green: Double(c.y), blue: Double(c.z), alpha: 1)
+        view.backgroundColor = UIColor(red: CGFloat(c.x), green: CGFloat(c.y), blue: CGFloat(c.z), alpha: 1)
+    }
+
     private func refreshQuality() {
         let q = RenderQuality.resolve(tier: tier, thermal: ProcessInfo.processInfo.thermalState,
                                       lowPower: ProcessInfo.processInfo.isLowPowerModeEnabled)
@@ -243,6 +269,16 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
         lastTimestamp = reduceMotion ? nil : now
         if reduceMotion { lastStaticDraw = now }
 
+        // Variante clara/oscura: fundido corto en el shader (con Reduce Motion, cambio directo).
+        let targetLightness = scheme.lightness
+        if reduceMotion {
+            lightness = targetLightness
+        } else if lightness != targetLightness {
+            let step = dt / 0.35
+            lightness = lightness < targetLightness ? min(targetLightness, lightness + step)
+                                                    : max(targetLightness, lightness - step)
+        }
+
         // Fundido entre renderers (con Reduce Motion, cambio directo).
         if reduceMotion {
             if let pendingStyle { swap(to: pendingStyle) }
@@ -268,7 +304,7 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
 
         let frame = BackgroundFrame(drawableSize: view.drawableSize, scale: view.contentScaleFactor,
                                     dt: reduceMotion ? 0 : dt, motion: reduceMotion ? 0 : 1,
-                                    frameIndex: frameIndex, quality: quality)
+                                    frameIndex: frameIndex, quality: quality, lightness: smoothstep(lightness))
         #if DEBUG
         let t0 = CACurrentMediaTime()
         #endif
@@ -277,9 +313,9 @@ final class BackgroundEngine: NSObject, MTKViewDelegate {
             if visibility < 1 {
                 pass.colorAttachments[0].loadAction = .load
                 if let enc = commandBuffer.makeRenderCommandEncoder(descriptor: pass) {
-                    var alpha = 1 - smoothstep(visibility)
+                    var fade = SIMD4<Float>(studioColor, 1 - smoothstep(visibility))
                     enc.setRenderPipelineState(gpu.fadePipeline)
-                    enc.setFragmentBytes(&alpha, length: MemoryLayout<Float>.stride, index: 0)
+                    enc.setFragmentBytes(&fade, length: MemoryLayout<SIMD4<Float>>.stride, index: 0)
                     enc.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
                     enc.endEncoding()
                 }

@@ -1,4 +1,4 @@
-// Piezas comunes de los fondos: triángulo de pantalla completa y fundido al color de estudio entre renderers.
+// Piezas comunes de los fondos: triángulo de pantalla completa y fundido al color de estudio (claro u oscuro) entre renderers.
 
 #include <metal_stdlib>
 using namespace metal;
@@ -16,6 +16,7 @@ vertex BGFullscreenOut bgFullscreenVertex(uint vid [[vertex_id]]) {
     return out;
 }
 
-fragment float4 bgFadeFragment(BGFullscreenOut in [[stage_in]], constant float &alpha [[buffer(0)]]) {
-    return float4(0.0392, 0.0392, 0.0392, alpha);   // #0A0A0A
+/// `color.rgb` = color de estudio de la variante (sRGB: el drawable es `bgra8Unorm`) · `color.a` = opacidad.
+fragment float4 bgFadeFragment(BGFullscreenOut in [[stage_in]], constant float4 &color [[buffer(0)]]) {
+    return color;
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Esquema de color de la app: con fondo animado, estudio oscuro; con "Ninguno", la apariencia de Ajustes
-/// (Sistema / Claro / Oscuro).
+/// Esquema de color de la app: siempre la apariencia de Ajustes (Sistema / Claro / Oscuro), con o sin fondo animado.
+/// Hex Vault tiene variante clara y oscura (T-30, D-33); el fondo ya no fuerza el modo oscuro.
 ///
 /// Va en la raíz (`LingoScanApp`), en lugar de `.preferredColorScheme(appearance.colorScheme)`: un
 /// `preferredColorScheme` exterior (aunque sea `nil`) anula al de las pantallas, así que la decisión se toma
@@ -15,8 +15,9 @@ struct AppColorSchemeModifier: ViewModifier {
             Self.colorScheme(style: BackgroundStyle(stored: styleRaw), appearance: appearance))
     }
 
+    /// La apariencia manda siempre; `style` se mantiene en la firma para que la decisión siga en un único sitio.
     static func colorScheme(style: BackgroundStyle, appearance: AppearanceMode) -> ColorScheme? {
-        style.isAnimated ? .dark : appearance.colorScheme
+        appearance.colorScheme
     }
 }
 

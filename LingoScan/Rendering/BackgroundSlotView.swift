@@ -4,7 +4,11 @@ import UIKit
 final class BackgroundSlotView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(red: 0.0392, green: 0.0392, blue: 0.0392, alpha: 1)
+        // Color de estudio de la variante (claro u oscuro) hasta que se aloja el `MTKView`.
+        backgroundColor = UIColor { trait in
+            let c = (trait.userInterfaceStyle == .light ? BackgroundScheme.light : .dark).studioColor
+            return UIColor(red: CGFloat(c.x), green: CGFloat(c.y), blue: CGFloat(c.z), alpha: 1)
+        }
         isUserInteractionEnabled = false
         accessibilityElementsHidden = true
     }

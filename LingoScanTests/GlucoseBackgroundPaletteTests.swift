@@ -98,17 +98,68 @@ struct GlucoseBackgroundPaletteTests {
     }
 }
 
-/// T-27b: con fondo animado la app va en oscuro; con "Ninguno" manda la apariencia elegida.
+/// T-30: la apariencia manda siempre, también con Hex Vault (que tiene variante clara).
 struct AppColorSchemeTests {
-    @Test func animatedBackgroundForcesDark() {
-        for appearance in AppearanceMode.allCases {
-            #expect(AppColorSchemeModifier.colorScheme(style: .hexVault, appearance: appearance) == .dark)
-        }
+    @Test func appearanceRulesWithAnimatedBackground() {
+        #expect(AppColorSchemeModifier.colorScheme(style: .hexVault, appearance: .light) == .light)
+        #expect(AppColorSchemeModifier.colorScheme(style: .hexVault, appearance: .system) == nil)
+        #expect(AppColorSchemeModifier.colorScheme(style: .hexVault, appearance: .dark) == .dark)
     }
 
     @Test func noneFollowsAppearance() {
         #expect(AppColorSchemeModifier.colorScheme(style: .none, appearance: .system) == nil)
         #expect(AppColorSchemeModifier.colorScheme(style: .none, appearance: .light) == .light)
         #expect(AppColorSchemeModifier.colorScheme(style: .none, appearance: .dark) == .dark)
+    }
+}
+
+/// T-30: variante clara de Hex Vault.
+struct HexVaultLightPaletteTests {
+    @Test func schemeFromColorScheme() {
+        #expect(BackgroundScheme(.light) == .light)
+        #expect(BackgroundScheme(.dark) == .dark)
+        #expect(BackgroundScheme.light.lightness == 1)
+        #expect(BackgroundScheme.dark.lightness == 0)
+    }
+
+    @Test func lightIntensityIsLowerThanDark() {
+        #expect(BackgroundPalette.intensity(for: .light) < BackgroundPalette.intensity(for: .dark))
+        #expect(BackgroundPalette.intensity(for: .light) > 0)
+    }
+
+    @Test func lightBaseIsNearWhiteWarmGray() {
+        let base = BackgroundPalette.Light.base
+        #expect(base.min() >= 0.94 && base.max() <= 0.99)
+        #expect(base.x >= base.z)                                       // cálido, no azulado
+        #expect(base.max() - base.min() < 0.03)                         // casi gris
+        #expect(BackgroundScheme.light.studioColor == base)
+        #expect(BackgroundScheme.dark.studioColor.max() < 0.05)
+    }
+
+    /// La rejilla en claro oscurece la base (nunca la aclara) y de forma discreta.
+    @Test func latticeDarkensSubtly() {
+        #expect(BackgroundPalette.Light.latticeShade > 0)
+        #expect(BackgroundPalette.Light.latticeShade < 0.25)
+    }
+
+    /// La veladura es sutil: el color efectivo sigue cerca de la base y nunca tira a rojo.
+    @Test func veilIsSubtleAndNeverRed() {
+        let base = BackgroundPalette.Light.base
+        for tone in GlucoseBackgroundTone.allCases {
+            let c = BackgroundPalette.lightVeilColor(for: tone)
+            #expect(c.y >= c.x * 0.6, "\(tone) demasiado rojo: \(c)")
+            #expect(simd_length(c - base) < 0.5, "\(tone) demasiado intenso: \(c)")
+            #expect(c.min() > 0.4, "\(tone) demasiado oscuro: \(c)")
+        }
+    }
+
+    @Test func veilKeepsHueFamilies() {
+        let base = BackgroundPalette.Light.base
+        let inRange = BackgroundPalette.lightVeilColor(for: .inRange) - base
+        #expect(inRange.y > inRange.x && inRange.y > inRange.z)         // verde-teal
+        let low = BackgroundPalette.lightVeilColor(for: .low) - base
+        #expect(low.z > low.x && low.z > low.y)                         // azul
+        let high = BackgroundPalette.lightVeilColor(for: .high)
+        #expect(high.x > high.y && high.y > high.z)                     // ámbar
     }
 }

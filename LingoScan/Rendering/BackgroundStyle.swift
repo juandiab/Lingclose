@@ -17,7 +17,7 @@ enum BackgroundStyle: String, CaseIterable, Identifiable, Sendable {
         self = stored.flatMap(Self.init(rawValue:)) ?? .default
     }
 
-    /// Con fondo animado la app usa el estudio oscuro; con "Ninguno" sigue la apariencia elegida.
+    /// Fondo animado (Hex Vault, en variante clara u oscura según la apariencia) o "Ninguno" (fondo del sistema).
     var isAnimated: Bool { self != .none }
 
     var title: String {

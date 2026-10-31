@@ -93,6 +93,7 @@
 		259986467818351B596D827A /* IncompatibilityReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0120B13ADEE4624B73115 /* IncompatibilityReason.swift */; };
 		2652C0E998E05738FC309124 /* openrouter-200-error.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A08D48512CF7BBBAD67E706 /* openrouter-200-error.json */; };
 		26A4A05602833A9E7DB5ED74 /* grok-food.json in Resources */ = {isa = PBXBuildFile; fileRef = 4AA6D92EE02DEDC0EAD55076 /* grok-food.json */; };
+		26AA4FCDB057F7AD0C369675 /* BackgroundScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EDCE65AD33B08037791AE0 /* BackgroundScheme.swift */; };
 		26F884DDF47657F632C3E914 /* GlucoseDownsampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FEBCBFA70A830FE2864E0A /* GlucoseDownsampler.swift */; };
 		27146776F5F8A51F840E0823 /* deepseek-coach.json in Resources */ = {isa = PBXBuildFile; fileRef = 8FBB0C59DDC8BED8833E2A8A /* deepseek-coach.json */; };
 		279F16400D5110B38E905C50 /* MealAnalysisViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E1B598A73F3FD5A12BB267 /* MealAnalysisViewModelTests.swift */; };
@@ -655,6 +656,7 @@
 		02660FCE0CA9802225EF853C /* PeriodStatMetric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodStatMetric.swift; sourceTree = "<group>"; };
 		026710F34E1E3BCC8C7F9D85 /* ReportStatTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportStatTile.swift; sourceTree = "<group>"; };
 		02C700E1E486E561180D9C20 /* DiaryDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDay.swift; sourceTree = "<group>"; };
+		02EDCE65AD33B08037791AE0 /* BackgroundScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundScheme.swift; sourceTree = "<group>"; };
 		0317CED7597746CB05EFB454 /* LLMPrivacyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMPrivacyTests.swift; sourceTree = "<group>"; };
 		03922202D7A43DF7457D48FB /* LiveTodayDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTodayDataSource.swift; sourceTree = "<group>"; };
 		03A625DE698F0593913D1564 /* PreviewSensorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSensorActions.swift; sourceTree = "<group>"; };
@@ -1829,6 +1831,7 @@
 				AEF3BCC76B2942446B2DA548 /* BackgroundMTKView.swift */,
 				C1D2D21339480CEF0B9D0160 /* BackgroundPalette.swift */,
 				C1CE7280781EE427CE831D39 /* BackgroundRenderer.swift */,
+				02EDCE65AD33B08037791AE0 /* BackgroundScheme.swift */,
 				401ECA526567FA2D392EF0BD /* BackgroundSlot.swift */,
 				327B2CA4B25124CD7658BEA6 /* BackgroundSlotView.swift */,
 				4363FFF592327777D7A97DC5 /* BackgroundStage.swift */,
@@ -2678,6 +2681,7 @@
 				0711AA62C69A76E2FFCD796B /* BackgroundMTKView.swift in Sources */,
 				DDDF8DCD806B903F6EC7E050 /* BackgroundPalette.swift in Sources */,
 				B017FE0A28BC3FBF62ACFD0E /* BackgroundRenderer.swift in Sources */,
+				26AA4FCDB057F7AD0C369675 /* BackgroundScheme.swift in Sources */,
 				99C1128F2B4543909E7BE5CA /* BackgroundSlot.swift in Sources */,
 				C56FA4139F8DE85EDE8D2BBF /* BackgroundSlotView.swift in Sources */,
 				23F4DE82C7A8480F4BF5050D /* BackgroundStage.swift in Sources */,
@@ -3123,14 +3127,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LingoScan/LingoScan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LingoScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.2;
+				MARKETING_VERSION = 0.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.otalvaro.lingoscan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3229,14 +3233,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LingoScan/LingoScan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LingoScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.2;
+				MARKETING_VERSION = 0.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.otalvaro.lingoscan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;

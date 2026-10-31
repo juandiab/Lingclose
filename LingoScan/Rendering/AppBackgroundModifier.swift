@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Fondo de una raíz de pestaña: Hex Vault o, con "Ninguno", el fondo del sistema.
-/// El modo oscuro que acompaña a Hex Vault lo pone `AppColorSchemeModifier` en la raíz.
+/// La variante (clara u oscura) sigue la apariencia de Ajustes; la pone `AppColorSchemeModifier` en la raíz.
 ///
 /// Va dentro del `NavigationStack` (usa `containerBackground(for: .navigation)`): el contenedor del `TabView`
 /// de iOS 26 es opaco y una capa detrás de él no se vería.

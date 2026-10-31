@@ -45,6 +45,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-27d | 2b | Sonnet | Reportes: análisis con IA (guía analítica, historial) | T-27a | cerrada |
 | T-27e | 2b | Sonnet | Reportes: localización en/pt-BR, cierre de docs y README | T-27c, T-27d | cerrada |
 | T-29 | 2b | Opus | Selector de idioma en Ajustes (Sistema/es/en/pt-BR, por `AppleLanguages`, se aplica al reabrir) y claves de `LLMCatalog`/`RangeSuggestionReplyParser`; v0.4.2 (8) | T-26 | cerrada (sin commit; detalle en `docs/T-29.md`, D-32) |
+| T-30 | 2b | Opus | Modo claro con Hex Vault: la apariencia manda siempre, variante clara del shader y `Tokens.Studio` adaptativos; v0.4.3 (9) | T-27b | cerrada (sin commit; detalle en `docs/T-30.md`, D-33) |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |

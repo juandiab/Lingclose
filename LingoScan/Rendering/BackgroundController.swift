@@ -1,7 +1,8 @@
 import LingoCore
 import SwiftUI
 
-/// Envía al engine del fondo el estado de la app: tono de glucosa, estilo, Reduce Motion y fase de escena.
+/// Envía al engine del fondo el estado de la app: tono de glucosa, estilo, esquema de color (variante clara u
+/// oscura), Reduce Motion y fase de escena.
 /// Va una sola vez, en `RootTabView` (`.background { BackgroundController(today: todayViewModel) }`).
 ///
 /// El tono sale de la última lectura elegible de `TodayViewModel` y del rango de referencia del usuario;
@@ -10,6 +11,7 @@ struct BackgroundController: View {
     let today: TodayViewModel
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage(BackgroundStyle.storageKey) private var styleRaw = BackgroundStyle.default.rawValue
     @AppStorage(ReferenceLines.lowKey) private var referenceLow = ReferenceLines.defaultLow
@@ -35,6 +37,9 @@ struct BackgroundController: View {
         .allowsHitTesting(false)
         .onChange(of: reduceMotion, initial: true) { _, on in
             BackgroundStage.shared.engine?.setReduceMotion(on)
+        }
+        .onChange(of: colorScheme, initial: true) { _, scheme in
+            BackgroundStage.shared.engine?.setScheme(BackgroundScheme(scheme))
         }
         .onChange(of: styleRaw, initial: true) { _, raw in
             BackgroundStage.shared.engine?.setStyle(BackgroundStyle(stored: raw))

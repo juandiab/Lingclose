@@ -1,5 +1,5 @@
 // Port de JPLights (app del propio autor), con intensidad global atenuada para LingoScan.
-// Hex Vault: rejilla hexagonal oscura que una luz suave recorre siguiendo el dedo (o sola, en autoplay),
+// Hex Vault: rejilla hexagonal que una luz suave recorre siguiendo el dedo (o sola, en autoplay),
 // dejando una estela que fluye con la velocidad del gesto, ondas al tocar y un brillo que barre la rejilla.
 //
 // Pasadas por frame:
@@ -7,6 +7,8 @@
 //   2. `vaultLightFragment`     (RG16F, baja resolución): x = luz de la estela, y = "calor"; se advecta con la
 //                                velocidad y decae (calor más rápido).
 //   3. `vaultCompositeFragment` (drawable): rejilla de hexágonos, aristas iluminadas, glow, pulsos, tonemap.
+//      Variante clara (T-30): base casi blanca, rejilla algo más oscura que la base y la luz como veladura del
+//      tono. `scheme.x` mezcla las dos variantes (el engine lo interpola ≤ 0,35 s al cambiar de apariencia).
 // Todo en píxeles del drawable, con origen en el centro y y hacia abajo (como UIKit).
 
 #include <metal_stdlib>
@@ -32,6 +34,8 @@ struct CompositeUniforms {
     float4 colorB;     // lineal
     float4 background; // lineal
     float4 pulses[4];  // xy = origen (px) · z = reloj de inicio · w = fuerza (0 = libre)
+    float4 scheme;     // x = claridad (0 oscuro … 1 claro) · y = sombra de la rejilla · z = veladura máx. del tono
+    float4 lightBase;  // lineal: base de la variante clara
 };
 
 struct FSOut {
@@ -208,8 +212,23 @@ fragment float4 vaultCompositeFragment(FSOut in [[stage_in]],
     emission += lineColor * glow * u.look.y * 0.6;
     emission += mix(lineColor, colorB, 0.5) * haloLit * u.look.y * 0.12;
 
-    float3 color = u.background.rgb + emission * u.look2.w;
-    color = 1.0 - exp(-color * 1.05);
+    float lightness = saturate(u.scheme.x);
+    float3 color = float3(0.0);
+    if (lightness < 1.0) {
+        float3 dark = u.background.rgb + emission * u.look2.w;
+        color = 1.0 - exp(-dark * 1.05);
+    }
+    if (lightness > 0.0) {
+        // Claro: la rejilla oscurece la base (nunca la aclara) y la luz tiñe la base hacia el tono.
+        float3 base = u.lightBase.rgb;
+        float3 ink = mix(float3(0.40, 0.41, 0.48), colorA, 0.3);
+        float shade = saturate(baseLine * u.scheme.y * (1.0 + 1.2 * shimmer));
+        float3 paper = mix(base, base * ink, shade);
+        float veil = saturate(energy * 0.55 + glow * u.look.y * 0.22 + haloLit * u.look.y * 0.1) * u.scheme.z;
+        float3 veilColor = mix(colorA, colorA * 0.72, white);
+        paper = mix(paper, veilColor, veil);
+        color = mix(color, paper, lightness);
+    }
 
     float2 fc = in.position.xy;
     float dither = (fract(52.9829189 * fract(dot(fc, float2(0.06711056, 0.00583715)))) - 0.5) / 255.0;

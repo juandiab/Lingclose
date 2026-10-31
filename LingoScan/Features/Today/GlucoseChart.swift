@@ -2,9 +2,9 @@ import Charts
 import SwiftUI
 
 /// Curva de glucosa con Swift Charts: un `LineMark` por tramo (los huecos quedan abiertos, sin interpolar),
-/// líneas de referencia finas, área sobre la línea alta (rojo) y bajo la baja (azul) con un lavado que se
+/// líneas de referencia finas, área sobre la línea alta (ámbar) y bajo la baja (azul) con un lavado que se
 /// desvanece hacia la referencia, huecos sombreados y, en vivo, la última lectura con un halo.
-/// La línea cambia de color por valor: rojo por encima de la referencia alta, neutro en el rango y azul por
+/// La línea cambia de color por valor: ámbar por encima de la referencia alta, neutro en el rango y azul por
 /// debajo de la baja (`GlucoseColorRun`: trozos por color con cruces interpolados; sin degradado, que en una
 /// gráfica desplazable se aplica sobre un rectángulo distinto según el dispositivo).
 ///
@@ -290,7 +290,7 @@ struct GlucoseChart: View {
     static let risingWash = Tokens.Palette.high.opacity(0.06)
     static let fallingWash = Tokens.Palette.low.opacity(0.06)
 
-    /// Áreas fuera del rango: lavado que se desvanece hacia la referencia (rojo de arriba abajo, azul al revés).
+    /// Áreas fuera del rango: lavado que se desvanece hacia la referencia (ámbar de arriba abajo, azul al revés).
     static let highWash = LinearGradient(
         colors: [Tokens.Palette.high.opacity(0.34), Tokens.Palette.high.opacity(0.04)],
         startPoint: .top, endPoint: .bottom
@@ -300,14 +300,14 @@ struct GlucoseChart: View {
         startPoint: .bottom, endPoint: .top
     )
 
-    /// Punto final en vivo: verde de "en rango" dentro de las referencias; rojo o azul fuera.
+    /// Punto final en vivo: verde de "en rango" dentro de las referencias; ámbar o azul fuera.
     static func endColor(for value: Int, low: Int, high: Int) -> Color {
         if value > high { return Tokens.Palette.high }
         if value < low { return Tokens.Palette.low }
         return Tokens.Palette.inRange
     }
 
-    /// Color de un valor aislado: azul bajo la referencia baja, rojo sobre la alta, neutro en el rango.
+    /// Color de un valor aislado: azul bajo la referencia baja, ámbar sobre la alta, neutro en el rango.
     static func color(for value: Int, low: Int, high: Int) -> Color {
         if value > high { return Tokens.Palette.high }
         if value < low { return Tokens.Palette.low }

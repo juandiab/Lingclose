@@ -29,8 +29,8 @@ enum Tokens {
         static let gap = Color(.gap)
         /// Rojo del sistema: solo para errores de la app (autenticación fallida, no compatible).
         static let error = Color.red
-        /// Curva por encima de la referencia alta (cálido).
-        static let high = Color.red
+        /// Curva por encima de la referencia alta: el mismo ámbar que Reportes (nunca rojo para glucosa; D-36).
+        static let high = Color(.outOfRange)
         /// Curva por debajo de la referencia baja (frío).
         static let low = Color.blue
     }

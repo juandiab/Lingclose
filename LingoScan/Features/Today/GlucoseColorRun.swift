@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-/// Trozo de un tramo con un solo color: sobre la referencia alta (rojo), en el rango (neutro) o bajo la
+/// Trozo de un tramo con un solo color: sobre la referencia alta (ámbar), en el rango (neutro) o bajo la
 /// baja (azul). Los cruces con una referencia se interpolan en el tiempo y el vértice de cruce pertenece
 /// a los dos trozos, así la línea no se corta. No depende de la geometría del chart: un degradado se
 /// aplica sobre un rectángulo que Swift Charts elige de forma distinta en una gráfica desplazable.

@@ -6,6 +6,8 @@ import SwiftUI
 /// análisis del mismo tramo y, siempre, la nota de que es una guía y no un diagnóstico.
 struct ReportAnalysisSheet: View {
     let bundle: ReportBundle
+    /// Eventos del período: solo para los nombres de comidas, si el usuario lo permite (T-33).
+    let events: [DiaryEvent]
     let service: ReportAnalysisService
 
     @Environment(\.dismiss) private var dismiss
@@ -33,11 +35,15 @@ struct ReportAnalysisSheet: View {
                 ReportAnalysisDisclaimer()
             }
         }
-        .task { await service.prepare(for: bundle) }
+        .task { await service.prepare(for: bundle, events: events) }
+        .onChange(of: service.sharing) {
+            Task { await service.sharingDidChange() }
+        }
     }
 
     @ViewBuilder
     private var content: some View {
+        @Bindable var service = service
         switch service.state {
         case .idle:
             if service.isConfigured {
@@ -46,7 +52,8 @@ struct ReportAnalysisSheet: View {
                     modelLabel: service.modelLabel,
                     hasPricing: service.model?.pricing != nil,
                     canAnalyze: bundle.hasData,
-                    analyze: { service.analyze(bundle) })
+                    sharing: $service.sharing,
+                    analyze: { service.analyze(bundle, events: events) })
             } else {
                 ReportAnalysisNotConfiguredView()
             }
@@ -55,7 +62,7 @@ struct ReportAnalysisSheet: View {
         case .done(let reply):
             ReportAnalysisResultView(reply: reply)
             Button(String(localized: "reports.analysis.again", defaultValue: "Analizar de nuevo"), systemImage: "arrow.clockwise") {
-                service.analyze(bundle)
+                service.analyze(bundle, events: events)
             }
             .buttonStyle(.bordered)
             .disabled(!service.isConfigured)
@@ -63,12 +70,12 @@ struct ReportAnalysisSheet: View {
             ReportAnalysisProblemView(
                 symbol: "hand.raised",
                 title: String(localized: "reports.analysis.rejected.title", defaultValue: "Respuesta descartada"),
-                message: message, canRetry: service.isConfigured, retry: { service.analyze(bundle) })
+                message: message, canRetry: service.isConfigured, retry: { service.analyze(bundle, events: events) })
         case .failed(let message):
             ReportAnalysisProblemView(
                 symbol: "exclamationmark.triangle",
                 title: String(localized: "reports.analysis.failed.title", defaultValue: "No se pudo analizar"),
-                message: message, canRetry: service.isConfigured, retry: { service.analyze(bundle) })
+                message: message, canRetry: service.isConfigured, retry: { service.analyze(bundle, events: events) })
         }
     }
 }

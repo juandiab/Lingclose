@@ -58,7 +58,7 @@ struct ReportsView: View {
                 }
             }
             .sheet(item: $analysisItem) { item in
-                analysisEntry?.makeSheet(item.bundle)
+                analysisEntry?.makeSheet(item.bundle, item.events)
             }
         }
         .task { await viewModel.appear() }
@@ -83,7 +83,7 @@ struct ReportsView: View {
 
     private func analyze() {
         guard canAnalyze, let content = viewModel.content else { return }
-        analysisItem = ReportsAnalysisSheetItem(bundle: content.bundle)
+        analysisItem = ReportsAnalysisSheetItem(bundle: content.bundle, events: content.events)
     }
 
     private func retry() {

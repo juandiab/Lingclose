@@ -6,6 +6,10 @@ import Observation
 /// el modelo del asistente de comidas (D-19). Cada intento queda en `report_analyses` como `succeeded`, `rejected`
 /// (el validador descartó la respuesta entera) o `failed`, con el SHA-256 del mensaje enviado. La clave solo se lee
 /// del Llavero en el instante de enviar y nunca se guarda en el estado observable.
+///
+/// T-33: con los interruptores de `ReportAnalysisSharing` (apagados por defecto) añade al mensaje el contexto opcional
+/// (comidas con nombre, sueño y pasos, perfil y composición corporal). Encender uno de Salud pide su permiso de lectura
+/// en ese momento; `prepare` nunca pide permisos.
 @MainActor @Observable
 final class ReportAnalysisService {
     private(set) var state: ReportAnalysisState = .idle
@@ -18,6 +22,9 @@ final class ReportAnalysisService {
     private(set) var outgoing: ReportAnalysisPreview?
     /// Registro del historial que se está mostrando (`nil` si es el análisis recién hecho).
     private(set) var shownRecordID: String?
+    /// Qué contexto opcional puede ver la IA (los mismos interruptores que Ajustes › Asistente con IA). La hoja lo
+    /// enlaza a sus `Toggle` y llama a `sharingDidChange()` cuando cambia.
+    var sharing: ReportAnalysisSharing
 
     var isConfigured: Bool { model != nil }
 
@@ -28,16 +35,25 @@ final class ReportAnalysisService {
     @ObservationIgnored private let locale: String
     @ObservationIgnored private let now: @Sendable () -> Date
     @ObservationIgnored private let makeID: @Sendable () -> String
+    @ObservationIgnored private let sharingSettings: LLMSettingsStore
+    @ObservationIgnored private let contextLoader: ReportAnalysisContextLoader
     @ObservationIgnored private var preparedPeriod: ReportPeriod?
+    @ObservationIgnored private var preparedBundle: ReportBundle?
+    /// Eventos del período abierto (para nombres de comidas); los da Reportes al abrir la hoja.
+    @ObservationIgnored private var preparedEvents: [DiaryEvent] = []
 
     static let historyFetchLimit = 200
 
     init(keys: LLMKeyStore, settings: LLMSettingsStore, store: any ReportAnalysisStoring,
          client: ReportAnalysisClient = ReportAnalysisClient(), locale: String = Locale.current.identifier,
+         sharingSettings: LLMSettingsStore? = nil, context: ReportAnalysisContextLoader = .unavailable,
          now: @escaping @Sendable () -> Date = { Date() },
          makeID: @escaping @Sendable () -> String = { UUID().uuidString.lowercased() }) {
         self.keys = keys
         self.settings = settings
+        self.sharingSettings = sharingSettings ?? settings
+        self.contextLoader = context
+        sharing = (sharingSettings ?? settings).analysisSharing()
         self.store = store
         self.client = client
         self.locale = locale
@@ -47,39 +63,100 @@ final class ReportAnalysisService {
 
     /// App real: claves y ajustes del asistente de comidas, red real, análisis en SQLite.
     static func live(store: SQLiteStore, assistant: MealAssistantServices) -> ReportAnalysisService {
-        ReportAnalysisService(keys: assistant.keys, settings: assistant.settings, store: store)
+        ReportAnalysisService(
+            keys: assistant.keys, settings: assistant.settings, store: store,
+            context: ReportAnalysisContextLoader(nutrition: assistant.nutrition, health: .live))
     }
 
-    /// Sin asistente configurado ni almacén real: previsualizaciones.
-    static var preview: ReportAnalysisService {
-        ReportAnalysisService(
-            keys: LLMKeyStore(itemFor: { _ in PreviewSecretItem() }),
-            settings: LLMSettingsStore(defaults: UserDefaults(suiteName: "report-analysis-preview") ?? .standard),
-            store: PreviewReportAnalysisStore())
+    /// Sin asistente configurado ni almacén real: previsualizaciones. Los interruptores son los de `sharingSettings`
+    /// (los del asistente de la previsualización, para que Ajustes y la hoja muestren lo mismo); comidas y Salud son
+    /// inventadas. Con `-previewAnalysis YES` (DEBUG) aparece configurado con una clave falsa y sin red, para ver
+    /// "Qué se enviará" en el simulador: "Analizar" falla sin llamar a ningún proveedor.
+    static func preview(sharingSettings: LLMSettingsStore = MealAssistantServices.preview.settings) -> ReportAnalysisService {
+        let settings = LLMSettingsStore(defaults: UserDefaults(suiteName: "report-analysis-preview") ?? .standard)
+        var fakeKey: String?
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "previewAnalysis") {
+            fakeKey = "preview-not-a-key"
+            settings.setSelectedProvider(.anthropic)
+            settings.setSelectedModel(LLMModel(
+                id: LLMCatalog.defaultAnthropicModel, provider: .anthropic, displayName: "Claude Haiku 5.5",
+                pricing: LLMCatalog.entry(provider: .anthropic, modelID: LLMCatalog.defaultAnthropicModel)?.pricing))
+        }
+        #endif
+        let key = fakeKey
+        return ReportAnalysisService(
+            keys: LLMKeyStore(itemFor: { _ in PreviewSecretItem(value: key) }),
+            settings: settings, store: PreviewReportAnalysisStore(),
+            client: ReportAnalysisClient(transport: PreviewOfflineTransport()),
+            sharingSettings: sharingSettings, context: .preview)
     }
 
     // MARK: - Preparar la hoja
 
-    /// Al abrir la hoja de un reporte: reinicia el estado si cambió de período, relee la configuración, calcula lo que
-    /// se enviará y carga el historial. No envía nada.
-    func prepare(for bundle: ReportBundle) async {
+    /// Al abrir la hoja de un reporte: reinicia el estado si cambió de período, relee la configuración y los
+    /// interruptores, calcula lo que se enviará (con el contexto opcional encendido) y carga el historial. No envía
+    /// nada ni pide permisos.
+    func prepare(for bundle: ReportBundle, events: [DiaryEvent] = []) async {
         if preparedPeriod != bundle.period {
             if state != .loading { state = .idle }
             shownRecordID = nil
             outgoing = nil
         }
         preparedPeriod = bundle.period
+        preparedBundle = bundle
+        preparedEvents = events
+        sharing = sharingSettings.analysisSharing()
         await refreshConfiguration()
         await refreshHistory(for: bundle.period)
-        guard let model else {
+        await refreshOutgoing()
+    }
+
+    /// Enciende o apaga un interruptor del contexto opcional (los mismos que en Ajustes). Al encender uno de Salud pide
+    /// su permiso de lectura; después recalcula "Qué se enviará".
+    func setSharing(_ option: ReportAnalysisSharingOption, isOn: Bool) async {
+        sharing.set(option, isOn)
+        await sharingDidChange()
+    }
+
+    /// Guarda los interruptores que cambiaron respecto a lo guardado, pide el permiso de Salud de los que se
+    /// encendieron y recalcula "Qué se enviará". Sin cambios (p. ej. al releerlos en `prepare`) no hace nada.
+    func sharingDidChange() async {
+        let stored = sharingSettings.analysisSharing()
+        let changed = ReportAnalysisSharingOption.allCases.filter { stored[$0] != sharing[$0] }
+        guard !changed.isEmpty else { return }
+        for option in changed {
+            sharingSettings.setAnalysisSharing(option, isOn: sharing[option])
+        }
+        for option in changed where sharing[option] {
+            await contextLoader.health.requestAccess(for: option)
+        }
+        await refreshOutgoing()
+    }
+
+    /// Recalcula el tamaño y el coste de lo que se enviará con los interruptores actuales.
+    func refreshOutgoing() async {
+        guard let model, let bundle = preparedBundle else {
             outgoing = nil
             return
         }
-        let locale = locale
-        let request = try? await Task.detached(priority: .userInitiated) {
-            try ReportAnalysisRequest(bundle: bundle, locale: locale)
+        let sharing = sharing
+        let request = try? await Self.makeRequest(bundle: bundle, events: preparedEvents, locale: locale,
+                                                  sharing: sharing, loader: contextLoader)
+        // Si mientras tanto cambió algo, otra llamada ya está calculando lo vigente.
+        guard sharing == self.sharing, bundle == preparedBundle else { return }
+        outgoing = request.map { ReportAnalysisPreview(request: $0, model: model, sharing: sharing) }
+    }
+
+    /// Snapshot compactado, contexto opcional (con el mismo snapshot) y petición, fuera del hilo principal.
+    nonisolated static func makeRequest(bundle: ReportBundle, events: [DiaryEvent], locale: String,
+                                        sharing: ReportAnalysisSharing,
+                                        loader: ReportAnalysisContextLoader) async throws -> ReportAnalysisRequest {
+        let snapshot = await Task.detached(priority: .userInitiated) { bundle.snapshot.compact() }.value
+        let context = await loader.load(snapshot: snapshot, events: events, period: bundle.period, sharing: sharing)
+        return try await Task.detached(priority: .userInitiated) {
+            try ReportAnalysisRequest(bundle: bundle, snapshot: snapshot, locale: locale, context: context)
         }.value
-        outgoing = request.map { ReportAnalysisPreview(request: $0, model: model) }
     }
 
     /// Relee proveedor, modelo y clave (la clave solo para saber si existe).
@@ -98,11 +175,12 @@ final class ReportAnalysisService {
     /// Envía **una** petición con el reporte. Sigue aunque se cierre la hoja (ya se pagó) y deja el resultado en el
     /// historial. Devuelve la tarea para poder esperarla (pruebas).
     @discardableResult
-    func analyze(_ bundle: ReportBundle) -> Task<Void, Never> {
-        Task { await run(bundle) }
+    func analyze(_ bundle: ReportBundle, events: [DiaryEvent]? = nil) -> Task<Void, Never> {
+        Task { await run(bundle, events: events) }
     }
 
-    func run(_ bundle: ReportBundle) async {
+    /// `events` `nil`: los del período preparado (si es el mismo), para no perder los nombres de comidas.
+    func run(_ bundle: ReportBundle, events: [DiaryEvent]? = nil) async {
         guard state != .loading else { return }
         guard let configuration = await resolveConfiguration() else {
             state = .failed(ReportAnalysisError.notConfigured.description)
@@ -110,12 +188,11 @@ final class ReportAnalysisService {
         }
         state = .loading
         shownRecordID = nil
-        let locale = locale
+        let events = events ?? (preparedPeriod == bundle.period ? preparedEvents : [])
         let request: ReportAnalysisRequest
         do {
-            request = try await Task.detached(priority: .userInitiated) {
-                try ReportAnalysisRequest(bundle: bundle, locale: locale)
-            }.value
+            request = try await Self.makeRequest(bundle: bundle, events: events, locale: locale,
+                                                 sharing: sharing, loader: contextLoader)
         } catch {
             state = .failed(Self.message(for: error))
             return

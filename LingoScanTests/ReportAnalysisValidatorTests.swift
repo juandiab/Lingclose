@@ -34,4 +34,25 @@ struct ReportAnalysisValidatorTests {
         #expect(ReportAnalysisValidator.violation(in: reply)?.term == "insulin")
         #expect(ReportAnalysisValidator.violation(in: try! ReportAnalysisParser.parse(object: ReportAnalysisFixtures.replyObject())) == nil)
     }
+
+    // MARK: - T-33: juicios sobre el peso
+
+    @Test(arguments: [
+        "Tienes sobrepeso.", "You are overweight.", "Você está com sobrepeso.", "Há excesso de peso.",
+        "Se nota delgadez.", "You look underweight.", "Estás en bajo peso.", "Indica baixo peso.", "Signs of obesity.",
+        "Está obeso.", "Deberías perder peso.", "Try to lose weight.", "Busca bajar de peso.", "Tu grasa corporal alta preocupa.",
+        "Your high body fat matters.", "Gordura corporal baixa.", "Intenta perder grasa.",
+    ])
+    func rejectsWeightJudgements(text: String) {
+        #expect(ReportAnalysisValidator.violation(in: [text]) != nil, "debería rechazar: \(text)")
+    }
+
+    @Test(arguments: [
+        "El peso de la cena fue mayor que el del almuerzo.", "Tu peso bajó 1,2 kg en el período.",
+        "The weight of dinner was larger.", "O peso do jantar foi maior.", "Tu grasa corporal pasó de 22 % a 21,3 %.",
+        "La masa magra se mantuvo estable.", "Body fat went from 22 % to 21.3 %.",
+    ])
+    func acceptsNeutralWeightMentions(text: String) {
+        #expect(ReportAnalysisValidator.violation(in: [text]) == nil, "no debería rechazar: \(text)")
+    }
 }

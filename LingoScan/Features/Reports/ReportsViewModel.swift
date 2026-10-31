@@ -140,9 +140,10 @@ final class ReportsViewModel {
                 let period = ReportPeriod.preset(preset, endingAt: UTCInstant(now), timeZone: timeZone)
                 async let readings = source.readings(in: period.dataRange)
                 async let events = source.events(in: period.dataRange)
+                let diary = try await events
                 let bundle = ReportBuilder.build(
-                    readings: try await readings, events: try await events, period: period, configuration: configuration)
-                return .success(ReportContent(preset: preset, bundle: bundle))
+                    readings: try await readings, events: diary, period: period, configuration: configuration)
+                return .success(ReportContent(preset: preset, bundle: bundle, events: diary))
             } catch {
                 return .failure(error)
             }

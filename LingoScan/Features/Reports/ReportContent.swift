@@ -16,10 +16,14 @@ struct ReportContent: Sendable {
     let overlayDetailed: [OverlayPoint]
     /// Mini-curva por comida (clave: instante de la comida), desde la serie remuestreada del período.
     let mealCurves: [UTCInstant: [MealSparkPoint]]
+    /// Eventos leídos para el período (T-33): el análisis con IA saca de aquí los nombres de las comidas si el usuario
+    /// lo permite. Nunca van al snapshot.
+    let events: [DiaryEvent]
 
-    init(preset: ReportPeriod.Preset, bundle: ReportBundle) {
+    init(preset: ReportPeriod.Preset, bundle: ReportBundle, events: [DiaryEvent] = []) {
         self.preset = preset
         self.bundle = bundle
+        self.events = events
         profile = HourlyProfilePoint.points(from: bundle.hourlyProfile)
         let days = bundle.dailyOverlay.days
         overlayCompact = OverlayPoint.points(from: days, slotMinutes: Self.compactSlotMinutes)

@@ -45,4 +45,26 @@ struct LLMSettingsStoreTests {
         #expect(!stored.lowercased().contains("key\""))
         #expect(!stored.contains("sk-"))
     }
+
+    // MARK: - T-33: interruptores del contexto del análisis
+
+    @Test func analysisSharingIsOffByDefaultAndPersists() {
+        let defaults = makeDefaults()
+        let store = LLMSettingsStore(defaults: defaults)
+        #expect(store.analysisSharing() == .none)
+        #expect(store.analysisSharing().isEmpty)
+
+        store.setAnalysisSharing(.meals, isOn: true)
+        store.setAnalysisSharing(.profile, isOn: true)
+        let reopened = LLMSettingsStore(defaults: defaults)
+        #expect(reopened.analysisSharing() == ReportAnalysisSharing(meals: true, sleepActivity: false, profile: true))
+        #expect(reopened.analysisSharing().enabled == [.meals, .profile])
+        #expect(defaults.bool(forKey: "lingoscan.llm.analysis.share_meals.v1"))
+        #expect(!defaults.bool(forKey: "lingoscan.llm.analysis.share_sleep_activity.v1"))
+        #expect(defaults.bool(forKey: "lingoscan.llm.analysis.share_profile.v1"))
+
+        reopened.setAnalysisSharing(.meals, isOn: false)
+        reopened.setAnalysisSharing(.sleepActivity, isOn: true)
+        #expect(LLMSettingsStore(defaults: defaults).analysisSharing() == ReportAnalysisSharing(sleepActivity: true, profile: true))
+    }
 }

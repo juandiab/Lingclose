@@ -22123,19 +22123,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lingclose guarda en Apple Salud tus lecturas válidas y lee de ahí tus entrenamientos y, para sugerir el rango, tu edad, sexo, peso y altura."
+            "value" : "Lingclose guarda en Apple Salud tus lecturas válidas y lee de ahí tus entrenamientos; para sugerir el rango, tu edad, sexo, peso y altura; y, solo si lo activas en el análisis con IA, tu sueño, tus pasos y tu composición corporal."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lingclose saves your valid readings to Apple Health and reads your workouts from it and, to suggest a range, your age, sex, weight and height."
+            "value" : "Lingclose saves your valid readings to Apple Health and reads your workouts from it; to suggest a range, your age, sex, weight and height; and, only if you turn it on for the AI analysis, your sleep, steps and body composition."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O Lingclose grava suas leituras válidas no Apple Saúde e lê de lá seus treinos e, para sugerir a faixa, sua idade, sexo, peso e altura."
+            "value" : "O Lingclose grava suas leituras válidas no Apple Saúde e lê de lá seus treinos; para sugerir a faixa, sua idade, sexo, peso e altura; e, só se você ativar na análise com IA, seu sono, seus passos e sua composição corporal."
           }
         }
       }
@@ -22665,6 +22665,420 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A chave e o modelo escolhido são apagados deste iPhone. Para voltar a usar o assistente, você terá que colar a chave de novo."
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.meals.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comidas con nombre"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meals with names"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refeições com nome"
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.meals.detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía el nombre que escribiste o que el asistente reconoció y sus calorías, carbohidratos, proteínas y grasas, para que la IA relacione cada comida con su subida."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends the name you typed or the assistant recognized, plus its calories, carbs, protein and fat, so the AI can link each meal to its rise."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envia o nome que você escreveu ou que o assistente reconheceu e as calorias, carboidratos, proteínas e gorduras, para que a IA relacione cada refeição com a subida dela."
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.meals.item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "el nombre y los nutrientes de tus comidas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the names and nutrients of your meals"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "o nome e os nutrientes das suas refeições"
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.sleep.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sueño y pasos (Apple Salud)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep and steps (Apple Health)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sono e passos (Apple Saúde)"
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.sleep.detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía por noche a qué hora te acostaste y te levantaste, cuánto dormiste y los pasos de cada día. Lingclose solo lee; nunca escribe sueño ni pasos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends, for each night, when you went to bed and got up and how long you slept, plus your steps each day. Lingclose only reads; it never writes sleep or steps."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envia, por noite, a que horas você deitou e levantou, quanto dormiu e os passos de cada dia. O Lingclose só lê; nunca grava sono nem passos."
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.sleep.item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tu sueño y tus pasos de Apple Salud"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "your sleep and steps from Apple Health"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "seu sono e seus passos do Apple Saúde"
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.profile.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfil y composición corporal (Apple Salud)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile and body composition (Apple Health)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfil e composição corporal (Apple Saúde)"
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.profile.detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edad, sexo, peso, altura y, si tu báscula los guarda en Salud, grasa corporal, masa magra y cintura con su cambio en el período. Solo como contexto general: la IA nunca juzga tu peso."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age, sex, weight, height and, if your scale saves them to Health, body fat, lean mass and waist with how they changed over the period. Only as general context: the AI never judges your weight."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idade, sexo, peso, altura e, se a sua balança os grava no Saúde, gordura corporal, massa magra e cintura com a variação no período. Só como contexto geral: a IA nunca julga o seu peso."
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.profile.item" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tu perfil y tu composición corporal de Apple Salud"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "your profile and body composition from Apple Health"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "seu perfil e sua composição corporal do Apple Saúde"
+          }
+        }
+      }
+    },
+    "reports.analysis.sharing.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo es opcional. Lo apagado no sale del iPhone. Nunca se envían fotos, notas, identificadores ni tu nombre."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything is optional. Whatever is off never leaves your iPhone. Photos, notes, identifiers and your name are never sent."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tudo é opcional. O que estiver desligado não sai do iPhone. Nunca são enviadas fotos, notas, identificadores nem o seu nome."
+          }
+        }
+      }
+    },
+    "reports.analysis.gap.meals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay comidas con nombre ni nutrientes en este período: van solo las cifras."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no meals with names or nutrients in this period: only the figures are sent."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não há refeições com nome nem nutrientes neste período: vão só os números."
+          }
+        }
+      }
+    },
+    "reports.analysis.gap.sleep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud no devolvió datos de sueño en este período."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Health returned no sleep data for this period."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Apple Saúde não retornou dados de sono neste período."
+          }
+        }
+      }
+    },
+    "reports.analysis.gap.steps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud no devolvió pasos en este período."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Health returned no steps for this period."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Apple Saúde não retornou passos neste período."
+          }
+        }
+      }
+    },
+    "reports.analysis.gap.profile" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud no devolvió datos de perfil ni de composición corporal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Health returned no profile or body composition data."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Apple Saúde não retornou dados de perfil nem de composição corporal."
+          }
+        }
+      }
+    },
+    "llm.analysisSharing.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué puede ver la IA en los reportes"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What the AI can see in reports"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O que a IA pode ver nos relatórios"
+          }
+        }
+      }
+    },
+    "reports.analysis.intro.privacyWithContext" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cifras del reporte (estadísticas, series y la hora, los carbohidratos o la duración de comidas y ejercicios) y, porque lo activaste, %@. Nunca fotos, notas, identificadores ni tu nombre."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report figures (statistics, series, and the time, carbs or duration of meals and exercise) and, because you turned it on, %@. Never photos, notes, identifiers or your name."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Números do relatório (estatísticas, séries e o horário, os carboidratos ou a duração de refeições e exercícios) e, porque você ativou, %@. Nunca fotos, notas, identificadores nem o seu nome."
+          }
+        }
+      }
+    },
+    "reports.analysis.intro.contextSize" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluye contexto opcional"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Includes optional context"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclui contexto opcional"
+          }
+        }
+      }
+    },
+    "reports.analysis.keyTakeaways" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo más importante"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key takeaways"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O mais importante"
           }
         }
       }

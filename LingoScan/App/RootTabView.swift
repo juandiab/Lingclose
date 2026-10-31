@@ -14,6 +14,8 @@ struct RootTabView: View {
     private let mealAssistant: MealAssistantServices
     private let rangeSuggester: any RangeSuggesting
     private let reportAnalysis: ReportAnalysisService
+    /// Fuentes de Salud de los interruptores del análisis (T-33): reales en la app, sintéticas en previsualización.
+    private let reportHealth: ReportAnalysisHealthSources
     private let workoutImport: WorkoutImportTrigger?
     private let alerts: AlertsController?
     @Environment(\.scenePhase) private var scenePhase
@@ -35,6 +37,7 @@ struct RootTabView: View {
         mealAssistant = assistant
         rangeSuggester = RangeSuggestionService.live(readings: environment.store, assistant: assistant)
         reportAnalysis = ReportAnalysisService.live(store: environment.store, assistant: assistant)
+        reportHealth = .live
         _coaching = State(initialValue: CoachingController(
             store: .appGroup(), assistant: CoachingAssistantService.live(assistant: assistant)))
         workoutImport = environment.workoutImport
@@ -55,7 +58,8 @@ struct RootTabView: View {
         identityImport = nil
         mealAssistant = .preview
         rangeSuggester = PreviewRangeSuggester()
-        reportAnalysis = .preview
+        reportAnalysis = .preview()
+        reportHealth = .preview
         _coaching = State(initialValue: Self.previewCoaching())
         workoutImport = nil
         alerts = nil
@@ -86,8 +90,9 @@ struct RootTabView: View {
         .environment(\.workoutImport, workoutImport)
         .environment(\.alerts, alerts)
         .environment(\.coaching, coaching)
-        .environment(\.reportAnalysisEntry, ReportAnalysisEntry { bundle in
-            AnyView(ReportAnalysisSheet(bundle: bundle, service: reportAnalysis))
+        .environment(\.reportAnalysisHealth, reportHealth)
+        .environment(\.reportAnalysisEntry, ReportAnalysisEntry { bundle, events in
+            AnyView(ReportAnalysisSheet(bundle: bundle, events: events, service: reportAnalysis))
         })
         .onReceive(NotificationCenter.default.publisher(for: AlertNotificationDelegate.openToday)) { _ in
             selection = .today

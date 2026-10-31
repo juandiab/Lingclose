@@ -11,6 +11,12 @@ enum ReportAnalysisFixtures {
 
     /// Días de lecturas cada minuto con una onda diaria, y comidas/ejercicio con texto libre inventado.
     static func bundle(days: Int = 7, withDiary: Bool = true) -> ReportBundle {
+        bundleWithEvents(days: days, withDiary: withDiary).bundle
+    }
+
+    /// Lo mismo, devolviendo también los eventos del diario (para el contexto opcional de T-33).
+    static func bundleWithEvents(days: Int = 7, withDiary: Bool = true,
+                                 mealText: String = freeText) -> (bundle: ReportBundle, events: [DiaryEvent]) {
         let period = ReportPeriod.last(days, endingAt: end, timeZone: bogota)
         let from = period.dataStart.epochSeconds
         let samples = stride(from: from, to: end.epochSeconds, by: 60).map { t -> BasicStats.Sample in
@@ -22,12 +28,12 @@ enum ReportAnalysisFixtures {
         if withDiary {
             for day in 0..<days {
                 let noon = period.start.adding(seconds: Int64(day) * 86_400 + 17 * 3_600)
-                events.append(event(.meal, at: noon, carbs: 60, text: freeText))
+                events.append(event(.meal, at: noon, carbs: 60, text: mealText))
                 events.append(event(.exercise, at: noon.adding(seconds: 4 * 3_600), duration: 30, text: freeText))
                 events.append(event(.note, at: noon, text: freeText))
             }
         }
-        return ReportBuilder.build(samples: samples, events: events, period: period)
+        return (ReportBuilder.build(samples: samples, events: events, period: period), events)
     }
 
     static func event(_ kind: DiaryEventKind, at: UTCInstant, carbs: Double? = nil, duration: Int? = nil, text: String?) -> DiaryEvent {
@@ -92,7 +98,8 @@ enum ReportAnalysisFixtures {
 
     @MainActor
     static func makeService(provider: LLMProviderID = .anthropic, configured: Bool = true,
-                            replies: [FixtureTransport.Reply] = [], model: LLMModel? = nil) async throws -> Environment {
+                            replies: [FixtureTransport.Reply] = [], model: LLMModel? = nil,
+                            context: ReportAnalysisContextLoader = .unavailable) async throws -> Environment {
         let items = Dictionary(uniqueKeysWithValues: LLMProviderID.allCases.map { ($0, InMemorySecretItem()) })
         let keys = LLMKeyStore(itemFor: { items[$0]! })
         let settings = LLMSettingsStore(defaults: UserDefaults(suiteName: "report-analysis-tests-\(UUID().uuidString)")!)
@@ -108,7 +115,7 @@ enum ReportAnalysisFixtures {
         let service = ReportAnalysisService(
             keys: keys, settings: settings, store: store,
             client: ReportAnalysisClient(transport: transport, log: RecordingLLMLogSink()), locale: "es-CO",
-            now: { Date(timeIntervalSince1970: 1_800_000_100) }, makeID: { counter.next() })
+            context: context, now: { Date(timeIntervalSince1970: 1_800_000_100) }, makeID: { counter.next() })
         return Environment(service: service, transport: transport, store: store)
     }
 }

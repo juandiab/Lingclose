@@ -48,6 +48,7 @@ Para ahorrar contexto: entregar diff, revisión probada y rutas de logs; no pega
 | T-30 | 2b | Opus | Modo claro con Hex Vault: la apariencia manda siempre, variante clara del shader y `Tokens.Studio` adaptativos; v0.4.3 (9) | T-27b | cerrada (sin commit; detalle en `docs/T-30.md`, D-33) |
 | T-31 | 2b | Opus | Ajustes coherentes y en lenguaje llano: grupos con subpantallas, un patrón por tipo de elección, nombres unificados en el catálogo (Apple Salud, Lingclose, Asistente con IA) y aviso de idioma estable; v0.4.4 (10) | T-29, T-30 | cerrada (sin commit; detalle en `docs/T-31.md`, D-34) |
 | T-32 | 2b | Opus | Crash al borrar en el Diario (`role: .destructive` en la acción de deslizar hacía que `List` quitara la fila antes de confirmar) y aviso de cambios del diario (`DiaryChangeFeed`) para que Hoy recargue sus marcas | T-27 | cerrada (detalle en `docs/T-32.md`) |
+| T-33 | 2b | Opus | Análisis con IA con contexto opcional (comidas con nombre y macros, sueño y pasos de Apple Salud, perfil) en tres interruptores apagados por defecto, bloque de contexto aparte del snapshot, prompt que cruza comidas/sueño/actividad con la glucosa y explica en lenguaje llano con "Lo más importante"; v0.4.6 (12) | T-27d, T-31 | cerrada (detalle en `docs/T-33.md`, D-37) |
 | T-12b | 2b | Sonnet | Reportes avanzados: respuesta a comidas, noche, comparación semanal, pulido visual | T-16 con lecturas reales | pendiente |
 | T-17 | 4 | Sonnet | Nightscout uploader (opcional) | T-16 | pendiente |
 | T-18 | 4 | Sonnet | Apple Watch | T-16 | pendiente |

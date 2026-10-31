@@ -1,11 +1,17 @@
 import SwiftUI
 
-/// Resultado: panorama general, una card expandible por reporte, salvedades y preguntas para explorar.
+/// Resultado: lo más importante (T-33; no aparece en análisis anteriores), panorama general, una card expandible por
+/// reporte, salvedades y preguntas para explorar.
 struct ReportAnalysisResultView: View {
     let reply: ReportAnalysisReply
 
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.sm) {
+            if !reply.keyTakeaways.isEmpty {
+                ReportAnalysisListCard(
+                    title: String(localized: "reports.analysis.keyTakeaways", defaultValue: "Lo más importante"),
+                    symbol: "star", items: reply.keyTakeaways)
+            }
             VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {
                 Text(String(localized: "reports.analysis.overview", defaultValue: "Panorama general"))
                     .font(.headline)

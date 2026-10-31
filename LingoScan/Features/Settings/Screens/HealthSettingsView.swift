@@ -13,7 +13,7 @@ struct HealthSettingsView: View {
                     state: isAuthorized ? .granted : .notDetermined,
                     detail: isAuthorized ? nil : PermissionRow.healthDetail)
             } footer: {
-                Text(String(localized: "settings.health.footer", defaultValue: "Lingclose guarda en Apple Salud tus lecturas válidas y lee de ahí tus entrenamientos y, para sugerir el rango, tu edad, sexo, peso y altura."))
+                Text(String(localized: "settings.health.footer", defaultValue: "Lingclose guarda en Apple Salud tus lecturas válidas y lee de ahí tus entrenamientos; para sugerir el rango, tu edad, sexo, peso y altura; y, solo si lo activas en el análisis con IA, tu sueño, tus pasos y tu composición corporal."))
             }
             WorkoutImportSection()
         }

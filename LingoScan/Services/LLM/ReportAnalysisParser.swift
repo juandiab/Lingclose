@@ -8,6 +8,9 @@ import LingoCore
 enum ReportAnalysisParser {
     static let maxSections = 10
     static let maxListItems = 8
+    /// "Lo más importante" pide de 3 a 5 frases; se aceptan hasta 6 y el resto se descarta. Sin la lista (respuesta
+    /// de un modelo que la omitió) el análisis sigue siendo válido.
+    static let maxTakeaways = 6
 
     static func parse(text: String) throws -> ReportAnalysisReply {
         guard let objectText = FoodAnalysisParser.firstJSONObject(in: text),
@@ -37,12 +40,13 @@ enum ReportAnalysisParser {
                 whatToTry: clean(item["what_to_try"]) ?? "",
                 whatToWatch: clean(item["what_to_watch"]) ?? "")
         }
-        return ReportAnalysisReply(overview: overview, sections: sections,
+        return ReportAnalysisReply(keyTakeaways: strings(object["key_takeaways"], max: maxTakeaways),
+                                   overview: overview, sections: sections,
                                    caveats: strings(object["caveats"]), questionsToExplore: strings(object["questions_to_explore"]))
     }
 
-    private static func strings(_ raw: Any?) -> [String] {
-        ((raw as? [Any]) ?? []).compactMap(clean).prefix(maxListItems).map { $0 }
+    private static func strings(_ raw: Any?, max: Int = maxListItems) -> [String] {
+        ((raw as? [Any]) ?? []).compactMap(clean).prefix(max).map { $0 }
     }
 
     private static func clean(_ raw: Any?) -> String? {

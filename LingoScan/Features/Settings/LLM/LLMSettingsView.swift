@@ -1,12 +1,16 @@
 import SwiftUI
 
 /// Ajustes › Conexiones › Asistente con IA. Muestra solo lo que corresponde al paso de `LLMSettingsViewModel`. Explica
-/// que la clave es del usuario y que el proveedor cobra cada consulta; "Olvidar clave" pide confirmación.
+/// que la clave es del usuario y que el proveedor cobra cada consulta; "Olvidar clave" pide confirmación. Debajo, qué
+/// contexto opcional puede ver la IA en los reportes (T-33).
 struct LLMSettingsView: View {
     @State private var viewModel: LLMSettingsViewModel
     @State private var isConfirmingForget = false
+    /// Interruptores del contexto del análisis de reportes (T-33).
+    private let sharingSettings: LLMSettingsStore
 
     init(services: MealAssistantServices) {
+        sharingSettings = services.settings
         _viewModel = State(initialValue: LLMSettingsViewModel(
             keys: services.keys, settings: services.settings, makeProvider: services.makeProvider))
     }
@@ -29,6 +33,7 @@ struct LLMSettingsView: View {
             case .elegido:
                 chosenSections
             }
+            ReportAnalysisSharingSection(settings: sharingSettings)
             Section {
             } footer: {
                 Text(String(localized: "llm.privacy", defaultValue: "La clave se guarda solo en el llavero de este iPhone. Al proveedor solo se envía lo necesario para cada consulta (por ejemplo, la foto reducida y tu descripción de una comida), nunca tu nombre."))

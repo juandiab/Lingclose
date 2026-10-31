@@ -183,7 +183,7 @@ struct ReportAnalysisServiceTests {
         let request = try ReportAnalysisRequest(bundle: bundle, locale: "es-CO")
         let estimate = ReportAnalysisCostEstimate(request: request, model: LLMFixtures.model(for: .anthropic))
         #expect(estimate.outputTokens == ReportAnalysisPrompt.expectedOutputTokens)
-        #expect(ReportAnalysisPrompt.expectedOutputTokens == 6000)
+        #expect(ReportAnalysisPrompt.expectedOutputTokens == 7000)
         #expect(ReportAnalysisPrompt.expectedOutputTokens < ReportAnalysisPrompt.maxOutputTokens)
 
         let env = try await ReportAnalysisFixtures.makeService(
@@ -213,7 +213,7 @@ struct ReportAnalysisServiceTests {
 
     @Test func systemPromptAsksForConciseness() {
         let system = ReportAnalysisPrompt.systemPrompt(locale: "es-CO")
-        #expect(system.contains("6000 tokens"))
+        #expect(system.contains("7000 tokens"))
         #expect(system.contains("entre 2 y 5 frases"))
     }
 
@@ -221,5 +221,48 @@ struct ReportAnalysisServiceTests {
         let text = LLMError.incomplete("stop_reason: max_tokens").description
         #expect(text.contains("stop_reason: max_tokens"))
         #expect(!text.contains("llm.error"), "la clave no debe verse como texto")
+    }
+
+    // MARK: - T-33: interruptores en la hoja
+
+    @Test func togglingMealsGrowsWhatWillBeSentAndReachesTheProvider() async throws {
+        let ok = ReportAnalysisFixtures.reply(for: .anthropic, text: ReportAnalysisFixtures.replyText())
+        let env = try await ReportAnalysisFixtures.makeService(replies: [ok], context: .preview)
+        let (bundle, events) = ReportAnalysisFixtures.bundleWithEvents()
+        await env.service.prepare(for: bundle, events: events)
+        #expect(env.service.sharing == .none)
+        let before = try #require(env.service.outgoing)
+        #expect(before.contextBytes == 0 && before.gaps.isEmpty)
+
+        // Los eventos del fixture no son `synthetic-…`: sin nutrición inventada, el nombre sale del texto del evento.
+        await env.service.setSharing(.meals, isOn: true)
+        await env.service.setSharing(.sleepActivity, isOn: true)
+        let after = try #require(env.service.outgoing)
+        #expect(after.contextBytes > 0)
+        #expect(after.payloadBytes > before.payloadBytes)
+        #expect(after.sharing == ReportAnalysisSharing(meals: true, sleepActivity: true))
+        #expect(after.gaps.isEmpty)
+
+        await env.service.run(bundle)
+        let body = try #require(env.transport.requests.first?.httpBody)
+        let sent = String(data: body, encoding: .utf8) ?? ""
+        #expect(sent.contains("Contexto opcional incluido: comidas con nombre, sueño, pasos"))
+        #expect(sent.contains("asleep_min") && sent.contains("daily_steps"))
+    }
+
+    @Test func enabledBlockWithoutHealthDataIsReportedNotFatal() async throws {
+        let empty = ReportAnalysisContextLoader(
+            nutrition: InMemoryMealNutritionStore(),
+            health: ReportAnalysisHealthSources(sleepActivity: PreviewSleepActivityReader(nights: [], steps: []),
+                                                profile: PreviewHealthProfileReader(profile: .empty),
+                                                bodyComposition: PreviewBodyCompositionReader(.empty)))
+        let env = try await ReportAnalysisFixtures.makeService(context: empty)
+        let bundle = ReportAnalysisFixtures.bundle(withDiary: false)
+        await env.service.prepare(for: bundle)
+        await env.service.setSharing(.sleepActivity, isOn: true)
+        await env.service.setSharing(.profile, isOn: true)
+        let outgoing = try #require(env.service.outgoing)
+        #expect(outgoing.contextBytes == 0)
+        #expect(outgoing.gaps == [.sleep, .steps, .profile])
     }
 }

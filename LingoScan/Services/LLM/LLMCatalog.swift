@@ -119,7 +119,7 @@ enum LLMCatalog {
             if model.id == chosen?.id, let pricing = model.pricing {
                 model.recommendation = .recommended(reason: reason(for: model, pricing: pricing))
             } else if model.imageSupport == .none {
-                model.recommendation = .notRecommended(reason: String(localized: "No acepta imágenes: solo sirve para describir la comida con texto."))
+                model.recommendation = .notRecommended(reason: String(localized: "llm.catalog.noImages", defaultValue: "No acepta imágenes: solo sirve para describir la comida con texto."))
             } else {
                 model.recommendation = .unknown
             }
@@ -135,8 +135,14 @@ enum LLMCatalog {
         let input = (pricing.inputUSDPerMTok ?? 0).formatted(.number.precision(.fractionLength(2...4)))
         let output = (pricing.outputUSDPerMTok ?? 0).formatted(.number.precision(.fractionLength(2...4)))
         if model.provider == .anthropic && model.id == defaultAnthropicModel {
-            return String(localized: "Recomendado por defecto: lee imágenes (confirmado), devuelve la respuesta estructurada y es el Claude más económico (\(input) $ entrada / \(output) $ salida por millón de tokens).")
+            return String(
+                localized: "llm.catalog.recommendedDefault",
+                defaultValue: "Recomendado por defecto: lee imágenes (confirmado), devuelve la respuesta estructurada y es el Claude más económico (\(input) $ entrada / \(output) $ salida por millón de tokens)."
+            )
         }
-        return String(localized: "Lee imágenes (confirmado) y es el más económico con precio publicado (\(input) $ entrada / \(output) $ salida por millón de tokens).")
+        return String(
+            localized: "llm.catalog.cheapest",
+            defaultValue: "Lee imágenes (confirmado) y es el más económico con precio publicado (\(input) $ entrada / \(output) $ salida por millón de tokens)."
+        )
     }
 }

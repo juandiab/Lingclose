@@ -21656,6 +21656,282 @@
           }
         }
       }
+    },
+    "settings.language" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma"
+          }
+        }
+      }
+    },
+    "settings.language.system" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        }
+      }
+    },
+    "settings.language.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se aplica al volver a abrir la app. Cierra Lingclose desde el selector de apps y ábrela de nuevo; el sensor se reconecta solo."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takes effect when you reopen the app. Close Lingclose from the app switcher and open it again; the sensor reconnects on its own."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vale quando você reabrir o app. Feche o Lingclose no seletor de apps e abra de novo; o sensor se reconecta sozinho."
+          }
+        }
+      }
+    },
+    "settings.language.pending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pendiente de reabrir la app"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reopen the app to apply"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reabra o app para aplicar"
+          }
+        }
+      }
+    },
+    "llm.catalog.noImages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No acepta imágenes: solo sirve para describir la comida con texto."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doesn't accept images: only useful for describing the meal in text."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não aceita imagens: só serve para descrever a refeição em texto."
+          }
+        }
+      }
+    },
+    "llm.catalog.recommendedDefault" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recomendado por defecto: lee imágenes (confirmado), devuelve la respuesta estructurada y es el Claude más económico (%@ $ entrada / %@ $ salida por millón de tokens)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommended by default: reads images (confirmed), returns the structured reply and is the cheapest Claude ($%@ input / $%@ output per million tokens)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recomendado por padrão: lê imagens (confirmado), devolve a resposta estruturada e é o Claude mais econômico (US$ %@ entrada / US$ %@ saída por milhão de tokens)."
+          }
+        }
+      }
+    },
+    "llm.catalog.cheapest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lee imágenes (confirmado) y es el más económico con precio publicado (%@ $ entrada / %@ $ salida por millón de tokens)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reads images (confirmed) and is the cheapest with published pricing ($%@ input / $%@ output per million tokens)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lê imagens (confirmado) e é o mais econômico com preço publicado (US$ %@ entrada / US$ %@ saída por milhão de tokens)."
+          }
+        }
+      }
+    },
+    "rangeSuggestion.parse.noJSON" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "la respuesta no contiene un objeto JSON"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the reply contains no JSON object"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "a resposta não contém um objeto JSON"
+          }
+        }
+      }
+    },
+    "rangeSuggestion.parse.missingExplanation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "falta la explicación"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the explanation is missing"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "falta a explicação"
+          }
+        }
+      }
+    },
+    "rangeSuggestion.parse.outOfBounds" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rango %lld–%lld fuera de los límites permitidos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "range %lld–%lld is outside the allowed limits"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "faixa %lld–%lld fora dos limites permitidos"
+          }
+        }
+      }
+    },
+    "rangeSuggestion.parse.notInteger" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ no es entero"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is not an integer"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ não é inteiro"
+          }
+        }
+      }
+    },
+    "rangeSuggestion.parse.missingField" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "falta %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is missing"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "falta %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -22,6 +22,7 @@ struct SettingsView: View {
                 }
                 WorkoutImportSection()
                 permissionsSection
+                LanguageSection()
                 appearanceSection
                 BackgroundStyleSection()
                 diagnosticsSection

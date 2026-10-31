@@ -9,7 +9,7 @@ enum RangeSuggestionReplyParser {
     static func parse(text: String) throws -> LLMRangeReply {
         guard let objectText = FoodAnalysisParser.firstJSONObject(in: text),
               let object = try? JSONSerialization.jsonObject(with: Data(objectText.utf8)) as? [String: Any] else {
-            throw LLMError.invalidResponse(String(localized: "la respuesta no contiene un objeto JSON"))
+            throw LLMError.invalidResponse(String(localized: "rangeSuggestion.parse.noJSON", defaultValue: "la respuesta no contiene un objeto JSON"))
         }
         return try parse(object: object)
     }
@@ -19,10 +19,13 @@ enum RangeSuggestionReplyParser {
         let high = try integer(object["high_mgdl"], field: "high_mgdl")
         guard let explanation = (object["explanation"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
               !explanation.isEmpty else {
-            throw LLMError.invalidResponse(String(localized: "falta la explicación"))
+            throw LLMError.invalidResponse(String(localized: "rangeSuggestion.parse.missingExplanation", defaultValue: "falta la explicación"))
         }
         guard RangeSuggestionBounds.isValid(low: low, high: high) else {
-            throw LLMError.invalidResponse(String(localized: "rango \(low)–\(high) fuera de los límites permitidos"))
+            throw LLMError.invalidResponse(String(
+                localized: "rangeSuggestion.parse.outOfBounds",
+                defaultValue: "rango \(low)–\(high) fuera de los límites permitidos"
+            ))
         }
         return LLMRangeReply(low: low, high: high, explanation: explanation)
     }
@@ -32,16 +35,16 @@ enum RangeSuggestionReplyParser {
         case let number as NSNumber:
             let value = number.doubleValue
             guard value.isFinite, value == value.rounded() else {
-                throw LLMError.invalidResponse(String(localized: "\(field) no es entero"))
+                throw LLMError.invalidResponse(String(localized: "rangeSuggestion.parse.notInteger", defaultValue: "\(field) no es entero"))
             }
             return Int(value)
         case let text as String:
             guard let value = Int(text.trimmingCharacters(in: .whitespaces)) else {
-                throw LLMError.invalidResponse(String(localized: "\(field) no es entero"))
+                throw LLMError.invalidResponse(String(localized: "rangeSuggestion.parse.notInteger", defaultValue: "\(field) no es entero"))
             }
             return value
         default:
-            throw LLMError.invalidResponse(String(localized: "falta \(field)"))
+            throw LLMError.invalidResponse(String(localized: "rangeSuggestion.parse.missingField", defaultValue: "falta \(field)"))
         }
     }
 }

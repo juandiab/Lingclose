@@ -302,6 +302,7 @@
 		7ABD0D7E52AAA79519F1BD33 /* CountingReceiverIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EB4E62C927C6D5C870846F /* CountingReceiverIDs.swift */; };
 		7AC33D25E911EF5BAB5AB30F /* RangeSuggesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8529E606F57E2188C48AADDA /* RangeSuggesting.swift */; };
 		7B186B0B6E0A032B880CB232 /* openai-broken.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B4A58ECAE75655570100BCD /* openai-broken.json */; };
+		7B598B923B3DE02CF8E6AA78 /* LanguagePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F65C85EDFFA7D6014DF7757 /* LanguagePreference.swift */; };
 		7BC6EE7ED382784E47DAEFA4 /* RangeSuggestionTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B609DF3251131D5630AD8452 /* RangeSuggestionTestSupport.swift */; };
 		7C0CCB2CC562A7D206F5CA51 /* WeeklyComparisonTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FC94FECD266B1E23A5EA67 /* WeeklyComparisonTable.swift */; };
 		7C6A03392939665982670864 /* CoachingContextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A867AB4624525662035969A1 /* CoachingContextBuilder.swift */; };
@@ -373,6 +374,7 @@
 		99C1128F2B4543909E7BE5CA /* BackgroundSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401ECA526567FA2D392EF0BD /* BackgroundSlot.swift */; };
 		99D4DDCBA772BBBDD6A1E610 /* RangeSuggestionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCCF9E67613301D1F05AD8D /* RangeSuggestionError.swift */; };
 		9AF599A58431BE5FFD12C5F4 /* PairingStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFB06BB1F6CB0668BB6482 /* PairingStateStore.swift */; };
+		9B34A0036CCC6820B412BC9B /* LanguagePreferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90306FDB06579F4FF3E4288 /* LanguagePreferenceTests.swift */; };
 		9B4C2F4EBC57D4E86D1E85CD /* SensorSessionCoordinatorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF3E0E0AF2B30E124AB5DED /* SensorSessionCoordinatorError.swift */; };
 		9B74EEFB194E75D46F65932A /* ReportDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DEB53013E1D8A00E9E84951 /* ReportDetailView.swift */; };
 		9C05FDF4EEEBE111E0B5430B /* MealGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD20B28F02DDA5D2859D74C /* MealGroupRow.swift */; };
@@ -486,6 +488,7 @@
 		C6366B7F274654503B75DBBF /* DataPreviewDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02397F6FB3D9D14BAF8059AE /* DataPreviewDoubles.swift */; };
 		C6E19DFAA5087798DED4AC6D /* ModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406B449A8B975C0550F278D3 /* ModelListView.swift */; };
 		C7A8924CD129D169C31634FB /* ReportAnalyzeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F7A0A9459F243509F838AD /* ReportAnalyzeButton.swift */; };
+		C7F28C82BD54E8A4BB2C1B54 /* LanguageSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952E49B04014C9B560337FEA /* LanguageSection.swift */; };
 		C83B454D9735F1905573BE7D /* deepseek-broken.json in Resources */ = {isa = PBXBuildFile; fileRef = 665DFB8CE59E516402A4F4BC /* deepseek-broken.json */; };
 		C8898F727FB636D32126C33B /* ScriptedNFC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4301BA91123AE23E6D0843 /* ScriptedNFC.swift */; };
 		C8D7A03F857FD657D25CE8DD /* ExportCooldownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F7388DA762B86CDD46E1E0 /* ExportCooldownTests.swift */; };
@@ -839,6 +842,7 @@
 		4E91FBE015A861C7810CFA43 /* GlucoseBackgroundTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseBackgroundTone.swift; sourceTree = "<group>"; };
 		4F2BEBB134241ACA4C12686A /* CoachingCategory+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoachingCategory+Display.swift"; sourceTree = "<group>"; };
 		4F54F56AD5553D83F9E31E80 /* AuthenticationFailureReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureReason.swift; sourceTree = "<group>"; };
+		4F65C85EDFFA7D6014DF7757 /* LanguagePreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagePreference.swift; sourceTree = "<group>"; };
 		50835CC8F3E2FF7F419D7A9F /* ReportPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPalette.swift; sourceTree = "<group>"; };
 		508F836CE441625A909133D1 /* grok-coach.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "grok-coach.json"; sourceTree = "<group>"; };
 		51C44E74B3CD52C29CBA1413 /* ReportsCountingSourceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsCountingSourceError.swift; sourceTree = "<group>"; };
@@ -1001,6 +1005,7 @@
 		93EAAE1E5373F24C2C3BE4C6 /* CoachingController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoachingController+Preview.swift"; sourceTree = "<group>"; };
 		94A0B899E7E702D14AF13E81 /* ReportAnalysisEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAnalysisEntry.swift; sourceTree = "<group>"; };
 		94E47A2BA4BDB5F95DC7DF34 /* GlucosePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucosePoint.swift; sourceTree = "<group>"; };
+		952E49B04014C9B560337FEA /* LanguageSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSection.swift; sourceTree = "<group>"; };
 		95A066AB61496641D74488A9 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		970F799052FD0A63761E6778 /* NightsCardContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightsCardContent.swift; sourceTree = "<group>"; };
 		97DEA753CF65E5964A9EA2B8 /* FakeWorkoutSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeWorkoutSource.swift; sourceTree = "<group>"; };
@@ -1121,6 +1126,7 @@
 		C66CB26E1B66A385818AC0E0 /* ICloudItemStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudItemStatus.swift; sourceTree = "<group>"; };
 		C78F0A89DD90EDA6FEC78DD5 /* CredentialImportError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialImportError.swift; sourceTree = "<group>"; };
 		C810C790C9164AEBFC1D6EFB /* TodayEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayEntriesView.swift; sourceTree = "<group>"; };
+		C90306FDB06579F4FF3E4288 /* LanguagePreferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagePreferenceTests.swift; sourceTree = "<group>"; };
 		C962FBCA8F6806792D17981C /* CoachingAsking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachingAsking.swift; sourceTree = "<group>"; };
 		C9B43EF4392CC5896A2687BF /* ModelRecommendation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRecommendation.swift; sourceTree = "<group>"; };
 		C9FD8D28F7840322F3624775 /* anthropic-coach.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anthropic-coach.json"; sourceTree = "<group>"; };
@@ -1769,6 +1775,7 @@
 				76BB25398BEF1029A61F7007 /* WorkoutImportSection.swift */,
 				39ED4532091CC6DA55764C79 /* Alerts */,
 				4BDE18CBBD51BB042F4A4E02 /* Appearance */,
+				99B30CBE2B90FA35F45C0687 /* Language */,
 				745095A64471FCD69DD92CDE /* LLM */,
 				37FA83EDBBF00DD05DF7D421 /* RangeSuggestion */,
 			);
@@ -1877,6 +1884,15 @@
 				7E06BECF4BE4F3A1DF5FB9F3 /* Meal */,
 			);
 			path = Diary;
+			sourceTree = "<group>";
+		};
+		99B30CBE2B90FA35F45C0687 /* Language */ = {
+			isa = PBXGroup;
+			children = (
+				4F65C85EDFFA7D6014DF7757 /* LanguagePreference.swift */,
+				952E49B04014C9B560337FEA /* LanguageSection.swift */,
+			);
+			path = Language;
 			sourceTree = "<group>";
 		};
 		A114778E9CA7BA93772EEC8E /* Products */ = {
@@ -2054,6 +2070,7 @@
 				3684EF37F93058182DF4BC3B /* HealthExporterTests.swift */,
 				C16221185DC0B75A4EEF543C /* HealthTestSupport.swift */,
 				CDB6822092D0B93EBC597743 /* InMemoryPairingStateStore.swift */,
+				C90306FDB06579F4FF3E4288 /* LanguagePreferenceTests.swift */,
 				5528B00F2CB66B3751256182 /* LingoScanTests.swift */,
 				9DF6FF6FE998E0791BD47C71 /* LingoTestFrames.swift */,
 				0A741C10C19A81A62288B967 /* LiveSensorStatusSourceTests.swift */,
@@ -2544,6 +2561,7 @@
 				FA7B96CAACFACA46C1E508AC /* LLMSettingsExtraTransitionTests.swift in Sources */,
 				0973F0EEC90103DFEFDC57D4 /* LLMSettingsStoreTests.swift in Sources */,
 				4D8262FEC03B2C60BE14583B /* LLMSettingsViewModelTests.swift in Sources */,
+				9B34A0036CCC6820B412BC9B /* LanguagePreferenceTests.swift in Sources */,
 				B1340005350F58A81CD5855D /* LingoScanTests.swift in Sources */,
 				A47E8753A489FDC5462A7377 /* LingoTestFrames.swift in Sources */,
 				B4CECA191EA0DE39944D6AED /* LiveSensorStatusSourceTests.swift in Sources */,
@@ -2805,6 +2823,8 @@
 				977DC345E55FE6B221395F4C /* LLMSettingsStore.swift in Sources */,
 				466D2D6F99AA9420FDAC901C /* LLMSettingsView.swift in Sources */,
 				4E2927DE1B78344B05E3060E /* LLMSettingsViewModel.swift in Sources */,
+				7B598B923B3DE02CF8E6AA78 /* LanguagePreference.swift in Sources */,
+				C7F28C82BD54E8A4BB2C1B54 /* LanguageSection.swift in Sources */,
 				F4A347211CC43C6B914040DE /* LingoReadingMapper.swift in Sources */,
 				BCF7DF9635C25C61EA4E2ABE /* LingoScanApp.swift in Sources */,
 				3EE0E8DDF42C85DB7B5D2D55 /* LiveReportsDataSource.swift in Sources */,
@@ -3103,14 +3123,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LingoScan/LingoScan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LingoScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.otalvaro.lingoscan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3209,14 +3229,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LingoScan/LingoScan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = LingoScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.otalvaro.lingoscan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;

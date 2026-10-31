@@ -4,13 +4,12 @@ import SwiftUI
 struct LingoScanApp: App {
     /// Se construye una sola vez, al arrancar (también en relanzamientos por BLE).
     @State private var root = AppRoot.make()
-    @AppStorage(AppearanceMode.storageKey) private var appearance = AppearanceMode.system
 
     var body: some Scene {
         WindowGroup {
             rootContent
                 // En la raíz: cambia al instante en toda la app, incluidas hojas y la barra de pestañas.
-                .preferredColorScheme(appearance.colorScheme)
+                .appColorScheme()
         }
     }
 

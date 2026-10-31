@@ -33,6 +33,7 @@ struct DataView: View {
                 RecentErrorsSection(viewModel: viewModel)
             }
             .navigationTitle(String(localized: "data.title", defaultValue: "Datos"))
+            .appBackground()
             .task { await viewModel.refresh() }
             .refreshable { await viewModel.refresh() }
             .fileImporter(isPresented: $isPicking, allowedContentTypes: allowedTypes) { result in

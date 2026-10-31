@@ -66,6 +66,7 @@ struct RootTabView: View {
                 SettingsView(viewModel: ui.settings, identity: identityImport)
             }
         }
+        .background { BackgroundController(today: todayViewModel) }
         .environment(\.tabSelector, TabSelector { selection = $0 })
         .environment(\.mealAssistant, mealAssistant)
         .environment(\.rangeSuggester, rangeSuggester)

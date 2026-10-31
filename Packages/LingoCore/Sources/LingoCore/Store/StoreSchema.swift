@@ -8,13 +8,16 @@
 ///
 /// v3 (T-21 §5) = tabla `workout_links`: qué entrenamiento de Salud (`HKWorkout.uuid`) generó qué evento
 /// `exercise`, para no duplicar al reimportar. Local: no entra en el `.lingoscan`.
+///
+/// v4 (T-27a) = tabla `report_analyses` (guion en `SchemaMigration.v4`): análisis por IA de reportes. Local.
 enum StoreSchema {
-    static let currentVersion = 3
+    static let currentVersion = 4
 
     static let migrations: [SchemaMigration] = [
         SchemaMigration(version: 1) { try $0.executeScript(v1) },
         SchemaMigration(version: 2) { try $0.executeScript(v2) },
         SchemaMigration(version: 3) { try $0.executeScript(v3) },
+        .reportAnalyses,
     ]
 
     static func userVersion(_ c: SQLiteConnection) throws -> Int {

@@ -62,6 +62,7 @@ struct TodayView: View {
                 }
             }
             .navigationTitle(String(localized: "today.title", defaultValue: "Hoy"))
+            .appBackground()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) { DayNavigator(viewModel: viewModel) }

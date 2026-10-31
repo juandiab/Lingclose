@@ -23,10 +23,12 @@ struct SettingsView: View {
                 WorkoutImportSection()
                 permissionsSection
                 appearanceSection
+                BackgroundStyleSection()
                 diagnosticsSection
                 aboutSection
             }
             .navigationTitle(String(localized: "settings.title", defaultValue: "Ajustes"))
+            .appBackground()
             .task { await viewModel.refreshPermissions() }
         }
     }

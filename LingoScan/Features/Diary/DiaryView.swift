@@ -19,6 +19,7 @@ struct DiaryView: View {
                 }
             }
             .navigationTitle(String(localized: "diary.title", defaultValue: "Diario"))
+            .appBackground()
             .overlay(alignment: .bottomTrailing) { addButton }
         }
         .task { await viewModel.load() }

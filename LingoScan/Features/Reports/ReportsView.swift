@@ -10,6 +10,7 @@ struct ReportsView: View {
                 description: Text(String(localized: "reports.placeholder", defaultValue: "Aquí verás tus reportes de glucosa."))
             )
             .navigationTitle(String(localized: "reports.title", defaultValue: "Reportes"))
+            .appBackground()
         }
     }
 }

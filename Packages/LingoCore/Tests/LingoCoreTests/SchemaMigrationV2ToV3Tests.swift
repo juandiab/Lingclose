@@ -38,7 +38,7 @@ struct SchemaMigrationV2ToV3Tests {
         }
 
         let store = try SQLiteStore(path: path)
-        #expect(try await store.schemaVersion() == 3)
+        #expect(try await store.schemaVersion() == 4)
         #expect(try await store.tableNames() == SchemaMigrationTests.expectedTables)
         #expect(try await store.linkedWorkoutCount() == 0, "workout_links nace vacía")
 
@@ -53,7 +53,7 @@ struct SchemaMigrationV2ToV3Tests {
         // La tabla nueva ya acepta enlaces, y reabrir no reaplica la migración ni toca los datos.
         try await store.linkWorkout(uuid: "w-1", eventID: exerciseID, at: UTCInstant(epochSeconds: at))
         let reopened = try SQLiteStore(path: path)
-        #expect(try await reopened.schemaVersion() == 3)
+        #expect(try await reopened.schemaVersion() == 4)
         #expect(try await reopened.linkedWorkoutCount() == 1)
         #expect(try await reopened.event(id: mealID) == meal)
         #expect(try await reopened.mealNutrition(eventID: mealID) == nutrition)

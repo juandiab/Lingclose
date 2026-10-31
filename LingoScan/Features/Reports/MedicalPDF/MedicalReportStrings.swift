@@ -18,7 +18,7 @@ enum MedicalReportStrings {
         String(localized: "medical.pdf.footer.generated", defaultValue: "Generado el \(text)")
     }
     static var disclaimer: String {
-        String(localized: "medical.pdf.footer.disclaimer", defaultValue: "Lingo es un producto de bienestar, no un dispositivo médico.")
+        String(localized: "medical.pdf.footer.disclaimer", defaultValue: "Lingclose no es un dispositivo médico; no sustituye el criterio de un profesional de salud.")
     }
     static var watermark: String {
         String(localized: "medical.pdf.watermark", defaultValue: "DATOS DE EJEMPLO")
@@ -244,7 +244,7 @@ enum MedicalReportStrings {
     static var methodTitle: String { String(localized: "medical.pdf.method.title", defaultValue: "Notas y método") }
     static var methodSource: String {
         String(localized: "medical.pdf.method.source",
-               defaultValue: "Fuente de los datos: lecturas del sensor Abbott Lingo (plataforma FreeStyle Libre 3) recibidas por Lingclose. Lingo es un producto de bienestar, no un dispositivo médico, y este reporte no sustituye un sistema médico ni el criterio clínico. La persona no declara uso de insulina.")
+               defaultValue: "Fuente de los datos: lecturas del biosensor de glucosa Abbott Lingo (plataforma FreeStyle Libre 3) recibidas por Lingclose. Lingclose no es un dispositivo médico y este reporte no sustituye el criterio de un profesional de salud ni un sistema médico. La persona no declara uso de insulina.")
     }
     static var methodRanges: String {
         String(localized: "medical.pdf.method.ranges",

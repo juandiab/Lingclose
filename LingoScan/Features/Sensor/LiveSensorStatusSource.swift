@@ -119,10 +119,10 @@ struct LiveSensorStatusSource: SensorStatusSource {
 
     private static func note(_ reason: IncompatibilityReason) -> String {
         switch reason {
-        case .unsupportedVariant(let productType, let securityVersion):
-            String(localized: "sensor.note.variant", defaultValue: "Variante no compatible (productType \(Int(productType)), securityVersion \(Int(securityVersion))). No se intenta activar.")
-        case .sensorEnded(let stateByte):
-            String(localized: "sensor.note.ended", defaultValue: "El sensor informa que terminó (state \(Int(stateByte))).")
+        case .unsupportedVariant:
+            String(localized: "sensor.note.variant", defaultValue: "Este biosensor no es compatible. No se intenta activar.")
+        case .sensorEnded:
+            String(localized: "sensor.note.ended", defaultValue: "El biosensor informa que ya terminó su vida útil.")
         }
     }
 }

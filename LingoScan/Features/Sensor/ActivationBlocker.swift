@@ -11,11 +11,11 @@ enum ActivationBlocker: Sendable, Hashable {
     var explanation: String {
         switch self {
         case .sensorNotRead:
-            String(localized: "activation.blocker.notRead", defaultValue: "Primero lee el sensor por NFC: solo se activa un Lingo sin activar (state 1).")
+            String(localized: "activation.blocker.notRead", defaultValue: "Primero lee el biosensor por NFC. Solo se puede activar un biosensor (Abbott Lingo) que todavía no esté activado.")
         case .unsupportedVariant:
-            String(localized: "activation.blocker.variant", defaultValue: "Este sensor no es un Lingo compatible (productType 9, securityVersion 3).")
+            String(localized: "activation.blocker.variant", defaultValue: "Este biosensor no es compatible. Lingclose funciona con Abbott Lingo.")
         case .noLingoIdentity:
-            String(localized: "activation.blocker.identity", defaultValue: "Falta una identidad del sensor que sirva a Lingo. Impórtala en Ajustes › Avanzado › Identidad del sensor.")
+            String(localized: "activation.blocker.identity", defaultValue: "Falta una identidad del biosensor compatible con Abbott Lingo. Impórtala en Ajustes › Avanzado › Identidad del sensor.")
         case .noSigningKeys:
             String(localized: "activation.blocker.keys", defaultValue: "La identidad no trae claves de firma del sensor. Sin ellas no se empareja.")
         case .actionsUnavailable:

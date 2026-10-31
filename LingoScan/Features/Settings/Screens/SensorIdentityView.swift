@@ -37,7 +37,7 @@ struct SensorIdentityView: View {
     }
 
     private var explanation: String {
-        String(localized: "identity.footer", defaultValue: "Son las credenciales que permiten a Lingclose emparejarse con el sensor Lingo. Llegan en un archivo .json y se guardan solo en el llavero de este iPhone; el archivo original no se modifica.")
+        String(localized: "identity.footer", defaultValue: "Son las credenciales que permiten a Lingclose emparejarse con tu biosensor (Abbott Lingo). Llegan en un archivo .json y se guardan solo en el llavero de este iPhone; el archivo original no se modifica.")
     }
 
     private func statusSection(_ model: IdentityImportModel) -> some View {
@@ -53,7 +53,7 @@ struct SensorIdentityView: View {
                 }
             }
             if !model.summaries.isEmpty {
-                LabeledContent(String(localized: "identity.signingKeys", defaultValue: "Claves para emparejar Lingo")) {
+                LabeledContent(String(localized: "identity.signingKeys", defaultValue: "Claves para emparejar tu biosensor (Abbott Lingo)")) {
                     Text(model.hasLingoSigningKeys
                          ? String(localized: "identity.signingKeys.present", defaultValue: "Presentes")
                          : String(localized: "identity.signingKeys.missing", defaultValue: "Faltan: no se puede emparejar"))

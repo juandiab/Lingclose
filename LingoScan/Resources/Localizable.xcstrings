@@ -2918,19 +2918,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Claves para emparejar Lingo"
+            "value" : "Claves para emparejar tu biosensor (Abbott Lingo)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keys to pair Lingo"
+            "value" : "Keys to pair your biosensor (Abbott Lingo)"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chaves para parear o Lingo"
+            "value" : "Chaves para parear seu biossensor (Abbott Lingo)"
           }
         }
       }
@@ -3010,19 +3010,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Son las credenciales que permiten a Lingclose emparejarse con el sensor Lingo. Llegan en un archivo .json y se guardan solo en el llavero de este iPhone; el archivo original no se modifica."
+            "value" : "Son las credenciales que permiten a Lingclose emparejarse con tu biosensor (Abbott Lingo). Llegan en un archivo .json y se guardan solo en el llavero de este iPhone; el archivo original no se modifica."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "These are the credentials that let Lingclose pair with the Lingo sensor. They come in a .json file and are stored only in this iPhone’s keychain; the original file is not modified."
+            "value" : "These are the credentials that let Lingclose pair with your biosensor (Abbott Lingo). They come in a .json file and are stored only in this iPhone’s keychain; the original file is not modified."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "São as credenciais que permitem ao Lingclose parear com o sensor Lingo. Chegam em um arquivo .json e ficam guardadas só nas chaves deste iPhone; o arquivo original não é alterado."
+            "value" : "São as credenciais que permitem ao Lingclose parear com seu biossensor (Abbott Lingo). Chegam em um arquivo .json e ficam guardadas só nas chaves deste iPhone; o arquivo original não é alterado."
           }
         }
       }
@@ -3539,19 +3539,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Primero lee el sensor por NFC: solo se activa un Lingo sin activar (state 1)."
+            "value" : "Primero lee el biosensor por NFC. Solo se puede activar un biosensor (Abbott Lingo) que todavía no esté activado."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Read the sensor by NFC first: only an unactivated Lingo (state 1) can be activated."
+            "value" : "Read the biosensor by NFC first. Only a biosensor (Abbott Lingo) that has not been activated yet can be activated."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Primeiro leia o sensor por NFC: só é possível ativar um Lingo ainda não ativado (state 1)."
+            "value" : "Primeiro leia o biossensor por NFC. Só é possível ativar um biossensor (Abbott Lingo) que ainda não foi ativado."
           }
         }
       }
@@ -3562,19 +3562,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Este sensor no es un Lingo compatible (productType 9, securityVersion 3)."
+            "value" : "Este biosensor no es compatible. Lingclose funciona con Abbott Lingo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This sensor is not a compatible Lingo (productType 9, securityVersion 3)."
+            "value" : "This biosensor is not compatible. Lingclose works with Abbott Lingo."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Este sensor não é um Lingo compatível (productType 9, securityVersion 3)."
+            "value" : "Este biossensor não é compatível. O Lingclose funciona com o Abbott Lingo."
           }
         }
       }
@@ -3585,19 +3585,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falta una identidad del sensor que sirva a Lingo. Impórtala en Ajustes › Avanzado › Identidad del sensor."
+            "value" : "Falta una identidad del biosensor compatible con Abbott Lingo. Impórtala en Ajustes › Avanzado › Identidad del sensor."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A sensor identity that works with Lingo is missing. Import it in Settings › Advanced › Sensor Identity."
+            "value" : "A biosensor identity compatible with Abbott Lingo is missing. Import it in Settings › Advanced › Sensor Identity."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falta uma identidade do sensor compatível com o Lingo. Importe-a em Ajustes › Avançado › Identidade do sensor."
+            "value" : "Falta uma identidade do biossensor compatível com o Abbott Lingo. Importe-a em Ajustes › Avançado › Identidade do sensor."
           }
         }
       }
@@ -4804,19 +4804,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Variante no compatible (productType %1$lld, securityVersion %2$lld). No se intenta activar."
+            "value" : "Este biosensor no es compatible. No se intenta activar."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unsupported variant (productType %1$lld, securityVersion %2$lld). Activation is not attempted."
+            "value" : "This biosensor is not compatible. Activation is not attempted."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Variante incompatível (productType %1$lld, securityVersion %2$lld). Não se tenta ativar."
+            "value" : "Este biossensor não é compatível. Não se tenta ativar."
           }
         }
       }
@@ -4827,19 +4827,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El sensor informa que terminó (state %lld)."
+            "value" : "El biosensor informa que ya terminó su vida útil."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The sensor reports it has ended (state %lld)."
+            "value" : "The biosensor reports that its wear period has ended."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O sensor informa que terminou (state %lld)."
+            "value" : "O biossensor informa que já terminou seu período de uso."
           }
         }
       }
@@ -23710,19 +23710,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lingo es un producto de bienestar, no un dispositivo médico."
+            "value" : "Lingclose no es un dispositivo médico; no sustituye el criterio de un profesional de salud."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lingo is a wellness product, not a medical device."
+            "value" : "Lingclose is not a medical device; it does not replace the judgment of a health professional."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O Lingo é um produto de bem-estar, não um dispositivo médico."
+            "value" : "O Lingclose não é um dispositivo médico; não substitui o julgamento de um profissional de saúde."
           }
         }
       }
@@ -26654,19 +26654,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fuente de los datos: lecturas del sensor Abbott Lingo (plataforma FreeStyle Libre 3) recibidas por Lingclose. Lingo es un producto de bienestar, no un dispositivo médico, y este reporte no sustituye un sistema médico ni el criterio clínico. La persona no declara uso de insulina."
+            "value" : "Fuente de los datos: lecturas del biosensor de glucosa Abbott Lingo (plataforma FreeStyle Libre 3) recibidas por Lingclose. Lingclose no es un dispositivo médico y este reporte no sustituye el criterio de un profesional de salud ni un sistema médico. La persona no declara uso de insulina."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Data source: readings from the Abbott Lingo sensor (FreeStyle Libre 3 platform) received by Lingclose. Lingo is a wellness product, not a medical device, and this report does not replace a medical system or clinical judgment. The person does not report insulin use."
+            "value" : "Data source: readings from the Abbott Lingo glucose biosensor (FreeStyle Libre 3 platform) received by Lingclose. Lingclose is not a medical device, and this report does not replace the judgment of a health professional or a medical system. The person does not report insulin use."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fonte dos dados: leituras do sensor Abbott Lingo (plataforma FreeStyle Libre 3) recebidas pelo Lingclose. O Lingo é um produto de bem-estar, não um dispositivo médico, e este relatório não substitui um sistema médico nem o julgamento clínico. A pessoa não declara uso de insulina."
+            "value" : "Fonte dos dados: leituras do biossensor de glicose Abbott Lingo (plataforma FreeStyle Libre 3) recebidas pelo Lingclose. O Lingclose não é um dispositivo médico, e este relatório não substitui o julgamento de um profissional de saúde nem um sistema médico. A pessoa não declara uso de insulina."
           }
         }
       }

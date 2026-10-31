@@ -111,7 +111,9 @@ final class TodayViewModel {
     private let clock: @Sendable () -> Date
     @ObservationIgnored let calendar: Calendar
     /// Diario en memoria cuando la fuente no trae uno propio (previsualización): el registro rápido se ve en la curva.
-    @ObservationIgnored private let fallbackStore = InMemoryDiaryStore()
+    @ObservationIgnored private let fallbackStore: InMemoryDiaryStore
+    /// Aviso compartido de cambios del diario: al recibirlo se recargan las marcas (T-32).
+    @ObservationIgnored let diaryChanges: DiaryChangeFeed
     /// Ventana visible y longitud con las que se hizo la última carga (su tercio central).
     @ObservationIgnored private var loadAnchor: (start: Date, end: Date, length: TimeInterval)?
     @ObservationIgnored private var settleTask: Task<Void, Never>?
@@ -124,11 +126,15 @@ final class TodayViewModel {
     init(
         dataSource: any TodayDataSource,
         sensorSource: any SensorStatusSource,
+        diaryChanges: DiaryChangeFeed = DiaryChangeFeed(),
+        fallbackDiary: InMemoryDiaryStore = InMemoryDiaryStore(),
         calendar: Calendar = .current,
         clock: @escaping @Sendable () -> Date = { .now }
     ) {
         self.dataSource = dataSource
         self.sensorSource = sensorSource
+        self.diaryChanges = diaryChanges
+        self.fallbackStore = fallbackDiary
         self.clock = clock
         self.calendar = calendar
         let now = clock()
@@ -413,18 +419,34 @@ final class TodayViewModel {
 
     // MARK: Carga
 
-    /// Carga el estado del sensor y sigue los avisos de datos nuevos y los cambios de estado hasta que se cancela la tarea.
+    /// Carga el estado del sensor y sigue los avisos de datos nuevos, los cambios del diario y los cambios de estado
+    /// hasta que se cancela la tarea.
     func observe() async {
         await refreshSensor()
         async let changes: Void = followChanges()
+        async let diary: Void = followDiary()
         async let statuses: Void = followSensor()
-        _ = await (changes, statuses)
+        _ = await (changes, diary, statuses)
     }
 
     private func followChanges() async {
         for await _ in dataSource.changes() {
             await refresh()
         }
+    }
+
+    /// Alta, edición o borrado desde el Diario (u otra pantalla): las marcas y el recuento del día se recargan.
+    private func followDiary() async {
+        let me = ObjectIdentifier(self)
+        for await change in diaryChanges.changes() where change.origin != me {
+            await refresh()
+        }
+    }
+
+    /// Una hoja de Hoy guardó en el diario por su cuenta: recarga y avisa a las demás pantallas.
+    func diaryDidChange() async {
+        diaryChanges.notify(from: self)
+        await refresh()
     }
 
     private func followSensor() async {

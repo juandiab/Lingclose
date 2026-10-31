@@ -7,10 +7,10 @@ struct TodayEntriesView: View {
     let calendar: Calendar
     @State private var diary: DiaryViewModel
 
-    init(day: Date, store: any DiaryStore, calendar: Calendar) {
+    init(day: Date, store: any DiaryStore, changes: DiaryChangeFeed, calendar: Calendar) {
         self.day = day
         self.calendar = calendar
-        _diary = State(initialValue: DiaryViewModel(store: store, calendar: calendar))
+        _diary = State(initialValue: DiaryViewModel(store: store, changes: changes, calendar: calendar))
     }
 
     private var events: [DiaryEvent] {
@@ -28,9 +28,7 @@ struct TodayEntriesView: View {
                 .buttonStyle(.plain)
                 .swipeActions(edge: .trailing) {
                     if diary.canModify(event) {
-                        Button(String(localized: "diary.delete.confirm", defaultValue: "Borrar"), systemImage: "trash", role: .destructive) {
-                            diary.pendingDeletion = event
-                        }
+                        DiaryDeleteSwipeButton(viewModel: diary, event: event)
                     }
                 }
             }
@@ -45,21 +43,13 @@ struct TodayEntriesView: View {
         }
         .navigationTitle(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
         .navigationBarTitleDisplayMode(.inline)
-        .task { await diary.load() }
+        .task {
+            await diary.load()
+            await diary.observeChanges()
+        }
         .sheet(item: $diary.editor) { editor in
             DiaryEditorView(viewModel: diary, editor: editor)
         }
-        .confirmationDialog(
-            String(localized: "diary.delete.title", defaultValue: "¿Borrar este registro?"),
-            isPresented: $diary.isConfirmingDeletion,
-            titleVisibility: .visible,
-            presenting: diary.pendingDeletion
-        ) { event in
-            Button(String(localized: "diary.delete.confirm", defaultValue: "Borrar"), role: .destructive) {
-                Task { await diary.delete(event) }
-            }
-        } message: { _ in
-            Text(String(localized: "diary.delete.message", defaultValue: "Se conserva el historial de ediciones; el registro deja de mostrarse."))
-        }
+        .diaryDeletionConfirmation(diary)
     }
 }

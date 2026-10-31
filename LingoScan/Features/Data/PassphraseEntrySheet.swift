@@ -110,7 +110,7 @@ struct PassphraseEntrySheet: View {
         } header: {
             Text(String(localized: "recovery.sheet.before.header", defaultValue: "Antes de usarla"))
         } footer: {
-            Text(String(localized: "recovery.sheet.before.footer", defaultValue: "Sin la frase no se pueden abrir los archivos de recuperación. LingoScan no puede recuperarla."))
+            Text(String(localized: "recovery.sheet.before.footer", defaultValue: "Sin la frase no se pueden abrir los archivos de recuperación. Lingclose no puede recuperarla."))
         }
     }
 

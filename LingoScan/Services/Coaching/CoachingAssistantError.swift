@@ -7,7 +7,7 @@ enum CoachingAssistantError: Error, Sendable, Equatable, CustomStringConvertible
     var description: String {
         switch self {
         case .notConfigured:
-            String(localized: "coaching.assistant.notConfigured", defaultValue: "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes → Asistente de comidas.")
+            String(localized: "coaching.assistant.notConfigured", defaultValue: "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes › Conexiones › Asistente con IA.")
         }
     }
 

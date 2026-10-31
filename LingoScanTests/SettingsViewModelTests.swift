@@ -33,6 +33,19 @@ struct SettingsViewModelTests {
         #expect(model.healthAuthorized)
     }
 
+    /// T-31: la fila Permisos cuenta lo que el usuario puede conceder (Bluetooth y Apple Salud); NFC no cuenta.
+    @Test func missingPermissionsCountOnlyGrantablePermissions() async {
+        let none = SettingsViewModel(
+            permissions: FakePermissions(bluetooth: .denied, nfcAvailable: false), health: nil, defaults: makeDefaults())
+        #expect(none.missingPermissionCount == 2)
+
+        let health = PreviewHealthController(current: HealthSnapshot(isAuthorized: true))
+        let all = SettingsViewModel(
+            permissions: FakePermissions(bluetooth: .granted, nfcAvailable: false), health: health, defaults: makeDefaults())
+        await all.refreshPermissions()
+        #expect(all.missingPermissionCount == 0)
+    }
+
     @Test func unitIsFixedAndAboutShowsVersionBuildAndForkBase() {
         let model = SettingsViewModel(
             permissions: FakePermissions(), health: nil, about: AboutInfo(version: "0.1.0", build: "7"), defaults: makeDefaults())

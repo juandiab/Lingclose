@@ -15,7 +15,7 @@ struct AlertTestSection: View {
                     .foregroundStyle(.secondary)
             }
         } footer: {
-            Text(String(localized: "alerts.disclaimer", defaultValue: "Las alertas son informativas y pueden retrasarse o no llegar (Bluetooth, batería, ajustes de iOS). LingoScan es un producto de bienestar, no un dispositivo médico; no tomes decisiones de salud solo con ellas."))
+            Text(String(localized: "alerts.disclaimer", defaultValue: "Las alertas son informativas y pueden retrasarse o no llegar (Bluetooth, batería, ajustes de iOS). Lingclose es un producto de bienestar, no un dispositivo médico; no tomes decisiones de salud solo con ellas."))
         }
     }
 

@@ -39,7 +39,7 @@ struct MealInputSection: View {
                 axis: .vertical)
                 .lineLimit(1...4)
         } footer: {
-            Text(String(localized: "meal.privacy", defaultValue: "Solo se envían la foto reducida y tu descripción. Nada de glucosa, Salud ni entrenamientos; la foto no se guarda."))
+            Text(String(localized: "meal.privacy", defaultValue: "Solo se envían la foto reducida y tu descripción. Nada de glucosa, Apple Salud ni entrenamientos; la foto no se guarda."))
         }
         if model.photoBlockedByModel {
             Section {

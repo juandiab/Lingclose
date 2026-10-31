@@ -20,7 +20,7 @@ struct ExerciseCardContent: View {
         } else if report.sessions.isEmpty {
             ReportEmptyState(message: String(
                 localized: "reports.exercise.empty",
-                defaultValue: "Anota ejercicio en el Diario (o impórtalo de Salud) para ver cómo cambia tu glucosa durante y después."),
+                defaultValue: "Anota ejercicio en el Diario (o impórtalo de Apple Salud) para ver cómo cambia tu glucosa durante y después."),
                 systemImage: "figure.run")
         } else {
             ReportEmptyState(message: String(

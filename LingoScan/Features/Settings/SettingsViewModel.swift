@@ -40,6 +40,12 @@ final class SettingsViewModel {
         privateDiagnostics = defaults.bool(forKey: Self.diagnosticsKey)
     }
 
+    /// Permisos que el usuario puede conceder y aún no están concedidos (Bluetooth y Apple Salud). NFC no cuenta: es
+    /// una capacidad del dispositivo, no un permiso.
+    var missingPermissionCount: Int {
+        (bluetooth == .granted ? 0 : 1) + (healthAuthorized ? 0 : 1)
+    }
+
     func refreshPermissions() async {
         bluetooth = permissions.bluetooth
         nfcAvailable = permissions.nfcAvailable

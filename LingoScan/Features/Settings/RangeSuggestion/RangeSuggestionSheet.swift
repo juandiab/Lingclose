@@ -70,7 +70,7 @@ struct RangeSuggestionSheet: View {
                 Text(String(localized: "range.suggest.loading", defaultValue: "Calculando con tus lecturas…"))
             }
         } footer: {
-            Text(String(localized: "range.suggest.loading.footer", defaultValue: "Se leen tus lecturas de los últimos 14 días y, si lo permites, edad, sexo, peso y altura de Salud. Si hay un asistente configurado recibe solo cifras agregadas: nunca lecturas sueltas."))
+            Text(String(localized: "range.suggest.loading.footer", defaultValue: "Se leen tus lecturas de los últimos 14 días y, si lo permites, edad, sexo, peso y altura de Apple Salud. Si hay un asistente configurado recibe solo cifras agregadas: nunca lecturas sueltas."))
         }
     }
 
@@ -85,7 +85,7 @@ struct RangeSuggestionSheet: View {
     private var disclaimerSection: some View {
         Section {
             Label {
-                Text(String(localized: "range.suggest.disclaimer", defaultValue: "Esta sugerencia no es consejo médico ni sustituye a un profesional de la salud. Las líneas solo ayudan a leer la curva; LingoScan no es un dispositivo médico. Nada cambia hasta que pulses \"Usar rango\"."))
+                Text(String(localized: "range.suggest.disclaimer", defaultValue: "Esta sugerencia no es consejo médico ni sustituye a un profesional de la salud. Las líneas solo ayudan a leer la curva; Lingclose no es un dispositivo médico. Nada cambia hasta que pulses \"Usar rango\"."))
             } icon: {
                 Image(systemName: "info.circle")
             }

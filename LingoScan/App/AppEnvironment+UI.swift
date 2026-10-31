@@ -16,11 +16,11 @@ final class AppUIModels {
         self.settings = settings
     }
 
-    /// Previsualización: diario con los eventos sintéticos (rotulados) y el resto inerte.
-    static func preview(events: [DiaryEvent]) -> AppUIModels {
+    /// Previsualización: diario en memoria (el mismo que usa Hoy, con los eventos sintéticos rotulados) y el resto inerte.
+    static func preview(diary store: InMemoryDiaryStore, changes: DiaryChangeFeed) -> AppUIModels {
         let health = PreviewHealthController()
         return AppUIModels(
-            diary: DiaryViewModel(store: InMemoryDiaryStore(events: events)),
+            diary: DiaryViewModel(store: store, changes: changes),
             data: DataViewModel(archive: PreviewArchiveManager(), health: health, eventLog: EmptyEventLog()),
             settings: SettingsViewModel(health: health))
     }

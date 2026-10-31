@@ -1,8 +1,10 @@
 import SwiftUI
 
-/// Ajustes → Asistente de comidas. Muestra solo lo que corresponde al paso de `LLMSettingsViewModel`.
+/// Ajustes › Conexiones › Asistente con IA. Muestra solo lo que corresponde al paso de `LLMSettingsViewModel`. Explica
+/// que la clave es del usuario y que el proveedor cobra cada consulta; "Olvidar clave" pide confirmación.
 struct LLMSettingsView: View {
     @State private var viewModel: LLMSettingsViewModel
+    @State private var isConfirmingForget = false
 
     init(services: MealAssistantServices) {
         _viewModel = State(initialValue: LLMSettingsViewModel(
@@ -29,10 +31,10 @@ struct LLMSettingsView: View {
             }
             Section {
             } footer: {
-                Text(String(localized: "llm.privacy", defaultValue: "La clave se guarda solo en el llavero de este iPhone. Al analizar, solo se envían la foto reducida y tu descripción."))
+                Text(String(localized: "llm.privacy", defaultValue: "La clave se guarda solo en el llavero de este iPhone. Al proveedor solo se envía lo necesario para cada consulta (por ejemplo, la foto reducida y tu descripción de una comida), nunca tu nombre."))
             }
         }
-        .navigationTitle(String(localized: "llm.title", defaultValue: "Asistente de comidas"))
+        .navigationTitle(String(localized: "llm.title", defaultValue: "Asistente con IA"))
         .navigationBarTitleDisplayMode(.inline)
         .modifier(CatalogSearch(isEnabled: viewModel.step == .catalogo, text: $viewModel.searchText))
         .task { await viewModel.load() }
@@ -49,6 +51,10 @@ struct LLMSettingsView: View {
                 }
             }
             .disabled(viewModel.step == .comprobando)
+        } header: {
+            Text(String(localized: "llm.provider", defaultValue: "Proveedor"))
+        } footer: {
+            Text(String(localized: "llm.provider.footer", defaultValue: "Lo usan \"Analizar con IA\" en comidas y reportes, \"Preguntar al asistente\" en Hoy y \"Sugerir rango\". Es opcional: sin él, todo lo demás funciona igual."))
         }
     }
 
@@ -65,7 +71,7 @@ struct LLMSettingsView: View {
                 }
             }
             SecureField(
-                String(localized: "llm.key.field", defaultValue: "Clave de API"),
+                String(localized: "llm.key.field", defaultValue: "Pega aquí tu clave de API"),
                 text: $viewModel.keyInput)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
@@ -79,6 +85,10 @@ struct LLMSettingsView: View {
                 }
             }
             messageView
+        } header: {
+            Text(String(localized: "llm.key.header", defaultValue: "Clave de API"))
+        } footer: {
+            Text(String(localized: "llm.key.footer", defaultValue: "La clave se crea en la web del proveedor, en tu cuenta. El proveedor cobra cada consulta a esa cuenta; Lingclose no cobra nada."))
         }
     }
 
@@ -96,6 +106,8 @@ struct LLMSettingsView: View {
                 ModelListView(models: viewModel.filteredModels) { viewModel.choose($0) }
             } header: {
                 Text(String(localized: "llm.pick", defaultValue: "Elige un modelo"))
+            } footer: {
+                Text(String(localized: "llm.pick.footer", defaultValue: "El precio lo publica el proveedor por millón de tokens (trozos de texto); una consulta usa unos pocos miles. Cada modelo indica si acepta fotos y por qué se recomienda o no."))
             }
         }
     }
@@ -110,6 +122,8 @@ struct LLMSettingsView: View {
                     ModelRow(model: model)
                 }
                 messageView
+            } header: {
+                Text(String(localized: "llm.chosen", defaultValue: "En uso"))
             }
             Section {
                 Button(String(localized: "llm.changeModel", defaultValue: "Cambiar modelo")) {
@@ -119,7 +133,19 @@ struct LLMSettingsView: View {
                     viewModel.changeKey()
                 }
                 Button(String(localized: "llm.forgetKey", defaultValue: "Olvidar clave"), role: .destructive) {
-                    Task { await viewModel.forgetKey() }
+                    isConfirmingForget = true
+                }
+                .confirmationDialog(
+                    String(localized: "llm.forget.title", defaultValue: "¿Olvidar la clave?"),
+                    isPresented: $isConfirmingForget,
+                    titleVisibility: .visible
+                ) {
+                    Button(String(localized: "llm.forgetKey", defaultValue: "Olvidar clave"), role: .destructive) {
+                        Task { await viewModel.forgetKey() }
+                    }
+                    Button(String(localized: "common.cancel", defaultValue: "Cancelar"), role: .cancel) {}
+                } message: {
+                    Text(String(localized: "llm.forget.message", defaultValue: "Se borran de este iPhone la clave y el modelo elegido. Para volver a usar el asistente tendrás que pegar la clave otra vez."))
                 }
             }
         }
@@ -132,8 +158,8 @@ struct LLMSettingsView: View {
             let number = String(count)
             Label(
                 count == 1
-                    ? String(localized: "llm.accessible.one", defaultValue: "Catálogo accesible: 1 modelo (no garantiza saldo para analizar)")
-                    : String(localized: "llm.accessible.many", defaultValue: "Catálogo accesible: \(number) modelos (no garantiza saldo para analizar)"),
+                    ? String(localized: "llm.accessible.one", defaultValue: "La clave funciona: 1 modelo disponible. Comprueba en tu cuenta que tienes saldo.")
+                    : String(localized: "llm.accessible.many", defaultValue: "La clave funciona: \(number) modelos disponibles. Comprueba en tu cuenta que tienes saldo."),
                 systemImage: "checkmark.circle")
         case .failed(let text, let keyKept):
             VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {

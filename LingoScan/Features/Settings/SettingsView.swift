@@ -1,113 +1,76 @@
 import SwiftUI
 
-/// Ajustes: unidad, alertas, identidad de app, permisos, apariencia, diagnóstico privado y "Acerca de".
+/// Ajustes, agrupados por lo que importa al usuario (T-31, D-34): Lecturas, Personalización, Conexiones, Avanzado y
+/// Acerca de (`SettingsGroup`). Cada grupo tiene un header corto y un pie en lenguaje llano; lo que necesita más filas
+/// vive en una subpantalla con `NavigationLink`.
 struct SettingsView: View {
     @Bindable var viewModel: SettingsViewModel
     /// `nil` en previsualización (`PreviewData`): no hay credenciales reales.
     let identity: IdentityImportModel?
 
-    @Environment(\.openURL) private var openURL
     @Environment(\.mealAssistant) private var mealAssistant
-    @AppStorage(AppearanceMode.storageKey) private var appearance = AppearanceMode.system
+    @Environment(\.alerts) private var alerts
 
     var body: some View {
         NavigationStack {
             Form {
-                unitSection
-                AlertsSection()
-                mealAssistantSection
-                ReferenceRangeSection()
-                if let identity {
-                    IdentitySection(model: identity)
+                ForEach(SettingsGroup.allCases) { group in
+                    Section {
+                        rows(for: group)
+                    } header: {
+                        Text(group.title)
+                    } footer: {
+                        Text(group.footer)
+                    }
                 }
-                WorkoutImportSection()
-                permissionsSection
-                LanguageSection()
-                appearanceSection
-                BackgroundStyleSection()
-                diagnosticsSection
-                aboutSection
             }
             .navigationTitle(String(localized: "settings.title", defaultValue: "Ajustes"))
+            .navigationDestination(for: SettingsRoute.self, destination: destination)
             .appBackground()
             .task { await viewModel.refreshPermissions() }
         }
     }
 
-    private var unitSection: some View {
-        Section {
-            LabeledContent(String(localized: "settings.unit", defaultValue: "Unidad de glucosa"), value: viewModel.glucoseUnit)
-        } footer: {
-            Text(String(localized: "settings.unit.footer", defaultValue: "Fija en mg/dL por ahora."))
+    @ViewBuilder
+    private func destination(_ route: SettingsRoute) -> some View {
+        switch route {
+        case .referenceRange:
+            ReferenceRangeSettingsView()
+        case .alerts:
+            if let alerts { AlertsSettingsView(alerts: alerts) }
+        case .health:
+            HealthSettingsView(isAuthorized: viewModel.healthAuthorized)
+        case .assistant:
+            LLMSettingsView(services: mealAssistant)
+        case .identity:
+            SensorIdentityView(model: identity)
+        case .permissions:
+            PermissionsSettingsView(viewModel: viewModel)
+        case .technicalInfo:
+            TechnicalInfoView(about: viewModel.about)
         }
     }
 
-    private var mealAssistantSection: some View {
-        Section {
-            NavigationLink {
-                LLMSettingsView(services: mealAssistant)
-            } label: {
-                Label(String(localized: "settings.mealAssistant", defaultValue: "Asistente de comidas"), systemImage: "sparkles")
-            }
-        } footer: {
-            Text(String(localized: "settings.mealAssistant.footer", defaultValue: "Opcional: propone calorías y macros de una foto o descripción. Tú revisas y guardas."))
-        }
-    }
-
-    private var permissionsSection: some View {
-        Section {
-            PermissionRow(title: String(localized: "settings.permission.bluetooth", defaultValue: "Bluetooth"), state: viewModel.bluetooth)
-            PermissionRow(
-                title: String(localized: "settings.permission.nfc", defaultValue: "NFC"),
-                state: viewModel.nfcAvailable ? .granted : .unavailable)
-            PermissionRow(
-                title: String(localized: "settings.permission.health", defaultValue: "Apple Salud"),
-                state: viewModel.healthAuthorized ? .granted : .notDetermined)
-            Button(String(localized: "settings.permission.open", defaultValue: "Abrir Ajustes de iOS"), systemImage: "gear") {
-                if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
-            }
-        } header: {
-            Text(String(localized: "settings.permissions", defaultValue: "Permisos"))
-        } footer: {
-            Text(String(localized: "settings.permission.footer", defaultValue: "NFC \"disponible\" significa que este iPhone puede leer sensores. Apple Salud se pide desde Datos."))
-        }
-    }
-
-    private var appearanceSection: some View {
-        Section {
-            Picker(String(localized: "settings.appearance", defaultValue: "Apariencia"), selection: $appearance) {
-                ForEach(AppearanceMode.allCases) { mode in
-                    Text(mode.title).tag(mode)
-                }
-            }
-            .pickerStyle(.segmented)
-        } header: {
-            Text(String(localized: "settings.appearance", defaultValue: "Apariencia"))
-        } footer: {
-            Text(String(localized: "settings.appearance.footer", defaultValue: "Sistema sigue el modo claro u oscuro de iOS. El tamaño de texto siempre sigue el de iOS."))
-        }
-    }
-
-    private var diagnosticsSection: some View {
-        Section {
-            Toggle(String(localized: "settings.diagnostics", defaultValue: "Diagnóstico privado"), isOn: $viewModel.privateDiagnostics)
-        } footer: {
-            Text(String(localized: "settings.diagnostics.footer", defaultValue: "Solo guarda la preferencia en este iPhone. El registro detallado llega en la Fase 3; nada sale del dispositivo."))
-        }
-    }
-
-    private var aboutSection: some View {
-        Section {
-            LabeledContent(String(localized: "settings.about.version", defaultValue: "Versión"), value: viewModel.about.version)
-            LabeledContent(String(localized: "settings.about.build", defaultValue: "Compilación"), value: viewModel.about.build)
-            LabeledContent(String(localized: "settings.about.fork", defaultValue: "Base del fork")) {
-                Text(verbatim: viewModel.about.forkBaseCommit)
-                    .font(.body.monospaced())
-            }
-        } header: {
-            Text(String(localized: "settings.about", defaultValue: "Acerca de"))
-        } footer: {
-            Text(String(localized: "settings.about.footer", defaultValue: "LingoScan es un proyecto personal de bienestar, no un dispositivo médico."))
+    @ViewBuilder
+    private func rows(for group: SettingsGroup) -> some View {
+        switch group {
+        case .readings:
+            UnitRow(unit: viewModel.glucoseUnit)
+            ReferenceRangeRow()
+            AlertsRow()
+        case .personalization:
+            LanguageRow()
+            AppearanceRow()
+            BackgroundStyleRow()
+        case .connections:
+            HealthRow(isAuthorized: viewModel.healthAuthorized)
+            AssistantRow(services: mealAssistant)
+        case .advanced:
+            IdentityRow(model: identity)
+            PermissionsRow(viewModel: viewModel)
+            DiagnosticsRow(viewModel: viewModel)
+        case .about:
+            AboutRows(about: viewModel.about)
         }
     }
 }

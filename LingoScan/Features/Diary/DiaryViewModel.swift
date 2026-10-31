@@ -21,13 +21,22 @@ final class DiaryViewModel {
     private(set) var failure: Failure?
     private(set) var isSaving = false
     var editor: DiaryEditor?
-    /// Evento pendiente de confirmar su borrado.
+    /// Evento pendiente de confirmar su borrado (abre el diálogo).
     var pendingDeletion: DiaryEvent?
+    /// Borrado ya confirmado en el diálogo; se aplica cuando el diálogo terminó de cerrarse (T-32).
+    private(set) var confirmedDeletion: DiaryEvent?
 
     var isConfirmingDeletion: Bool {
         get { pendingDeletion != nil }
         set { if !newValue { pendingDeletion = nil } }
     }
+
+    /// `true` cuando hay un borrado confirmado y el diálogo ya no está presentado: la vista lo aplica entonces,
+    /// para no cambiar la lista mientras el diálogo se cierra.
+    var hasDeletionReadyToCommit: Bool { confirmedDeletion != nil && pendingDeletion == nil }
+
+    /// Aviso compartido de cambios del diario (Hoy, la pestaña Diario y los registros rápidos).
+    let changes: DiaryChangeFeed
 
     @ObservationIgnored private let store: any DiaryStore
     @ObservationIgnored private let now: @Sendable () -> Date
@@ -36,11 +45,13 @@ final class DiaryViewModel {
 
     init(
         store: any DiaryStore,
+        changes: DiaryChangeFeed = DiaryChangeFeed(),
         calendar: Calendar = .current,
         now: @escaping @Sendable () -> Date = { Date() },
         newID: @escaping @Sendable () -> String = { UUID().uuidString.lowercased() }
     ) {
         self.store = store
+        self.changes = changes
         self.calendar = calendar
         self.now = now
         self.newID = newID
@@ -55,19 +66,33 @@ final class DiaryViewModel {
         let range = UTCInstant(now().addingTimeInterval(-Self.lookback))...UTCInstant(end)
         do {
             let events = try await store.events(in: range)
-            days = Self.group(events, calendar: calendar)
-            failure = nil
+            // Una sola asignación, y solo si cambió: la lista recibe un único diff coherente.
+            let newDays = Self.group(events, calendar: calendar)
+            if newDays != days { days = newDays }
+            if failure != nil { failure = nil }
         } catch {
             failure = .loadFailed
         }
         hasLoaded = true
     }
 
-    /// Agrupa por día local, días y eventos del más reciente al más antiguo.
+    /// Recarga cada vez que otra pantalla cambia el diario, hasta que se cancela la tarea.
+    func observeChanges() async {
+        let me = ObjectIdentifier(self)
+        for await change in changes.changes() where change.origin != me {
+            await load()
+        }
+    }
+
+    /// Agrupa por día local, días y eventos del más reciente al más antiguo (empates por `eventID`).
+    /// Secciones identificadas por día de calendario y filas por `eventID`: identidades estables entre cargas.
     static func group(_ events: [DiaryEvent], calendar: Calendar) -> [DiaryDay] {
         let byDay = Dictionary(grouping: events.filter { !$0.deleted }) { calendar.startOfDay(for: $0.at.date) }
         return byDay.keys.sorted(by: >).map { day in
-            DiaryDay(start: day, events: (byDay[day] ?? []).sorted { ($0.at, $0.eventID) > ($1.at, $1.eventID) })
+            DiaryDay(
+                id: DiaryDay.key(for: day, calendar: calendar),
+                start: day,
+                events: (byDay[day] ?? []).sorted { ($0.at, $0.eventID) > ($1.at, $1.eventID) })
         }
     }
 
@@ -122,13 +147,30 @@ final class DiaryViewModel {
         }
         editor = nil
         await load()
+        changes.notify(from: self)
         return true
     }
 
-    /// El análisis de comidas guardó el evento por su cuenta: cierra el editor y recarga.
+    /// El análisis de comidas guardó el evento por su cuenta: cierra el editor, recarga y avisa a las demás pantallas.
     func reloadAfterExternalSave() async {
         editor = nil
         await load()
+        changes.notify(from: self)
+    }
+
+    // MARK: Borrar
+
+    /// Botón "Borrar" del diálogo: solo anota el borrado. Se aplica con `commitConfirmedDeletion()` cuando el
+    /// diálogo ya se cerró (`hasDeletionReadyToCommit`), para no cambiar la lista durante la animación de cierre.
+    func confirmDeletion(_ event: DiaryEvent) {
+        confirmedDeletion = event
+    }
+
+    /// Aplica el borrado confirmado, si lo hay.
+    func commitConfirmedDeletion() async {
+        guard pendingDeletion == nil, let event = confirmedDeletion else { return }
+        confirmedDeletion = nil
+        await delete(event)
     }
 
     /// Tombstone: misma identidad de evento, `deleted = true`, `edit_id` nuevo con la edición anterior como padre.
@@ -152,5 +194,6 @@ final class DiaryViewModel {
         }
         pendingDeletion = nil
         await load()
+        changes.notify(from: self)
     }
 }

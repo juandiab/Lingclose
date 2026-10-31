@@ -10,7 +10,7 @@ enum ReportAnalysisError: Error, Sendable, Equatable, CustomStringConvertible, L
         switch self {
         case .notConfigured:
             String(localized: "reports.analysis.error.notConfigured",
-                   defaultValue: "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes → Asistente de comidas.")
+                   defaultValue: "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes › Conexiones › Asistente con IA.")
         case .alreadyRunning:
             String(localized: "reports.analysis.error.alreadyRunning", defaultValue: "Ya hay un análisis en curso.")
         case .rejected(let term):

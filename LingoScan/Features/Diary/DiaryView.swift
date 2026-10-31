@@ -22,22 +22,15 @@ struct DiaryView: View {
             .appBackground()
             .overlay(alignment: .bottomTrailing) { addButton }
         }
-        .task { await viewModel.load() }
+        // Carga al aparecer (también al volver a la pestaña) y sigue los cambios hechos desde Hoy.
+        .task {
+            await viewModel.load()
+            await viewModel.observeChanges()
+        }
         .sheet(item: $viewModel.editor) { editor in
             DiaryEditorView(viewModel: viewModel, editor: editor)
         }
-        .confirmationDialog(
-            String(localized: "diary.delete.title", defaultValue: "¿Borrar este registro?"),
-            isPresented: $viewModel.isConfirmingDeletion,
-            titleVisibility: .visible,
-            presenting: viewModel.pendingDeletion
-        ) { event in
-            Button(String(localized: "diary.delete.confirm", defaultValue: "Borrar"), role: .destructive) {
-                Task { await viewModel.delete(event) }
-            }
-        } message: { _ in
-            Text(String(localized: "diary.delete.message", defaultValue: "Se conserva el historial de ediciones; el registro deja de mostrarse."))
-        }
+        .diaryDeletionConfirmation(viewModel)
     }
 
     private var list: some View {
@@ -60,9 +53,7 @@ struct DiaryView: View {
                         .buttonStyle(.plain)
                         .swipeActions(edge: .trailing) {
                             if viewModel.canModify(event) {
-                                Button(String(localized: "diary.delete.confirm", defaultValue: "Borrar"), systemImage: "trash", role: .destructive) {
-                                    viewModel.pendingDeletion = event
-                                }
+                                DiaryDeleteSwipeButton(viewModel: viewModel, event: event)
                             }
                         }
                     }

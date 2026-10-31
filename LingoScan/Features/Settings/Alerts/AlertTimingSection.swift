@@ -8,22 +8,22 @@ struct AlertTimingSection: View {
     var body: some View {
         Section {
             Stepper(value: $alerts.settings.rateThreshold, in: AlertSettings.rateThresholdRange, step: 0.5) {
-                LabeledContent(String(localized: "alerts.rate", defaultValue: "Cambio rápido"),
-                               value: String(localized: "alerts.rate.value", defaultValue: "\(alerts.settings.rateThreshold.formatted(.number.precision(.fractionLength(1)))) mg/dL/min"))
+                StepperValueLabel(title: String(localized: "alerts.rate", defaultValue: "Cambio rápido desde"),
+                                  value: String(localized: "alerts.rate.value", defaultValue: "\(alerts.settings.rateThreshold.formatted(.number.precision(.fractionLength(1)))) mg/dL por minuto"))
             }
             Stepper(value: $alerts.settings.noDataAfterMinutes, in: AlertSettings.noDataRange, step: 5) {
-                LabeledContent(String(localized: "alerts.noData.after", defaultValue: "Sin datos tras"),
-                               value: String(localized: "alerts.minutes", defaultValue: "\(alerts.settings.noDataAfterMinutes) min"))
+                StepperValueLabel(title: String(localized: "alerts.noData.after", defaultValue: "Sin datos durante"),
+                                  value: String(localized: "alerts.minutes", defaultValue: "\(alerts.settings.noDataAfterMinutes) min"))
             }
-            Picker(String(localized: "alerts.cooldown", defaultValue: "Silencio entre avisos"), selection: $alerts.settings.sharedCooldownMinutes) {
+            Picker(String(localized: "alerts.cooldown", defaultValue: "Repetir el aviso cada"), selection: $alerts.settings.sharedCooldownMinutes) {
                 ForEach(AlertSettings.cooldownChoices, id: \.self) { minutes in
                     Text(String(localized: "alerts.minutes", defaultValue: "\(minutes) min")).tag(minutes)
                 }
             }
         } header: {
-            Text(String(localized: "alerts.timing", defaultValue: "Sensibilidad"))
+            Text(String(localized: "alerts.timing", defaultValue: "Cuándo avisar"))
         } footer: {
-            Text(String(localized: "alerts.timing.footer", defaultValue: "Cambio rápido compara la media de los 5 primeros y los 5 últimos minutos de una ventana de 15. Mientras una condición se mantiene, el aviso se repite tras el silencio elegido; \"sin datos\" se repite como mucho cada hora."))
+            Text(String(localized: "alerts.timing.footer", defaultValue: "Un cambio es rápido si la glucosa sube o baja más que esa cantidad cada minuto. Si la situación sigue, el aviso se repite con esa frecuencia; el de \"sin datos\", como mucho cada hora."))
         }
         .disabled(!alerts.settings.isEnabled)
     }

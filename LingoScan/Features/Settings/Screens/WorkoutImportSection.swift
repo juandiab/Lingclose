@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Ajustes → Salud: entrenamientos del Apple Watch importados desde Salud (solo lectura).
+/// Ajustes › Conexiones › Apple Salud: entrenamientos del Apple Watch importados desde Salud (solo lectura).
 struct WorkoutImportSection: View {
     @Environment(\.workoutImport) private var trigger
     @State private var result: String?
@@ -40,9 +40,9 @@ struct WorkoutImportSection: View {
                         .foregroundStyle(.secondary)
                 }
             } header: {
-                Text(String(localized: "workouts.settings.header", defaultValue: "Salud"))
+                Text(String(localized: "workouts.settings.header", defaultValue: "Entrenamientos"))
             } footer: {
-                Text(String(localized: "workouts.settings.footer", defaultValue: "Solo lectura: LingoScan nunca escribe ejercicio en Salud. Los entrenamientos aparecen en el Diario y como marcas en Hoy."))
+                Text(String(localized: "workouts.settings.footer", defaultValue: "Solo lectura: Lingclose nunca escribe ejercicio en Apple Salud. Los entrenamientos aparecen en el Diario y como marcas en Hoy."))
             }
             .task { await trigger.refreshStatus() }
         }
@@ -55,7 +55,7 @@ struct WorkoutImportSection: View {
     /// Texto breve del resultado de una importación (también lo usa el registro rápido).
     static func summary(_ report: WorkoutImportReport?) -> String {
         guard let report else {
-            return String(localized: "workouts.result.failed", defaultValue: "No se pudo leer Salud.")
+            return String(localized: "workouts.result.failed", defaultValue: "No se pudo leer Apple Salud.")
         }
         guard report.changed > 0 else {
             return String(localized: "workouts.result.none", defaultValue: "Sin entrenamientos nuevos.")

@@ -48,7 +48,7 @@ struct RangeSuggestionService: RangeSuggesting {
                                 defaultValue: "Apple Salud no está disponible en este dispositivo: la sugerencia no usa el perfil.")
         } catch {
             healthNote = String(localized: "range.suggest.health.failed",
-                                defaultValue: "No se pudo leer el perfil de Salud: la sugerencia no usa edad, sexo, peso ni altura.")
+                                defaultValue: "No se pudo leer el perfil de Apple Salud: la sugerencia no usa edad, sexo, peso ni altura.")
         }
 
         var suggestion = RangeSuggestion(

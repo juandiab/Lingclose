@@ -24,12 +24,13 @@ final class QuickAddModel: Identifiable {
     /// - Parameter at: hora por defecto del registro (ahora).
     init(
         store: any DiaryStore,
+        changes: DiaryChangeFeed = DiaryChangeFeed(),
         at: Date,
         calendar: Calendar = .current,
         now: @escaping @Sendable () -> Date = { Date() },
         newID: @escaping @Sendable () -> String = { UUID().uuidString.lowercased() }
     ) {
-        diary = DiaryViewModel(store: store, calendar: calendar, now: now, newID: newID)
+        diary = DiaryViewModel(store: store, changes: changes, calendar: calendar, now: now, newID: newID)
         draft = DiaryDraft(now: at)
     }
 

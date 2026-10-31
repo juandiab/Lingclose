@@ -72,7 +72,9 @@ struct TodayView: View {
                 case .sensor:
                     SensorView(viewModel: sensorViewModel)
                 case .entries:
-                    TodayEntriesView(day: viewModel.shownDay, store: viewModel.diaryStore, calendar: viewModel.calendar)
+                    TodayEntriesView(
+                        day: viewModel.shownDay, store: viewModel.diaryStore,
+                        changes: viewModel.diaryChanges, calendar: viewModel.calendar)
                 }
             }
             .sheet(item: $quickAdd) { model in
@@ -86,13 +88,13 @@ struct TodayView: View {
             .sheet(item: $askingRecord) { record in
                 if let coaching {
                     CoachingAssistantSheet(record: record, assistant: coaching.assistant, diary: viewModel.diaryStore) {
-                        Task { await viewModel.refresh() }
+                        Task { await viewModel.diaryDidChange() }
                     }
                 }
             }
             .sheet(item: $mealAnalysis) { analysis in
                 MealAnalysisView(model: analysis, onSaved: {
-                    Task { await viewModel.refresh() }
+                    Task { await viewModel.diaryDidChange() }
                 }, onManualEntry: {
                     // "Entrada manual" desde la cámara: se cierra el análisis y se abre el registro de comida a mano.
                     mealAnalysis = nil
@@ -129,7 +131,8 @@ struct TodayView: View {
     }
 
     private func makeQuickAdd(preselecting kind: DiaryEventKind? = nil) -> QuickAddModel {
-        let model = QuickAddModel(store: viewModel.diaryStore, at: quickAddDate(), calendar: viewModel.calendar)
+        let model = QuickAddModel(
+            store: viewModel.diaryStore, changes: viewModel.diaryChanges, at: quickAddDate(), calendar: viewModel.calendar)
         if let kind { model.choose(kind) }
         return model
     }

@@ -9,7 +9,7 @@ struct RangeSuggestionSourceRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.xxs) {
             LabeledContent(title) {
-                Text(value ?? String(localized: "range.suggest.data.missing", defaultValue: "No disponible en Salud"))
+                Text(value ?? String(localized: "range.suggest.data.missing", defaultValue: "No disponible en Apple Salud"))
                     .foregroundStyle(value == nil ? .secondary : .primary)
                     .monospacedDigit()
             }

@@ -108,7 +108,7 @@ struct QuickAddSheet: View {
                     if (report?.changed ?? 0) > 0 { onSaved() }
                 }
             } label: {
-                Label(String(localized: "workouts.importFromHealth", defaultValue: "Importar de Salud"), systemImage: "applewatch")
+                Label(String(localized: "workouts.importFromHealth", defaultValue: "Importar de Apple Salud"), systemImage: "applewatch")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)

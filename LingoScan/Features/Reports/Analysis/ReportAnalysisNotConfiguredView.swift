@@ -9,7 +9,7 @@ struct ReportAnalysisNotConfiguredView: View {
                 .font(.headline)
                 .foregroundStyle(Tokens.Studio.textPrimary)
             Text(String(localized: "reports.analysis.notConfigured.body",
-                        defaultValue: "Para analizar un reporte hace falta un proveedor, su clave y un modelo. Se configuran en Ajustes → Asistente de comidas y son los mismos del asistente de comidas. La clave se guarda solo en este iPhone."))
+                        defaultValue: "Para analizar un reporte hace falta un proveedor, su clave y un modelo. Se configuran en Ajustes › Conexiones › Asistente con IA y son los mismos que usa \"Analizar con IA\" en las comidas. La clave se guarda solo en este iPhone."))
                 .font(.subheadline)
                 .foregroundStyle(Tokens.Studio.textSecondary)
         }

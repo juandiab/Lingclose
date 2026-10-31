@@ -15,7 +15,7 @@ enum ActivationBlocker: Sendable, Hashable {
         case .unsupportedVariant:
             String(localized: "activation.blocker.variant", defaultValue: "Este sensor no es un Lingo compatible (productType 9, securityVersion 3).")
         case .noLingoIdentity:
-            String(localized: "activation.blocker.identity", defaultValue: "Falta una identidad de app que sirva a Lingo. Impórtala en Ajustes.")
+            String(localized: "activation.blocker.identity", defaultValue: "Falta una identidad del sensor que sirva a Lingo. Impórtala en Ajustes › Avanzado › Identidad del sensor.")
         case .noSigningKeys:
             String(localized: "activation.blocker.keys", defaultValue: "La identidad no trae claves de firma del sensor. Sin ellas no se empareja.")
         case .actionsUnavailable:

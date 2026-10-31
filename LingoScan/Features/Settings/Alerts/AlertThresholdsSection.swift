@@ -12,17 +12,14 @@ struct AlertThresholdsSection: View {
                            value: String(localized: "alerts.mgdl", defaultValue: "\(lines.high) mg/dL"))
             LabeledContent(String(localized: "alerts.threshold.low", defaultValue: "Baja por debajo de"),
                            value: String(localized: "alerts.mgdl", defaultValue: "\(lines.low) mg/dL"))
-            NavigationLink {
-                Form { ReferenceRangeSection() }
-                    .navigationTitle(String(localized: "settings.range", defaultValue: "Rango de referencia"))
-                    .navigationBarTitleDisplayMode(.inline)
-            } label: {
-                Text(String(localized: "alerts.threshold.edit", defaultValue: "Cambiar en Rango de referencia"))
+            NavigationLink(value: SettingsRoute.referenceRange) {
+                Label(String(localized: "alerts.threshold.edit", defaultValue: "Cambiar el rango de referencia"),
+                      systemImage: "arrow.up.and.down")
             }
         } header: {
             Text(String(localized: "alerts.thresholds", defaultValue: "Umbrales"))
         } footer: {
-            Text(String(localized: "alerts.thresholds.footer", defaultValue: "Son las líneas del rango de referencia; se editan en un solo sitio."))
+            Text(String(localized: "alerts.thresholds.footer", defaultValue: "Son las líneas del rango de referencia: si las cambias, cambian también aquí."))
         }
     }
 }

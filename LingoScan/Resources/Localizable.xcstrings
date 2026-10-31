@@ -2504,19 +2504,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fija en mg/dL por ahora."
+            "value" : "Por ahora solo mg/dL."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fixed to mg/dL for now."
+            "value" : "Only mg/dL for now."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fixa em mg/dL por enquanto."
+            "value" : "Por enquanto, só mg/dL."
           }
         }
       }
@@ -2642,19 +2642,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NFC \"disponible\" significa que este iPhone puede leer sensores. Apple Salud se pide desde Datos."
+            "value" : "Bluetooth recibe las lecturas del sensor y NFC lo lee al acercar el iPhone. Si algo aparece denegado, cámbialo en Ajustes de iOS."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NFC “available” means this iPhone can read sensors. Apple Health is requested from Data."
+            "value" : "Bluetooth receives the sensor readings and NFC reads it when you hold the iPhone close. If something shows as denied, change it in iOS Settings."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NFC “disponível” significa que este iPhone pode ler sensores. O Apple Saúde é solicitado em Dados."
+            "value" : "O Bluetooth recebe as leituras do sensor e o NFC o lê ao aproximar o iPhone. Se algo aparecer negado, altere nos Ajustes do iOS."
           }
         }
       }
@@ -2705,48 +2705,25 @@
         }
       }
     },
-    "settings.appearance.footer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sistema sigue el modo claro u oscuro de iOS. El tamaño de texto siempre sigue el de iOS."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "System follows the iOS light or dark mode. Text size always follows iOS."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sistema segue o modo claro ou escuro do iOS. O tamanho do texto sempre segue o do iOS."
-          }
-        }
-      }
-    },
     "settings.diagnostics" : {
       "extractionState" : "manual",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diagnóstico privado"
+            "value" : "Registro detallado del sensor"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private diagnostics"
+            "value" : "Detailed sensor log"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diagnóstico privado"
+            "value" : "Registro detalhado do sensor"
           }
         }
       }
@@ -2757,19 +2734,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo guarda la preferencia en este iPhone. El registro detallado llega en la Fase 3; nada sale del dispositivo."
+            "value" : "Guardará en este iPhone más detalle de la conexión con el sensor para investigar fallos. Aún no registra nada más; nunca sale del dispositivo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Only stores the preference on this iPhone. Detailed logging arrives in Phase 3; nothing leaves the device."
+            "value" : "Will keep more detail about the sensor connection on this iPhone to investigate problems. It does not record anything extra yet; it never leaves the device."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apenas guarda a preferência neste iPhone. O registro detalhado chega na Fase 3; nada sai do dispositivo."
+            "value" : "Vai guardar neste iPhone mais detalhes da conexão com o sensor para investigar falhas. Ainda não registra nada a mais; nunca sai do dispositivo."
           }
         }
       }
@@ -2872,19 +2849,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LingoScan es un proyecto personal de bienestar, no un dispositivo médico."
+            "value" : "Lingclose es un proyecto personal de bienestar, no un dispositivo médico."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LingoScan is a personal wellness project, not a medical device."
+            "value" : "Lingclose is a personal wellness project, not a medical device."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O LingoScan é um projeto pessoal de bem-estar, não um dispositivo médico."
+            "value" : "O Lingclose é um projeto pessoal de bem-estar, não um dispositivo médico."
           }
         }
       }
@@ -2895,19 +2872,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importar identidad de app"
+            "value" : "Importar archivo de identidad"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import app identity"
+            "value" : "Import Identity File"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importar identidade do app"
+            "value" : "Importar arquivo de identidade"
           }
         }
       }
@@ -2918,19 +2895,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No hay identidad cargada."
+            "value" : "No hay identidad cargada: el sensor no se puede emparejar."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No identity loaded."
+            "value" : "No identity loaded: the sensor cannot be paired."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nenhuma identidade carregada."
+            "value" : "Nenhuma identidade carregada: o sensor não pode ser pareado."
           }
         }
       }
@@ -2941,19 +2918,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Claves de firma Lingo"
+            "value" : "Claves para emparejar Lingo"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lingo signing keys"
+            "value" : "Keys to pair Lingo"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chaves de assinatura Lingo"
+            "value" : "Chaves para parear o Lingo"
           }
         }
       }
@@ -2987,19 +2964,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Faltan"
+            "value" : "Faltan: no se puede emparejar"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Missing"
+            "value" : "Missing: cannot pair"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ausentes"
+            "value" : "Faltam: não é possível parear"
           }
         }
       }
@@ -3010,19 +2987,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Identidad de app"
+            "value" : "Identidad del sensor"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App identity"
+            "value" : "Sensor Identity"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Identidade do app"
+            "value" : "Identidade do sensor"
           }
         }
       }
@@ -3033,19 +3010,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Archivo JSON. Se valida y se guarda solo en el llavero de este iPhone; el archivo original no se modifica."
+            "value" : "Son las credenciales que permiten a Lingclose emparejarse con el sensor Lingo. Llegan en un archivo .json y se guardan solo en el llavero de este iPhone; el archivo original no se modifica."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "JSON file. It is validated and stored only in this iPhone’s keychain; the original file is not modified."
+            "value" : "These are the credentials that let Lingclose pair with the Lingo sensor. They come in a .json file and are stored only in this iPhone’s keychain; the original file is not modified."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arquivo JSON. É validado e guardado apenas no chaveiro deste iPhone; o arquivo original não é modificado."
+            "value" : "São as credenciais que permitem ao Lingclose parear com o sensor Lingo. Chegam em um arquivo .json e ficam guardadas só nas chaves deste iPhone; o arquivo original não é alterado."
           }
         }
       }
@@ -3608,19 +3585,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falta una identidad de app que sirva a Lingo. Impórtala en Ajustes."
+            "value" : "Falta una identidad del sensor que sirva a Lingo. Impórtala en Ajustes › Avanzado › Identidad del sensor."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "An app identity that serves Lingo is missing. Import it in Settings."
+            "value" : "A sensor identity that works with Lingo is missing. Import it in Settings › Advanced › Sensor Identity."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falta uma identidade de app compatível com o Lingo. Importe-a em Ajustes."
+            "value" : "Falta uma identidade do sensor compatível com o Lingo. Importe-a em Ajustes › Avançado › Identidade do sensor."
           }
         }
       }
@@ -7311,19 +7288,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No hay identidad de app con clave de firma"
+            "value" : "No hay identidad del sensor con clave de firma"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There is no app identity with a signing key"
+            "value" : "There is no sensor identity with a signing key"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não há identidade de app com chave de assinatura"
+            "value" : "Não há identidade do sensor com chave de assinatura"
           }
         }
       }
@@ -7978,19 +7955,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restablecer %lld–%lld"
+            "value" : "Volver a %lld–%lld mg/dL"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reset to %lld–%lld"
+            "value" : "Back to %lld–%lld mg/dL"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restaurar %lld–%lld"
+            "value" : "Voltar para %lld–%lld mg/dL"
           }
         }
       }
@@ -8001,19 +7978,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se usa en la curva, el sombreado de picos y el tiempo en rango. Solo orienta la lectura; no es un objetivo médico ni un dispositivo médico. \"Sugerir rango\" propone las líneas a partir de tus lecturas de los últimos 14 días y tú decides si usarlas."
+            "value" : "Entre las dos líneas la curva se ve \"en rango\"; fuera de ellas avisan las alertas de alta y baja. Solo orientan la lectura: no son un objetivo médico."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Used in the curve, the spike shading and time in range. It only guides reading; it is not a medical target nor a medical device. “Suggest range” proposes the lines from your readings of the last 14 days and you decide whether to use them."
+            "value" : "Between the two lines the curve shows as “in range”; outside them the high and low alerts fire. They only guide your reading: they are not a medical target."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usada na curva, no sombreado dos picos e no tempo na faixa. Serve apenas para orientar a leitura; não é uma meta médica nem um dispositivo médico. “Sugerir faixa” propõe as linhas a partir das suas leituras dos últimos 14 dias e você decide se quer usá-las."
+            "value" : "Entre as duas linhas a curva aparece “na faixa”; fora delas avisam os alertas de alta e baixa. Servem só para orientar a leitura: não são uma meta médica."
           }
         }
       }
@@ -8553,19 +8530,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin la frase no se pueden abrir los archivos de recuperación. LingoScan no puede recuperarla."
+            "value" : "Sin la frase no se pueden abrir los archivos de recuperación. Lingclose no puede recuperarla."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Without the passphrase the recovery files cannot be opened. LingoScan cannot recover it."
+            "value" : "Without the passphrase the recovery files cannot be opened. Lingclose cannot recover it."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem a frase-senha, os arquivos de recuperação não podem ser abertos. O LingoScan não consegue recuperá-la."
+            "value" : "Sem a frase-senha, os arquivos de recuperação não podem ser abertos. O Lingclose não consegue recuperá-la."
           }
         }
       }
@@ -8658,52 +8635,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Repita a frase-senha para conferir"
-          }
-        }
-      }
-    },
-    "settings.mealAssistant" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Asistente de comidas"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meal Assistant"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Assistente de refeições"
-          }
-        }
-      }
-    },
-    "settings.mealAssistant.footer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opcional: propone calorías y macros de una foto o descripción. Tú revisas y guardas."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optional: suggests calories and macros from a photo or description. You review and save."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opcional: sugere calorias e macros a partir de uma foto ou descrição. Você revisa e salva."
           }
         }
       }
@@ -8944,19 +8875,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La clave se guarda solo en el llavero de este iPhone. Al analizar, solo se envían la foto reducida y tu descripción."
+            "value" : "La clave se guarda solo en el llavero de este iPhone. Al proveedor solo se envía lo necesario para cada consulta (por ejemplo, la foto reducida y tu descripción de una comida), nunca tu nombre."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The key is stored only in this iPhone’s keychain. When analyzing, only the reduced photo and your description are sent."
+            "value" : "The key is stored only in this iPhone’s keychain. The provider only receives what each request needs (for example, the reduced photo and your description of a meal), never your name."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A chave é guardada apenas no chaveiro deste iPhone. Ao analisar, só são enviados a foto reduzida e a sua descrição."
+            "value" : "A chave fica guardada só nas chaves deste iPhone. O provedor recebe apenas o necessário para cada consulta (por exemplo, a foto reduzida e a sua descrição de uma refeição), nunca seu nome."
           }
         }
       }
@@ -8967,19 +8898,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asistente de comidas"
+            "value" : "Asistente con IA"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meal Assistant"
+            "value" : "AI Assistant"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Assistente de refeições"
+            "value" : "Assistente com IA"
           }
         }
       }
@@ -9059,19 +8990,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clave de API"
+            "value" : "Pega aquí tu clave de API"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "API key"
+            "value" : "Paste your API key here"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chave de API"
+            "value" : "Cole aqui sua chave de API"
           }
         }
       }
@@ -9243,19 +9174,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catálogo accesible: 1 modelo (no garantiza saldo para analizar)"
+            "value" : "La clave funciona: 1 modelo disponible. Comprueba en tu cuenta que tienes saldo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catalog accessible: 1 model (does not guarantee balance to analyze)"
+            "value" : "The key works: 1 model available. Check in your account that you have credit."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catálogo acessível: 1 modelo (não garante saldo para analisar)"
+            "value" : "A chave funciona: 1 modelo disponível. Confira na sua conta se há saldo."
           }
         }
       }
@@ -9266,19 +9197,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catálogo accesible: %@ modelos (no garantiza saldo para analizar)"
+            "value" : "La clave funciona: %@ modelos disponibles. Comprueba en tu cuenta que tienes saldo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catalog accessible: %@ models (does not guarantee balance to analyze)"
+            "value" : "The key works: %@ models available. Check in your account that you have credit."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Catálogo acessível: %@ modelos (não garante saldo para analisar)"
+            "value" : "A chave funciona: %@ modelos disponíveis. Confira na sua conta se há saldo."
           }
         }
       }
@@ -9933,19 +9864,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo se envían la foto reducida y tu descripción. Nada de glucosa, Salud ni entrenamientos; la foto no se guarda."
+            "value" : "Solo se envían la foto reducida y tu descripción. Nada de glucosa, Apple Salud ni entrenamientos; la foto no se guarda."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Only the reduced photo and your description are sent. No glucose, Health or workout data; the photo is not saved."
+            "value" : "Only the reduced photo and your description are sent. No glucose, Apple Health or workout data; the photo is not saved."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Só são enviados a foto reduzida e a sua descrição. Nenhum dado de glicose, Saúde ou treinos; a foto não é salva."
+            "value" : "Só são enviados a foto reduzida e a sua descrição. Nenhum dado de glicose, Apple Saúde ou treinos; a foto não é salva."
           }
         }
       }
@@ -11129,19 +11060,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importar de Salud"
+            "value" : "Importar de Apple Salud"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import from Health"
+            "value" : "Import from Apple Health"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importar do Saúde"
+            "value" : "Importar do Apple Saúde"
           }
         }
       }
@@ -11290,19 +11221,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salud"
+            "value" : "Entrenamientos"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Health"
+            "value" : "Workouts"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saúde"
+            "value" : "Treinos"
           }
         }
       }
@@ -11313,19 +11244,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo lectura: LingoScan nunca escribe ejercicio en Salud. Los entrenamientos aparecen en el Diario y como marcas en Hoy."
+            "value" : "Solo lectura: Lingclose nunca escribe ejercicio en Apple Salud. Los entrenamientos aparecen en el Diario y como marcas en Hoy."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Read only: LingoScan never writes exercise to Health. Workouts appear in the Diary and as marks on Today."
+            "value" : "Read only: Lingclose never writes exercise to Apple Health. Workouts appear in the Diary and as marks on Today."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Somente leitura: o LingoScan nunca grava exercícios no Saúde. Os treinos aparecem no Diário e como marcas em Hoje."
+            "value" : "Somente leitura: o Lingclose nunca grava exercícios no Apple Saúde. Os treinos aparecem no Diário e como marcas em Hoje."
           }
         }
       }
@@ -11336,19 +11267,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se pudo leer Salud."
+            "value" : "No se pudo leer Apple Salud."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Could not read Health."
+            "value" : "Could not read Apple Health."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não foi possível ler o Saúde."
+            "value" : "Não foi possível ler o Apple Saúde."
           }
         }
       }
@@ -11934,19 +11865,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se pudo leer el perfil de Salud: la sugerencia no usa edad, sexo, peso ni altura."
+            "value" : "No se pudo leer el perfil de Apple Salud: la sugerencia no usa edad, sexo, peso ni altura."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The Health profile could not be read: the suggestion does not use age, sex, weight or height."
+            "value" : "The Apple Health profile could not be read: the suggestion does not use age, sex, weight or height."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não foi possível ler o perfil do Saúde: a sugestão não usa idade, sexo, peso nem altura."
+            "value" : "Não foi possível ler o perfil do Apple Saúde: a sugestão não usa idade, sexo, peso nem altura."
           }
         }
       }
@@ -12095,19 +12026,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se leen tus lecturas de los últimos 14 días y, si lo permites, edad, sexo, peso y altura de Salud. Si hay un asistente configurado recibe solo cifras agregadas: nunca lecturas sueltas."
+            "value" : "Se leen tus lecturas de los últimos 14 días y, si lo permites, edad, sexo, peso y altura de Apple Salud. Si hay un asistente configurado recibe solo cifras agregadas: nunca lecturas sueltas."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your readings from the last 14 days are read and, if you allow it, age, sex, weight and height from Health. A configured assistant only receives aggregate figures: never individual readings."
+            "value" : "Your readings from the last 14 days are read and, if you allow it, age, sex, weight and height from Apple Health. A configured assistant only receives aggregate figures: never individual readings."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "São lidas suas leituras dos últimos 14 dias e, se você permitir, idade, sexo, peso e altura do Saúde. Um assistente configurado recebe apenas números agregados: nunca leituras individuais."
+            "value" : "São lidas suas leituras dos últimos 14 dias e, se você permitir, idade, sexo, peso e altura do Apple Saúde. Um assistente configurado recebe apenas números agregados: nunca leituras individuais."
           }
         }
       }
@@ -12141,19 +12072,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esta sugerencia no es consejo médico ni sustituye a un profesional de la salud. Las líneas solo ayudan a leer la curva; LingoScan no es un dispositivo médico. Nada cambia hasta que pulses \"Usar rango\"."
+            "value" : "Esta sugerencia no es consejo médico ni sustituye a un profesional de la salud. Las líneas solo ayudan a leer la curva; Lingclose no es un dispositivo médico. Nada cambia hasta que pulses \"Usar rango\"."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This suggestion is not medical advice and does not replace a health professional. The lines only help you read the curve; LingoScan is not a medical device. Nothing changes until you tap “Use range”."
+            "value" : "This suggestion is not medical advice and does not replace a health professional. The lines only help you read the curve; Lingclose is not a medical device. Nothing changes until you tap “Use range”."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esta sugestão não é aconselhamento médico nem substitui um profissional de saúde. As linhas só ajudam a ler a curva; o LingoScan não é um dispositivo médico. Nada muda até você tocar em “Usar faixa”."
+            "value" : "Esta sugestão não é aconselhamento médico nem substitui um profissional de saúde. As linhas só ajudam a ler a curva; o Lingclose não é um dispositivo médico. Nada muda até você tocar em “Usar faixa”."
           }
         }
       }
@@ -12670,19 +12601,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Calculado con peso y altura de Salud"
+            "value" : "Calculado con peso y altura de Apple Salud"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Computed from Health weight and height"
+            "value" : "Computed from Apple Health weight and height"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Calculado com peso e altura do Saúde"
+            "value" : "Calculado com peso e altura do Apple Saúde"
           }
         }
       }
@@ -12716,19 +12647,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La edad, el sexo, el peso y la altura no determinan un rango de glucosa validado: la personalización sale de tus propias lecturas. Lo que falta en Salud se omite."
+            "value" : "La edad, el sexo, el peso y la altura no determinan un rango de glucosa validado: la personalización sale de tus propias lecturas. Lo que falta en Apple Salud se omite."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Age, sex, weight and height do not determine a validated glucose range: personalization comes from your own readings. Whatever is missing in Health is left out."
+            "value" : "Age, sex, weight and height do not determine a validated glucose range: personalization comes from your own readings. Whatever is missing in Apple Health is left out."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Idade, sexo, peso e altura não determinam uma faixa de glicose validada: a personalização vem das suas próprias leituras. O que faltar no Saúde é omitido."
+            "value" : "Idade, sexo, peso e altura não determinam uma faixa de glicose validada: a personalização vem das suas próprias leituras. O que faltar no Apple Saúde é omitido."
           }
         }
       }
@@ -12762,19 +12693,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No disponible en Salud"
+            "value" : "No disponible en Apple Salud"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not available in Health"
+            "value" : "Not available in Apple Health"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indisponível no Saúde"
+            "value" : "Indisponível no Apple Saúde"
           }
         }
       }
@@ -14113,71 +14044,25 @@
         }
       }
     },
-    "alerts.configure" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configurar alertas"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure alerts"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configurar alertas"
-          }
-        }
-      }
-    },
     "alerts.unavailable" : {
       "extractionState" : "manual",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alertas no disponibles en la vista previa"
+            "value" : "No disponibles en la vista previa"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts unavailable in preview"
+            "value" : "Not available in preview"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alertas indisponíveis na pré-visualização"
-          }
-        }
-      }
-    },
-    "alerts.header" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alertas"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alerts"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alertas"
+            "value" : "Indisponíveis na pré-visualização"
           }
         }
       }
@@ -14188,19 +14073,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avisos informativos de alta, baja, cambios rápidos y falta de datos. LingoScan no es un dispositivo médico."
+            "value" : "Avisan si la glucosa sale del rango de referencia, cambia rápido o deja de llegar. Son informativas: Lingclose no es un dispositivo médico."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Informational notices for high, low, fast changes and missing data. LingoScan is not a medical device."
+            "value" : "They tell you when glucose leaves the reference range, changes fast or stops arriving. They are informational: Lingclose is not a medical device."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avisos informativos de glicose alta, baixa, mudanças rápidas e falta de dados. O LingoScan não é um dispositivo médico."
+            "value" : "Avisam quando a glicose sai da faixa de referência, muda rápido ou para de chegar. São informativos: o Lingclose não é um dispositivo médico."
           }
         }
       }
@@ -14234,19 +14119,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tipos"
+            "value" : "Qué avisar"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Types"
+            "value" : "What to alert"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tipos"
+            "value" : "O que avisar"
           }
         }
       }
@@ -14464,19 +14349,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambiar en Rango de referencia"
+            "value" : "Cambiar el rango de referencia"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change in Reference range"
+            "value" : "Change the reference range"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alterar em Faixa de referência"
+            "value" : "Alterar a faixa de referência"
           }
         }
       }
@@ -14510,19 +14395,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Son las líneas del rango de referencia; se editan en un solo sitio."
+            "value" : "Son las líneas del rango de referencia: si las cambias, cambian también aquí."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "They are the reference range lines; edited in one place."
+            "value" : "They are the reference range lines: if you change them, they change here too."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "São as linhas da faixa de referência; são editadas em um só lugar."
+            "value" : "São as linhas da faixa de referência: se você as alterar, mudam aqui também."
           }
         }
       }
@@ -14533,19 +14418,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambio rápido"
+            "value" : "Cambio rápido desde"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fast change"
+            "value" : "Fast change from"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mudança rápida"
+            "value" : "Mudança rápida a partir de"
           }
         }
       }
@@ -14556,19 +14441,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ mg/dL/min"
+            "value" : "%@ mg/dL por minuto"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ mg/dL/min"
+            "value" : "%@ mg/dL per minute"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ mg/dL/min"
+            "value" : "%@ mg/dL por minuto"
           }
         }
       }
@@ -14579,19 +14464,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin datos tras"
+            "value" : "Sin datos durante"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No data after"
+            "value" : "No data for"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem dados após"
+            "value" : "Sem dados por"
           }
         }
       }
@@ -14625,19 +14510,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Silencio entre avisos"
+            "value" : "Repetir el aviso cada"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Time between alerts"
+            "value" : "Repeat the alert every"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Intervalo entre alertas"
+            "value" : "Repetir o alerta a cada"
           }
         }
       }
@@ -14648,19 +14533,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sensibilidad"
+            "value" : "Cuándo avisar"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sensitivity"
+            "value" : "When to alert"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sensibilidade"
+            "value" : "Quando avisar"
           }
         }
       }
@@ -14671,19 +14556,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambio rápido compara la media de los 5 primeros y los 5 últimos minutos de una ventana de 15. Mientras una condición se mantiene, el aviso se repite tras el silencio elegido; \"sin datos\" se repite como mucho cada hora."
+            "value" : "Un cambio es rápido si la glucosa sube o baja más que esa cantidad cada minuto. Si la situación sigue, el aviso se repite con esa frecuencia; el de \"sin datos\", como mucho cada hora."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fast change compares the average of the first and last 5 minutes of a 15-minute window. While a condition lasts, the alert repeats after the chosen interval; “no data” repeats at most once an hour."
+            "value" : "A change is fast when glucose rises or falls more than that amount each minute. If the situation continues, the alert repeats at that interval; the “no data” one at most once an hour."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mudança rápida compara a média dos 5 primeiros e dos 5 últimos minutos de uma janela de 15. Enquanto a condição persiste, o alerta se repete após o intervalo escolhido; “sem dados” se repete no máximo a cada hora."
+            "value" : "Uma mudança é rápida quando a glicose sobe ou desce mais que esse valor por minuto. Se a situação continuar, o alerta se repete nessa frequência; o de “sem dados”, no máximo a cada hora."
           }
         }
       }
@@ -14763,19 +14648,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las alertas son informativas y pueden retrasarse o no llegar (Bluetooth, batería, ajustes de iOS). LingoScan es un producto de bienestar, no un dispositivo médico; no tomes decisiones de salud solo con ellas."
+            "value" : "Las alertas son informativas y pueden retrasarse o no llegar (Bluetooth, batería, ajustes de iOS). Lingclose es un producto de bienestar, no un dispositivo médico; no tomes decisiones de salud solo con ellas."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts are informational and may be delayed or not arrive (Bluetooth, battery, iOS settings). LingoScan is a wellness product, not a medical device; do not make health decisions based on them alone."
+            "value" : "Alerts are informational and may be delayed or not arrive (Bluetooth, battery, iOS settings). Lingclose is a wellness product, not a medical device; do not make health decisions based on them alone."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Os alertas são informativos e podem atrasar ou não chegar (Bluetooth, bateria, ajustes do iOS). O LingoScan é um produto de bem-estar, não um dispositivo médico; não tome decisões de saúde apenas com base neles."
+            "value" : "Os alertas são informativos e podem atrasar ou não chegar (Bluetooth, bateria, ajustes do iOS). O Lingclose é um produto de bem-estar, não um dispositivo médico; não tome decisões de saúde apenas com base neles."
           }
         }
       }
@@ -14855,19 +14740,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notificaciones desactivadas en iOS"
+            "value" : "Notificaciones desactivadas en iOS: las alertas no pueden llegar."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notifications turned off in iOS"
+            "value" : "Notifications are off in iOS: alerts cannot arrive."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notificações desativadas no iOS"
+            "value" : "Notificações desativadas no iOS: os alertas não podem chegar."
           }
         }
       }
@@ -14901,29 +14786,6 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Silencio"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quiet"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Silêncio"
-          }
-        }
-      }
-    },
-    "alerts.quiet.toggle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
             "value" : "Horas de silencio"
           }
         },
@@ -14937,6 +14799,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Horário de silêncio"
+          }
+        }
+      }
+    },
+    "alerts.quiet.toggle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciar en un horario"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silence during set hours"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciar em um horário"
           }
         }
       }
@@ -14993,19 +14878,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La baja ignora el silencio"
+            "value" : "Avisar de glucosa baja igualmente"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Low ignores quiet hours"
+            "value" : "Still alert for low glucose"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A baixa ignora o silêncio"
+            "value" : "Avisar de glicose baixa mesmo assim"
           }
         }
       }
@@ -15108,19 +14993,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes → Asistente de comidas."
+            "value" : "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes › Conexiones › Asistente con IA."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No assistant is set up. Choose a provider, key and model in Settings → Meal Assistant."
+            "value" : "No assistant is set up. Choose a provider, key and model in Settings › Connections › AI Assistant."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não há assistente configurado. Escolha provedor, chave e modelo em Ajustes → Assistente de refeições."
+            "value" : "Não há assistente configurado. Escolha provedor, chave e modelo em Ajustes › Conexões › Assistente com IA."
           }
         }
       }
@@ -15384,19 +15269,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sugerencias de bienestar, no consejo médico ni un diagnóstico. Si tienes síntomas que persisten, consulta a un profesional de la salud. LingoScan no es un dispositivo médico."
+            "value" : "Sugerencias de bienestar, no consejo médico ni un diagnóstico. Si tienes síntomas que persisten, consulta a un profesional de la salud. Lingclose no es un dispositivo médico."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wellbeing suggestions, not medical advice or a diagnosis. If symptoms persist, talk to a health professional. LingoScan is not a medical device."
+            "value" : "Wellbeing suggestions, not medical advice or a diagnosis. If symptoms persist, talk to a health professional. Lingclose is not a medical device."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sugestões de bem-estar; não são aconselhamento médico nem diagnóstico. Se os sintomas persistirem, consulte um profissional de saúde. O LingoScan não é um dispositivo médico."
+            "value" : "Sugestões de bem-estar; não são aconselhamento médico nem diagnóstico. Se os sintomas persistirem, consulte um profissional de saúde. O Lingclose não é um dispositivo médico."
           }
         }
       }
@@ -16327,19 +16212,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acerca el iPhone al sensor y abre LingoScan un momento."
+            "value" : "Acerca el iPhone al sensor y abre Lingclose un momento."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bring the iPhone close to the sensor and open LingoScan for a moment."
+            "value" : "Bring the iPhone close to the sensor and open Lingclose for a moment."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aproxime o iPhone do sensor e abra o LingoScan por um instante."
+            "value" : "Aproxime o iPhone do sensor e abra o Lingclose por um instante."
           }
         }
       }
@@ -16580,19 +16465,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hex Vault es un fondo animado que toma el color de tu última lectura: verde en rango, ámbar por encima, azul por debajo y gris sin dato reciente. El fondo sigue la apariencia elegida arriba, en claro o en oscuro."
+            "value" : "Hex Vault es un fondo animado que toma el color de tu última lectura: verde en rango, ámbar por encima, azul por debajo y gris sin dato reciente."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hex Vault is an animated background that takes the color of your latest reading: green in range, amber above, blue below and gray without a recent value. The background follows the appearance chosen above, light or dark."
+            "value" : "Hex Vault is an animated background that takes the color of your latest reading: green in range, amber above, blue below and gray without a recent value."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hex Vault é um fundo animado que assume a cor da sua última leitura: verde no intervalo, âmbar acima, azul abaixo e cinza sem dado recente. O fundo segue a aparência escolhida acima, clara ou escura."
+            "value" : "Hex Vault é um fundo animado que assume a cor da sua última leitura: verde na faixa, âmbar acima, azul abaixo e cinza sem dado recente."
           }
         }
       }
@@ -16787,19 +16672,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes → Asistente de comidas."
+            "value" : "No hay asistente configurado. Elige proveedor, clave y modelo en Ajustes › Conexiones › Asistente con IA."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No assistant is set up. Choose a provider, key and model in Settings → Meal Assistant."
+            "value" : "No assistant is set up. Choose a provider, key and model in Settings › Connections › AI Assistant."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Não há assistente configurado. Escolha provedor, chave e modelo em Ajustes → Assistente de refeições."
+            "value" : "Não há assistente configurado. Escolha provedor, chave e modelo em Ajustes › Conexões › Assistente com IA."
           }
         }
       }
@@ -17293,19 +17178,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Para analizar un reporte hace falta un proveedor, su clave y un modelo. Se configuran en Ajustes → Asistente de comidas y son los mismos del asistente de comidas. La clave se guarda solo en este iPhone."
+            "value" : "Para analizar un reporte hace falta un proveedor, su clave y un modelo. Se configuran en Ajustes › Conexiones › Asistente con IA y son los mismos que usa \"Analizar con IA\" en las comidas. La clave se guarda solo en este iPhone."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To analyze a report you need a provider, its key and a model. They are set in Settings → Meal Assistant and are the same ones the meal assistant uses. The key is stored only on this iPhone."
+            "value" : "To analyze a report you need a provider, its key and a model. They are set in Settings › Connections › AI Assistant and are the same ones “Analyze with AI” uses for meals. The key is stored only on this iPhone."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Para analisar um relatório é preciso um provedor, a chave dele e um modelo. Eles são configurados em Ajustes → Assistente de refeições e são os mesmos do assistente de refeições. A chave fica guardada apenas neste iPhone."
+            "value" : "Para analisar um relatório é preciso um provedor, a chave dele e um modelo. Eles são configurados em Ajustes › Conexões › Assistente com IA e são os mesmos que “Analisar com IA” usa nas refeições. A chave fica guardada apenas neste iPhone."
           }
         }
       }
@@ -18443,19 +18328,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anota ejercicio en el Diario (o impórtalo de Salud) para ver cómo cambia tu glucosa durante y después."
+            "value" : "Anota ejercicio en el Diario (o impórtalo de Apple Salud) para ver cómo cambia tu glucosa durante y después."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log exercise in the Diary (or import it from Health) to see how your glucose changes during and after."
+            "value" : "Log exercise in the Diary (or import it from Apple Health) to see how your glucose changes during and after."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Registre exercícios no Diário (ou importe do Saúde) para ver como sua glicose muda durante e depois."
+            "value" : "Registre exercícios no Diário (ou importe do Apple Saúde) para ver como sua glicose muda durante e depois."
           }
         }
       }
@@ -21703,48 +21588,25 @@
         }
       }
     },
-    "settings.language.footer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se aplica al volver a abrir la app. Cierra Lingclose desde el selector de apps y ábrela de nuevo; el sensor se reconecta solo."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Takes effect when you reopen the app. Close Lingclose from the app switcher and open it again; the sensor reconnects on its own."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vale quando você reabrir o app. Feche o Lingclose no seletor de apps e abra de novo; o sensor se reconecta sozinho."
-          }
-        }
-      }
-    },
     "settings.language.pending" : {
       "extractionState" : "manual",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pendiente de reabrir la app"
+            "value" : "Pendiente de reabrir la app: ciérrala desde el selector de apps y ábrela de nuevo. El sensor se reconecta solo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reopen the app to apply"
+            "value" : "Waiting for the app to reopen: close it from the app switcher and open it again. The sensor reconnects on its own."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reabra o app para aplicar"
+            "value" : "Aguardando reabrir o app: feche-o no seletor de apps e abra de novo. O sensor se reconecta sozinho."
           }
         }
       }
@@ -21929,6 +21791,880 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "falta %@"
+          }
+        }
+      }
+    },
+    "settings.group.readings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecturas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Readings"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leituras"
+          }
+        }
+      }
+    },
+    "settings.group.readings.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El rango decide qué parte de la curva se ve como \"en rango\" y cuándo avisan las alertas. Solo orienta la lectura; no es un objetivo médico."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The range decides which part of the curve shows as “in range” and when alerts fire. It only guides your reading; it is not a medical target."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A faixa define que parte da curva aparece como “na faixa” e quando os alertas avisam. Serve só para orientar a leitura; não é uma meta médica."
+          }
+        }
+      }
+    },
+    "settings.group.personalization" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalización"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalization"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalização"
+          }
+        }
+      }
+    },
+    "settings.group.personalization.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia solo el aspecto de Lingclose, nunca tus datos. El idioma se aplica al volver a abrir la app."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes only how Lingclose looks, never your data. The language applies when you reopen the app."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muda só a aparência do Lingclose, nunca seus dados. O idioma vale quando você reabrir o app."
+          }
+        }
+      }
+    },
+    "settings.group.connections" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexiones"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connections"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexões"
+          }
+        }
+      }
+    },
+    "settings.group.connections.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud guarda tus lecturas y aporta tus entrenamientos. El asistente con IA es opcional: usa tu propia clave y el proveedor te cobra cada consulta."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Health stores your readings and provides your workouts. The AI assistant is optional: it uses your own key and the provider charges you for each request."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Apple Saúde guarda suas leituras e fornece seus treinos. O assistente com IA é opcional: usa sua própria chave e o provedor cobra cada consulta."
+          }
+        }
+      }
+    },
+    "settings.group.advanced" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avanzado"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avançado"
+          }
+        }
+      }
+    },
+    "settings.group.advanced.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo hace falta si algo falla con el sensor. Cambiar la identidad del sensor puede impedir que se conecte."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only needed if something goes wrong with the sensor. Changing the sensor identity can stop it from connecting."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Só é necessário se algo der errado com o sensor. Trocar a identidade do sensor pode impedir que ele se conecte."
+          }
+        }
+      }
+    },
+    "settings.about.technical" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información técnica"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Technical Information"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informações técnicas"
+          }
+        }
+      }
+    },
+    "settings.about.technical.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La compilación identifica esta instalación. La base del fork es la versión de RoundWhiteDiscKit, la biblioteca que habla con el sensor, sobre la que se construye Lingclose."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The build identifies this installation. The fork base is the version of RoundWhiteDiscKit, the library that talks to the sensor, that Lingclose is built on."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A compilação identifica esta instalação. A base do fork é a versão do RoundWhiteDiscKit, a biblioteca que conversa com o sensor, sobre a qual o Lingclose é construído."
+          }
+        }
+      }
+    },
+    "settings.range.lines" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Líneas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lines"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linhas"
+          }
+        }
+      }
+    },
+    "settings.range.suggest.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Sugerir rango\" propone las líneas a partir de tus lecturas de los últimos 14 días. Nada cambia hasta que pulses \"Usar rango\"."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Suggest range” proposes the lines from your readings of the last 14 days. Nothing changes until you tap “Use range”."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Sugerir faixa” propõe as linhas a partir das suas leituras dos últimos 14 dias. Nada muda até você tocar em “Usar faixa”."
+          }
+        }
+      }
+    },
+    "settings.health.connected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectada"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectado"
+          }
+        }
+      }
+    },
+    "settings.health.notConnected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin permiso"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No permission"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem permissão"
+          }
+        }
+      }
+    },
+    "settings.health.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lingclose guarda en Apple Salud tus lecturas válidas y lee de ahí tus entrenamientos y, para sugerir el rango, tu edad, sexo, peso y altura."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lingclose saves your valid readings to Apple Health and reads your workouts from it and, to suggest a range, your age, sex, weight and height."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Lingclose grava suas leituras válidas no Apple Saúde e lê de lá seus treinos e, para sugerir a faixa, sua idade, sexo, peso e altura."
+          }
+        }
+      }
+    },
+    "settings.assistant.notConfigured" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin configurar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not set up"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não configurado"
+          }
+        }
+      }
+    },
+    "settings.preview.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No disponible en la vista previa"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not available in preview"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indisponível na pré-visualização"
+          }
+        }
+      }
+    },
+    "settings.permissions.allGranted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo concedido"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All granted"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tudo concedido"
+          }
+        }
+      }
+    },
+    "settings.permissions.missing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por revisar: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To review: %lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para revisar: %lld"
+          }
+        }
+      }
+    },
+    "settings.permission.bluetooth.detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin Bluetooth no llegan lecturas del sensor. Actívalo en Ajustes de iOS."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without Bluetooth no sensor readings arrive. Turn it on in iOS Settings."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem Bluetooth não chegam leituras do sensor. Ative-o nos Ajustes do iOS."
+          }
+        }
+      }
+    },
+    "settings.permission.nfc.detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este dispositivo no puede leer sensores al acercarlo (NFC). Las lecturas por Bluetooth siguen llegando."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device cannot read sensors by holding it close (NFC). Bluetooth readings keep arriving."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este dispositivo não consegue ler sensores por aproximação (NFC). As leituras por Bluetooth continuam chegando."
+          }
+        }
+      }
+    },
+    "settings.permission.health.detail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se pide en la pestaña Datos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It is requested in the Data tab."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "É solicitado na aba Dados."
+          }
+        }
+      }
+    },
+    "alerts.state.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activadas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativados"
+          }
+        }
+      }
+    },
+    "alerts.state.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivadas"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desativados"
+          }
+        }
+      }
+    },
+    "identity.import.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo hace falta una vez, antes de emparejar un sensor. Importar otro archivo reemplaza el actual."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only needed once, before pairing a sensor. Importing another file replaces the current one."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Só é necessário uma vez, antes de parear um sensor. Importar outro arquivo substitui o atual."
+          }
+        }
+      }
+    },
+    "identity.loaded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargada en este iPhone"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loaded on this iPhone"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregada neste iPhone"
+          }
+        }
+      }
+    },
+    "identity.replace.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Reemplazar la identidad del sensor?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace the sensor identity?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Substituir a identidade do sensor?"
+          }
+        }
+      }
+    },
+    "identity.replace.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir archivo y reemplazar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose File and Replace"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolher arquivo e substituir"
+          }
+        }
+      }
+    },
+    "identity.replace.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si el archivo nuevo no sirve para tu sensor, dejará de conectarse. La identidad actual solo se sustituye si el archivo es válido."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If the new file does not work for your sensor, it will stop connecting. The current identity is only replaced if the file is valid."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se o novo arquivo não servir para o seu sensor, ele deixará de se conectar. A identidade atual só é substituída se o arquivo for válido."
+          }
+        }
+      }
+    },
+    "identity.state.loaded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargada"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loaded"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregada"
+          }
+        }
+      }
+    },
+    "identity.state.missing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin cargar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not loaded"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não carregada"
+          }
+        }
+      }
+    },
+    "llm.provider.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo usan \"Analizar con IA\" en comidas y reportes, \"Preguntar al asistente\" en Hoy y \"Sugerir rango\". Es opcional: sin él, todo lo demás funciona igual."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It is used by “Analyze with AI” for meals and reports, “Ask the assistant” in Today and “Suggest range”. It is optional: without it, everything else works the same."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "É usado por “Analisar com IA” em refeições e relatórios, “Perguntar ao assistente” em Hoje e “Sugerir faixa”. É opcional: sem ele, todo o resto funciona igual."
+          }
+        }
+      }
+    },
+    "llm.key.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave de API"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chave de API"
+          }
+        }
+      }
+    },
+    "llm.key.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La clave se crea en la web del proveedor, en tu cuenta. El proveedor cobra cada consulta a esa cuenta; Lingclose no cobra nada."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You create the key on the provider’s website, in your account. The provider charges each request to that account; Lingclose charges nothing."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A chave é criada no site do provedor, na sua conta. O provedor cobra cada consulta nessa conta; o Lingclose não cobra nada."
+          }
+        }
+      }
+    },
+    "llm.pick.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El precio lo publica el proveedor por millón de tokens (trozos de texto); una consulta usa unos pocos miles. Cada modelo indica si acepta fotos y por qué se recomienda o no."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The price is published by the provider per million tokens (pieces of text); a request uses a few thousand. Each model says whether it accepts photos and why it is recommended or not."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O preço é publicado pelo provedor por milhão de tokens (pedaços de texto); uma consulta usa alguns milhares. Cada modelo indica se aceita fotos e por que é recomendado ou não."
+          }
+        }
+      }
+    },
+    "llm.chosen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En uso"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Use"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em uso"
+          }
+        }
+      }
+    },
+    "llm.forget.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Olvidar la clave?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forget the key?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esquecer a chave?"
+          }
+        }
+      }
+    },
+    "llm.forget.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se borran de este iPhone la clave y el modelo elegido. Para volver a usar el asistente tendrás que pegar la clave otra vez."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key and the chosen model are deleted from this iPhone. To use the assistant again you will have to paste the key again."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A chave e o modelo escolhido são apagados deste iPhone. Para voltar a usar o assistente, você terá que colar a chave de novo."
           }
         }
       }

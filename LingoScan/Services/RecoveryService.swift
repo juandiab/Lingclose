@@ -692,7 +692,7 @@ extension RecoveryService {
             case .sessionIncomplete(let id): String(localized: "recovery.error.incomplete", defaultValue: "La sesión \(id) no tiene Receiver ID o serial")
             case .missingPatchInfo: "Faltan los datos originales del sensor. Esta sesión antigua no se puede exportar para Astra de forma segura."
             case .incompleteForAstra: "La sesión no contiene los datos completos y coherentes necesarios para Astra."
-            case .identityUnavailable: String(localized: "recovery.error.identity", defaultValue: "No hay identidad de app con clave de firma")
+            case .identityUnavailable: String(localized: "recovery.error.identity", defaultValue: "No hay identidad del sensor con clave de firma")
             case .unreadableFile: String(localized: "recovery.error.unreadable", defaultValue: "No se pudo leer el archivo")
             }
         }

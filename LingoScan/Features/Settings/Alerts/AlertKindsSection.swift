@@ -13,7 +13,7 @@ struct AlertKindsSection: View {
                 }
             }
         } header: {
-            Text(String(localized: "alerts.kinds", defaultValue: "Tipos"))
+            Text(String(localized: "alerts.kinds", defaultValue: "Qué avisar"))
         } footer: {
             Text(String(localized: "alerts.kinds.footer", defaultValue: "Baja y bajada rápida llegan como avisos urgentes y pueden atravesar un modo de concentración."))
         }

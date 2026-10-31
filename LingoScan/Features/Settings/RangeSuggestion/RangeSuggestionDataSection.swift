@@ -40,11 +40,11 @@ struct RangeSuggestionDataSection: View {
             RangeSuggestionSourceRow(
                 title: String(localized: "range.suggest.data.bmi", defaultValue: "IMC"),
                 value: suggestion.profile.bodyMassIndex.map { $0.formatted(.number.precision(.fractionLength(1))) },
-                source: String(localized: "range.suggest.source.computed", defaultValue: "Calculado con peso y altura de Salud"))
+                source: String(localized: "range.suggest.source.computed", defaultValue: "Calculado con peso y altura de Apple Salud"))
         } header: {
             Text(String(localized: "range.suggest.data", defaultValue: "Datos usados y su fuente"))
         } footer: {
-            Text(String(localized: "range.suggest.data.footer", defaultValue: "La edad, el sexo, el peso y la altura no determinan un rango de glucosa validado: la personalización sale de tus propias lecturas. Lo que falta en Salud se omite."))
+            Text(String(localized: "range.suggest.data.footer", defaultValue: "La edad, el sexo, el peso y la altura no determinan un rango de glucosa validado: la personalización sale de tus propias lecturas. Lo que falta en Apple Salud se omite."))
         }
     }
 

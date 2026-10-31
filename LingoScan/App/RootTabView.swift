@@ -20,8 +20,10 @@ struct RootTabView: View {
 
     /// Fuentes reales: `SQLiteStore` y `SensorSessionCoordinator`.
     init(environment: AppEnvironment) {
+        // Hoy y la pestaña Diario comparten el aviso de cambios del diario (T-32).
         _todayViewModel = State(initialValue: TodayViewModel(
-            dataSource: environment.todayData, sensorSource: environment.sensorStatus
+            dataSource: environment.todayData, sensorSource: environment.sensorStatus,
+            diaryChanges: environment.ui.diary.changes
         ))
         _sensorViewModel = State(initialValue: SensorViewModel(
             statusSource: environment.sensorStatus, actions: environment.sensorActions
@@ -42,9 +44,13 @@ struct RootTabView: View {
     /// `PreviewData` (sintético y señalado como tal): `#Preview` y `-previewSensorState`.
     init(previewState: SensorPresentationState) {
         let data = PreviewData(sensorState: previewState)
-        _todayViewModel = State(initialValue: TodayViewModel(dataSource: data, sensorSource: data))
+        // Un solo diario en memoria y un solo aviso de cambios para Hoy y la pestaña Diario.
+        let diary = InMemoryDiaryStore(events: data.events)
+        let changes = DiaryChangeFeed()
+        _todayViewModel = State(initialValue: TodayViewModel(
+            dataSource: data, sensorSource: data, diaryChanges: changes, fallbackDiary: diary))
         _sensorViewModel = State(initialValue: SensorViewModel(statusSource: data, actions: PreviewSensorActions()))
-        _ui = State(initialValue: .preview(events: data.events))
+        _ui = State(initialValue: .preview(diary: diary, changes: changes))
         _reports = State(initialValue: .preview(data: data))
         identityImport = nil
         mealAssistant = .preview
